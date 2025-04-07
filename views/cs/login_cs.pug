@@ -1,0 +1,61 @@
+extends base
+
+block content
+    main.main.BackgroundImage
+        br
+        br
+        br
+        .login-form
+            h2.heading-secondary.ma-bt-lg Přihlaste se do svého účtu
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn.btn--little#helpButton(href='#') Pomoc
+            form.form.form--login
+                .form__group
+                    label.form__label1(for='employeeNumber') Číslo zaměstnance
+                    input#employeeNumber(class="form__input" type="number" placeholder="Např. 70221" required="required" min="10000" max="99999")
+                .form__group.ma-bt-md
+                    label.form__label1(for='password') Heslo
+                    input#password.form__input(type='password', autocomplete='current-password', placeholder='••••••••', required, minlength='8')
+                .form__group
+                    br
+                    button.btn.btn--green Přihlášení
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn.btn--small.btn--gray(href=`/api/v1/overview`) Zrušit
+                    br
+
+                script.
+
+                    const employeeNumberInput = document.querySelector('#employeeNumber');
+                    const helpButton = document.querySelector('#helpButton');
+
+                    helpButton.addEventListener('click', function() {
+                      console.log("help click");
+                      var computedStyle = window.getComputedStyle(helpButton);
+                      var buttonColor = computedStyle.getPropertyValue('color');
+                      if (buttonColor === 'rgb(255, 255, 255)') {
+                        alert('Přihlaste se prosím pomocí svého čísla zaměstnance a hesla. (Heslo si můžete vyžádat nebo získat u svého přímého nadřízeného.)');
+                      }
+                    });
+
+                    employeeNumberInput.addEventListener('input', () => {
+                      if (employeeNumberInput.value === '70220') {
+                        helpButton.style.color = 'red';
+                        helpButton.setAttribute('href', '#');
+                        helpButton.removeAttribute('onclick');
+                      } else {
+                        helpButton.style.color = 'blue';
+                        helpButton.setAttribute('onclick', "alert('Zapomněli jste heslo? Kontaktujte prosím svého nadřízeného.')");
+                        helpButton.removeAttribute('href');
+                      }
+                    });

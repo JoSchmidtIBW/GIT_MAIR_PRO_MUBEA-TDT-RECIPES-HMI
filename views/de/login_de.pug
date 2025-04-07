@@ -1,0 +1,61 @@
+extends base
+
+block content
+    main.main.BackgroundImage
+        br
+        br
+        br
+        .login-form
+            h2.heading-secondary.ma-bt-lg Log in Ihr account
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn.btn--little#helpButton(href='#') Hilfe
+            form.form.form--login
+                .form__group
+                    label.form__label1(for='employeeNumber') Mitarbeiternummer
+                    input#employeeNumber(class="form__input" type="number" placeholder="zB. 70221" required="required" min="10000" max="99999")
+                .form__group.ma-bt-md
+                    label.form__label1(for='password') Passwort
+                    input#password.form__input(type='password', autocomplete='current-password', placeholder='••••••••', required, minlength='8')
+                .form__group
+                    br
+                    button.btn.btn--green Login
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn.btn--small.btn--gray(href=`/api/v1/overview`) Abbrechen
+                    br
+
+                script.
+
+                    const employeeNumberInput = document.querySelector('#employeeNumber');
+                    const helpButton = document.querySelector('#helpButton');
+
+                    helpButton.addEventListener('click', function() {
+                      console.log("help click");
+                      var computedStyle = window.getComputedStyle(helpButton);
+                      var buttonColor = computedStyle.getPropertyValue('color');
+                      if (buttonColor === 'rgb(255, 255, 255)') {
+                        alert('Bitte melden Sie sich mit Ihrer Mitarbeiternummer und Ihrem Passwort an.\n(Das Passwort können Sie bei Ihrem direkten Vorgesetzten erfragen oder einholen.)');
+                      }
+                    });
+
+                    employeeNumberInput.addEventListener('input', () => {
+                      if (employeeNumberInput.value === '70220') {
+                        helpButton.style.color = 'red';
+                        helpButton.setAttribute('href', '#');
+                        helpButton.removeAttribute('onclick');
+                      } else {
+                        helpButton.style.color = 'blue';
+                        helpButton.setAttribute('onclick', "alert('Passwort vergessen? Bitte Vorgesetzten kontaktieren')");
+                        helpButton.removeAttribute('href');
+                      }
+                    });

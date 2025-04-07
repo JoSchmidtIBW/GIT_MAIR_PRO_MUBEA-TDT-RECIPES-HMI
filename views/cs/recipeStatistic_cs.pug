@@ -1,0 +1,48 @@
+extends base
+
+block content
+    main.main
+        h1 Receptní statistika
+        br
+        br
+        //-pre=JSON.stringify(data,null, 2)
+        table#recipeStatisticTable_cs.recipeStatisticTable_cs.table
+            thead
+                tr
+                    th Číslo artiklu
+                    th Celkem-<br>odesláno
+                    th Číslo(čísla)-<br>objednávky
+                        //-th XXX-<br>Nummer
+                        //-th    
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down
+                    th Odeslání        
+                    th Rychlost<br>tažení
+                    th Rychlost<br>trnu
+                    
+                    th Poslední<br>odeslání
+                    th Název(názvy)<br>artiklu
+                tbody
+                    each recipeStatistic, index in data
+                        tr
+                            td= recipeStatistic.artikelNummer
+                            td= recipeStatistic.totalSends
+                            td!= recipeStatistic.faNumbers.join('<br>')     
+                            td
+                                each sendData in recipeStatistic.sendData
+                                    //-td= sendData.sendDate.join('<br>')
+                                    //-.join('<br>') 
+                                    div= sendData.sendDate ? new Date(sendData.sendDate).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : ''
+                                    //-td=
+
+                            td= recipeStatistic.ziehGeschwindigkeiten.join('<br>') 
+                            td= recipeStatistic.dornGeschwindigkeiten.join('<br>')
+
+                            td= recipeStatistic.lastSendAt  ? new Date(recipeStatistic.lastSendAt).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false}) : ''
+                            td!= recipeStatistic.artikelRealName.join('<br>')                                             
+        br
+        br
+
+        a.btn.btn--small.btn--green(href="/api/v1/me") Zpět

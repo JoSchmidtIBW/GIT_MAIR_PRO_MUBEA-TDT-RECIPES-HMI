@@ -1,0 +1,11 @@
+# Project exclude paths
+node_modules/
+*.env
+*.cache
+*.VSCodeCounter
+dist/
+# meine zum spÃ¤ter lÃ¶schen
+veryOldXXX.html
+hallo.txt
+recipesTDT2.json
+fragen.txt

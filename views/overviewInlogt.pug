@@ -1,0 +1,241 @@
+extends base
+
+block content 
+    main.main  
+        div#recipeSendStatusContainer(style="margin-top:-40px; margin-left: -30px;")
+            #leftStatusTextSend
+                h2 Send recipe:
+            #middleStatusRecipeSendStatus 
+                h2#recipeSendStatus(style="margin-left: 10px; color: blue;")=dataSPS+isFindInDB
+            #rightStatusBtn  
+                if(user.role === 'admin' || user.role === 'Chef')
+                    button.btn.btn--info-big.toggle-pre-csvData-button(type="button" style="margin-right: 10px; margin-top: 4px; ")
+                        svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-arrow-down" style="color: green; ")
+                        a(style="color: green; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") Last CSV-Data
+
+                    button.btn.btn--info-big.toggle-pre-recipe-button(type="button" style="margin-left: 0px; margin-top: 4px; ")
+                        svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-arrow-down" style="color: green; ")
+                        a(style="color: green; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") Send recipe-view
+
+                    button.btn.btn--info-big#sps-btn(type="button", style="margin-left: 10px; margin-top: 4px;")
+                        svg#sps-btn-svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
+                        a#sps-btn-a(href="/api/v1/getSPS", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") PLC                                               
+                    .pre-recipe-container(style="display: none; margin-left: -800px;")
+                        br
+                        pre#recipefindLoadedinSPSinDBrightDiv=recipefindLoadedinSPSinDB
+                        pre#sendDataA
+                        br    
+
+                    .pre-csvData-container(style="display: none; margin-left: -600px;")
+                        br
+                        pre#CSVDataLocalStorage(style="font-size: 14px;")
+
+                else 
+                    button.btn.btn--info-big.toggle-pre-csvData-button(type="button" style="margin-right: 10px; margin-top: 4px; display: none;")
+                    button.btn.btn--info-big.toggle-pre-recipe-button(type="button" style="margin-left: 0px; margin-top: 4px; display: none;")
+                        svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-arrow-down" style="color: green; ")
+                        a(style="color: green; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") Gesendete Rezept- Übersicht
+
+                    .pre-recipe-container(style="display: none; margin-left: -800px;")
+                        br
+                        pre#sendDataA 
+                        br                        
+        br
+        
+        div.containerOverview
+            div.left-side()
+                div(style="display: flex; justify-content: space-between;")
+                    a(style="margin-top: 5px; font-size: 22px; font-weight: 900;") TDT- Recipes
+                    input#userSendData(value=user, type="hidden")
+                    div(style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;")
+                        h3(style="margin-top: 5px; margin-left:10px;") Production-order-number (FA):
+                        input#fa_Nummer(class="form__input_FA" type="number" placeholder="e.g. 1000410101" required="required" min="1000000000" max="9999999999" onblur="validateFA_Nummer(this)")
+                    a.btn.btn--small.btn--green.btn--recipeSend#recipeSendBtn(href="#" style="margin-right: 15px;") Send recipe                
+                //-br   
+
+                <select id="speedFilter" style="margin-bottom: 5px;">
+                    <option value="15m/min">15m/min</option>
+                    <option value="all">All draw-speed's</option>
+                    <option value="10m/min">10m/min</option>
+                    <option value="15m/min">15m/min</option>
+                    <option value="20m/min">20m/min</option>
+                    <option value="25m/min">25m/min</option>
+                </select>                                   
+                br                
+
+                table#recipesTDToverviewTable.recipesTDToverviewTable.table
+                    thead
+                    tr
+                        th ID
+                        th Artikelnummer
+                        th Artikelname
+                        th Letztes erstell-Datum
+                        th Ersteller
+                        th Edit
+                    tbody
+                        if data != "Es sind keine Daten gefunden worden"
+                            each recipe in data
+                                tr
+                                    td= recipe._id
+                                    td= recipe.kopfDaten.artikelNummer
+                                    td= recipe.kopfDaten.artikelName
+                                    td
+                                        - const lastComment = recipe.kopfDaten.kommentar[recipe.kopfDaten.kommentar.length - 1]
+                                        p= lastComment ? new Date(lastComment.erstelltAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''
+                                    td
+                                        - const lastCommentUser = recipe.kopfDaten.kommentar[recipe.kopfDaten.kommentar.length - 1]
+                                        p= lastCommentUser ? lastCommentUser.createdBy.firstName : ''  
+                                    td    
+                        else
+                            tr
+                                td(colspan='5') Keine Daten verfügbar
+
+                br      
+            div.right-side.rightDiv
+                form.form.form--recipeSend 
+                    h1(style="border: 1px solid transparent; border-bottom-color: rgb(29, 245, 76);")
+                    br
+                    br
+                    input#recipeToSendRowdataInput(class="form__input" type="hidden" placeholder="RowData" style="background-color: lightgreen;")
+                br                    
+                div.aussenDiv
+                    div#rightDiv
+        br
+        div(style="margin-left: -30px; margin-right: -30px;")
+            a.btn.btn--small.btn--green(style="float: left;" href="/api/v1/createRecipeOverview") Create
+            a.btn.btn--small.btn--green.btn--saveAllRecipteToTXT_Files#saveAllRecipteToTXT_FilesBtn(style="float: right; margin-right: 25px;" href="#") Save all recipes
+
+
+        script.
+            console.log("bin script")
+
+            //- function validateFA_Nummer(input){
+            //-     console.log('Bin validateFA_Nummer..., mache nichts...');
+            //- }
+
+            function displayMessage_isError_isSuccess(message, isError) {
+                const markup = `<div class="alert ${isError ? 'alert--error' : 'alert--success'}" >${message}</div>`;
+
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = markup;
+
+                const messageElement = tempElement.firstElementChild;
+
+                document.body.insertBefore(messageElement, document.body.firstChild);
+
+                setTimeout(() => {
+                    messageElement.remove();
+                }, 2500);
+            }            
+
+
+            function validateFA_Nummer(faNummerInput){
+                console.log('bin validateFANummer und input: ' + faNummerInput.value);
+                const faNummer_Min = 1000000000;
+                const faNummer_Max = 9999999999;
+
+                if (faNummerInput.value < faNummer_Min) {
+                    displayMessage_isError_isSuccess('Die Auftrags- Fertigungs- Nummer ist zu klein!', true);
+                    //faNummerInput.value = ''; 
+                }
+                if (faNummerInput.value > faNummer_Max) {
+                    displayMessage_isError_isSuccess('Die Auftrags- Fertigungs- Nummer ist zu gross!', true);
+                    //faNummerInput.value = ''; 
+                }
+            }
+
+            let lastCSVDataLocalStorage = 'Test'
+
+            const btnRecipeSend = document.getElementById("recipeSendBtn");
+            btnRecipeSend.addEventListener("click", spinnerFunctionRecipeSend);        
+
+            function spinnerFunctionRecipeSend() {
+                const duration = 5; 
+                let remainingTime = duration;
+
+                btnRecipeSend.innerHTML = `
+                <a>
+                    <svg  style="height: 50px; width: 40px; margin-left: -8px; margin-bottom: -33px;" viewBox="0 0 40 40">
+                    <!-- Kreis -->
+                    <circle cx="20" cy="8" r="12" stroke="#FFF"  stroke-width="3" fill="none" stroke-dasharray="3 4" class="loaderRecipe"></circle>
+                    <!-- Countdown-Text -->
+                    <text x="50%" y="21%" text-anchor="middle" fill="#FFF" dy=".3em" font-size="12px">${remainingTime}</text>
+                    </svg>
+                    Rezept senden
+                </a>
+                `;            
+                const interval = setInterval(() => {
+                    remainingTime--;
+                    const textElement = btnRecipeSend.querySelector('text');
+                    if (textElement) {
+                        textElement.textContent = remainingTime;
+                    }
+
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        btnRecipeSend.innerHTML = "Rezept senden";
+                    }
+                }, 1000);
+            }       
+
+            const btnSPSa = document.getElementById("sps-btn");
+            btnSPSa.addEventListener("click", spinnerFunction);
+
+            const linkSPS = document.getElementById("sps-btn-a");
+            
+            function spinnerFunction() {
+                document.getElementById("sps-btn-svg").innerHTML = `<svg ><use class="loaderSPS" xlink:href="/img/icons.svg#icon-loader"></use></svg>`                
+                window.location.href = linkSPS.href;
+            }
+
+            const btnSaveAllRecipteToTXT = document.getElementById("saveAllRecipteToTXT_FilesBtn");
+            btnSaveAllRecipteToTXT.addEventListener("click", spinnerFunctionSaveAllRecipteToTXT);
+            
+            function spinnerFunctionSaveAllRecipteToTXT() {
+                btnSaveAllRecipteToTXT.innerHTML = `<a><svg style="height: 18px; width: 18px; margin-left: -4px; margin-right: 8px; margin-bottom: -3px;"><use class="loaderSPS" xlink:href="/img/icons.svg#icon-loader" style="fill: #FFFF; "></use></svg>Save all recipes</a>`                
+            }            
+
+
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("Bin DOMcontentLoader...");
+
+                const buttonTogglePreRecipe = document.querySelector('.toggle-pre-recipe-button');
+                const containerPreRecipe = document.querySelector('.pre-recipe-container');
+                const buttonTogglePreCsvData = document.querySelector('.toggle-pre-csvData-button');
+                const containerPreCsvData = document.querySelector('.pre-csvData-container');
+
+                buttonTogglePreRecipe.addEventListener('click', function() {
+                    console.log("buttonTogglePreRecipe: "+buttonTogglePreRecipe)
+                    console.log("containerPreRecipe: "+containerPreRecipe)
+                    if (containerPreRecipe.style.display === 'none') {
+                        containerPreRecipe.style.display = 'block';
+                        containerPreCsvData.style.display = 'none'
+                    } else {
+                        containerPreRecipe.style.display = 'none';
+                    }
+                });     
+
+                const preCSVDataLocalStorage = document.getElementById('CSVDataLocalStorage')
+                
+
+                buttonTogglePreCsvData.addEventListener('click', function() {
+                    console.log("buttonTogglePreCsvData: "+buttonTogglePreCsvData)
+                    console.log("containerPreCsvData: "+containerPreCsvData)
+                    lastCSVDataLocalStorage = localStorage.getItem('lastCSVData');
+                    
+
+                    if (containerPreCsvData.style.display === 'none') {
+                        
+                        preCSVDataLocalStorage.style.color = 'green';
+                        preCSVDataLocalStorage.innerHTML = 'ATTENTION: Refresh page first!!! \n\n' + lastCSVDataLocalStorage;
+                        containerPreCsvData.style.display = 'block';
+                        containerPreRecipe.style.display = 'none';
+                    } else {
+                        containerPreCsvData.style.display = 'none';
+                    }
+                });                    
+            });            

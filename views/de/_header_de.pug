@@ -1,0 +1,105 @@
+header.header
+    nav.nav.nav--tours
+        if user
+            a.nav__el(href='/api/v1/overviewInlogt') Übersicht
+    .header__logo
+        .LogoBildText
+            img(src='/img/Mubea_logo.svg.png', alt='Mubea logo' style="filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);")
+            a.logoTrack Track
+            //-img(src='/img/Mubea_logo.svg.png', alt='Mubea logo' style="filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);")
+            //-a.logoTDT_ASMAG(style="margin-left: 3px;") ASMAG-TDT
+            img(src='/img/Logo-Mair-Research.png', alt='Mubea logo' style="filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);")
+            a.logoTDT_ASMAG(style="margin-left: 3px;") -TDT
+            a#aSPS_Run.effect-shine(style="margin-left: -2px; font-size: 16px; padding: 5px 5px; font-style: italic; font-family: 'Arial';") SPS
+
+    nav.nav.nav--user
+        if user
+            a.nav__el.nav__el--logout Log out
+            a.nav__el.avatar(href='/api/v1/me')
+                img.nav__user-img(src=`/img/users/${user.photo}`, alt=`Photo of ${user.firstName}`)
+                span= user.firstName
+                span(style='margin-left:5px;')= user.lastName
+        else
+            // Comes from isloggedIn- Middleware, where res.locals.user = currentUser
+            a.nav__el.nav__el--cta(href='/api/v1/login') Log in
+
+    script. 
+        console.log("bin header")  
+        
+        var socket = io();
+        
+        socket.on('connect', function() {
+            console.log('bin header: Verbunden mit dem Server');
+        });
+        
+        let aSPS_Run = document.getElementById('aSPS_Run');
+        let savedSPSStatusLocalStorage = localStorage.getItem('spsStatus');
+
+        setTimeout(() => {
+            if (savedSPSStatusLocalStorage) {
+                aSPS_Run.textContent = savedSPSStatusLocalStorage;
+            }
+        }, 1000);   
+
+        socket.on('message', function(data) {
+            console.log('Nachricht vom Server erhalten: ' + data);
+        });       
+
+        socket.on('messageCSVData', function(data) {
+            console.log('CSVData-Nachricht vom Server erhalten: \n' + data);
+            localStorage.setItem('lastCSVData', data);
+        });       
+
+        let timeOfFailedConnectionSPS = ''; 
+        let savedTimeOfFailedConnectionSPS = localStorage.getItem('timeOfFailedConnectionSPS');
+
+        socket.on('sps-Socket-data', function(data) {
+        //socket.on('sps-Socket-spsDataCSVData', function(data) {    
+            console.log('sps-Socket-data vom Server erhalten: ' + JSON.stringify(data));
+            //spsDataCSVData
+            //console.log('sps-Socket-spsDataCSVData vom Server erhalten: ' + JSON.stringify(data));
+            //aSPS_Run.textContent = JSON.stringify(data.adsStateStr);
+            if (data === null) {
+                if (!savedTimeOfFailedConnectionSPS){//savedTimeOfFailedConnectionSPS.length === 0) {
+                    let currentTime = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Zurich' });
+                    localStorage.setItem('timeOfFailedConnectionSPS', currentTime);
+                    savedTimeOfFailedConnectionSPS = currentTime;
+                    
+                    aSPS_Run.textContent = 'Fehlerhafte SPS- Verbindung!'.toUpperCase() + ( ' seit: ' + savedTimeOfFailedConnectionSPS || '');//JSON.stringify(data);
+                    aSPS_Run.style.borderRadius = '8px';
+                    aSPS_Run.style.marginLeft = '5px';
+                    aSPS_Run.style.boxShadow = 'inset 0 0 15px #444';
+                    aSPS_Run.style.animation = 'shine 0.5s infinite, shadowMoveRED 0.5s infinite, blinkYellow 2s infinite';   
+                    localStorage.setItem('spsStatus', 'Fehlerhafte SPS- Verbindung!'); 
+                } else {
+                    aSPS_Run.textContent = 'Fehlerhafte SPS- Verbindung!'.toUpperCase() + ( ' seit: ' + savedTimeOfFailedConnectionSPS || '');//JSON.stringify(data);
+                    aSPS_Run.style.borderRadius = '8px';
+                    aSPS_Run.style.marginLeft = '5px';
+                    aSPS_Run.style.boxShadow = 'inset 0 0 15px #444';
+                    aSPS_Run.style.animation = 'shine 0.5s infinite, shadowMoveRED 0.5s infinite, blinkYellow 2s infinite';   
+                    localStorage.setItem('spsStatus', 'Fehlerhafte SPS- Verbindung!');
+                }                
+            } else {
+                if(JSON.stringify(data.adsStateStr) !== '"Run"'){
+                    aSPS_Run.textContent = JSON.stringify(data);
+                    aSPS_Run.style.marginLeft = '5px';
+                    aSPS_Run.style.animation = 'shine 1.5s infinite, shadowMoveRED 2s infinite';
+                     localStorage.setItem('spsStatus', JSON.stringify(data));
+                } else {
+                    aSPS_Run.textContent = data.adsStateStr;
+                    aSPS_Run.style.animation = 'shine 2.6s infinite, shadowFlash 2.6s infinite';
+                    localStorage.setItem('spsStatus', data.adsStateStr);
+                    timeOfFailedConnectionSPS = '';
+                    localStorage.removeItem('timeOfFailedConnectionSPS');
+                    savedTimeOfFailedConnectionSPS = '';
+                }
+            }      
+        });  
+
+        socket.on('disconnect', function() {
+            console.log('WebSocket-Verbindung verloren. Versuche erneut zu verbinden...');
+            
+            setTimeout(function() {
+                socket.connect();
+            }, 5000);
+        });        

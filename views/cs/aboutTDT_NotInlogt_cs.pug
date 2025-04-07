@@ -1,0 +1,25 @@
+extends base
+
+block content
+    main.main
+        h2 O TDT
+        br
+        br
+        br
+        //h1 Anleitung TDT- Prüflehre einstellen
+        br
+        //h1 Anleitung TDT- Rohr messen
+        br
+        .error_center
+            h2.heading-secondary.heading-secondary--error Uh oh! Něco je špatně!
+        br
+        .error_center      
+            h2.error__emoji_big 😢 🤯
+            br
+            .error__msg= msg
+            //- Page not found!
+        br  
+        div( style="position: absolute; bottom: 30px;")
+            a.btn.btn--small.btn--green(href="/api/v1/overviewInlogt") Zpět na přehled     
+        br
+        br           

@@ -1,0 +1,20 @@
+[
+  {
+    "_id": "643c1f042df0111cb1a11a11",
+    "artikelNummer": "10183037",
+    "artikelName": "29.50x4.40-3.40",
+    "artikelRealName": ["MTT0106DC013 5Stk;"],
+    "ziehGeschwindigkeiten": ["15"],
+    "dornGeschwindigkeiten": [{ "dVFwd": 100, "dVBwd": 100 }],
+    "totalSends": 1,
+    "sendData": [
+      {
+        "userID": "643c1f042df0321cb8a06a47",
+        "sendDate": "2024-11-28T12:00:00Z",
+        "logEntry": "6745749d6bc4aa22cd22c22c"
+      }
+    ],
+    "faNumbers": [1000410012],
+    "lastSendAt": "2024-11-28T12:00:00Z"
+  }
+]

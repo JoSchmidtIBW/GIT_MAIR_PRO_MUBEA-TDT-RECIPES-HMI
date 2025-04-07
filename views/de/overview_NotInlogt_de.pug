@@ -1,0 +1,179 @@
+extends base
+
+block content 
+    main.main 
+        div#recipeSendStatusContainer(style="margin-top:-40px; margin-left: -30px;")
+            #leftStatusTextSend
+                h2 Gesendetes Rezept:
+            #middleStatusRecipeSendStatus 
+                h2#recipeSendStatus(style="margin-left: 10px; color: blue;")=dataSPS+isFindInDB
+            #rightStatusBtn(type="hidden")
+                button.btn.btn--info-big.toggle-pre-recipe-button(type="button" style="margin-left: 0px; margin-top: 4px; display: none;")
+                    svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                        use(xlink:href="/img/icons.svg#icon-arrow-down" style="color: green; ")
+                    a(style="color: green; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") Gesendete Rezept- Übersicht
+                .pre-recipe-container(style="display: none; margin-left: -800px;")
+                    br
+                    pre#recipefindLoadedinSPSinDBrightDiv=recipefindLoadedinSPSinDB
+                    pre#sendDataA 
+                    br        
+        br
+        br
+        div.containerOverview
+            div.left-side
+                div(style="display: flex; justify-content: space-between;")
+                    a(style="margin-top: 5px; font-size: 22px; font-weight: 900;") TDT- Rezepte
+                    input#userSendData(value='{"_id":"000000000000000000000001","firstName":"Anonymous","lastName":"NoAccount","employeeNumber":50001,"language":"de","professional":"Aushilfe ohne Account","email":"","photo":"default.jpg","role":"user","department":["Zieherei"],"__v":0}', type="hidden")
+                    div(style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;")
+                        h3(style="margin-top: 5px; margin-left:10px;") Fertigungs- Auftrags- FA- Nummer:
+                        input#fa_Nummer(class="form__input_FA" type="number" placeholder="zB. 1000410101" required="required" min="1000000000" max="9999999999" onblur="validateFA_Nummer(this)")
+                    a.btn.btn--small.btn--green.btn--recipeSend_NotInlogt#recipeSendBtn(href="#" style="margin-right: 15px;") Rezept senden            
+                //-br 
+
+                <select id="speedFilter" style="margin-bottom: 5px;">
+                    <option value="15m/min">15m/min</option>
+                    <option value="all">Alle Geschwindigkeiten</option>
+                    <option value="10m/min">10m/min</option>
+                    <option value="15m/min">15m/min</option>
+                    <option value="20m/min">20m/min</option>
+                    <option value="25m/min">25m/min</option>
+                </select>                                   
+                br                
+
+                table#recipesTDToverviewTable_de_NotInlogt.recipesTDToverviewTable_de_NotInlogt.table
+                    thead
+                    tr
+                        th ID
+                        th Artikelnummer
+                        th Artikelname
+                        th Letztes erstell-Datum
+                        th Ersteller
+                    tbody
+                        if data != "Es sind keine Daten gefunden worden"                   
+                            each recipe in data
+                                tr
+                                    td= recipe._id
+                                    td= recipe.kopfDaten.artikelNummer
+                                    td= recipe.kopfDaten.artikelName
+                                    td
+                                        - const lastComment = recipe.kopfDaten.kommentar[recipe.kopfDaten.kommentar.length - 1]
+                                        p= lastComment ? new Date(lastComment.erstelltAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''
+                                    td
+                                        - const lastCommentUser = recipe.kopfDaten.kommentar[recipe.kopfDaten.kommentar.length - 1]
+                                        p= lastCommentUser ? lastCommentUser.createdBy.firstName : ''  
+                        else
+                            tr
+                                //td(colspan='5') Keine Daten verfügbar  
+                                td= "-"
+                                td= "-"
+                                td= "-"
+                                td= "-"
+                                td= "-"
+
+                br      
+
+            div.right-side.rightDiv
+                form.form.form--recipeSend_NotInlogt
+                    h1(style="border: 1px solid transparent; border-bottom-color: rgb(125, 177, 250);")
+                    br
+                    br
+                    input#recipeToSendRowdataInput(class="form__input" type="hidden" placeholder="RowData" style="background-color: lightgreen;")
+                br                    
+                div.aussenDiv
+                    div#rightDiv
+        br
+
+        script.
+            console.log("bin script")
+
+            //- function validateFA_Nummer(input){
+            //-     console.log('Bin validateFA_Nummer..., mache nichts...');
+            //- }
+
+            function displayMessage_isError_isSuccess(message, isError) {
+                const markup = `<div class="alert ${isError ? 'alert--error' : 'alert--success'}" >${message}</div>`;
+
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = markup;
+
+                const messageElement = tempElement.firstElementChild;
+
+                document.body.insertBefore(messageElement, document.body.firstChild);
+
+                setTimeout(() => {
+                    messageElement.remove();
+                }, 2500);
+            }            
+
+            function validateFA_Nummer(faNummerInput){
+                console.log('bin validateFANummer und input: ' + faNummerInput.value);
+                const faNummer_Min = 1000000000;
+                const faNummer_Max = 9999999999;
+
+                if (faNummerInput.value < faNummer_Min) {
+                    displayMessage_isError_isSuccess('Die Auftrags- Fertigungs- Nummer ist zu klein!', true);
+                    //faNummerInput.value = ''; 
+                }
+                if (faNummerInput.value > faNummer_Max) {
+                    displayMessage_isError_isSuccess('Die Auftrags- Fertigungs- Nummer ist zu gross!', true);
+                    //faNummerInput.value = ''; 
+                }
+            }            
+
+            const btnRecipeSend = document.getElementById("recipeSendBtn");
+            btnRecipeSend.addEventListener("click", spinnerFunctionRecipeSend);
+            
+            function spinnerFunctionRecipeSend222() {
+                btnRecipeSend.innerHTML = `<a><svg style="height: 18px; width: 18px; margin-left: -4px; margin-right: 8px; margin-bottom: -3px;"><use class="loaderSPS" xlink:href="/img/icons.svg#icon-loader-bigbig" style="fill: #FFFF; "></use></svg>Rezept senden</a>` 
+   
+                setTimeout(() => {
+                    btnRecipeSend.innerHTML = "Rezept senden";
+                }, 155000);
+            }
+
+            function spinnerFunctionRecipeSend() {
+                const duration = 5; 
+                let remainingTime = duration;
+
+                btnRecipeSend.innerHTML = `
+                <a>
+                    <svg  style="height: 50px; width: 40px; margin-left: -8px; margin-bottom: -33px;" viewBox="0 0 40 40">
+                    <!-- Kreis -->
+                    <circle cx="20" cy="8" r="12" stroke="#FFF"  stroke-width="3" fill="none" stroke-dasharray="3 4" class="loaderRecipe"></circle>
+                    <!-- Countdown-Text -->
+                    <text x="50%" y="21%" text-anchor="middle" fill="#FFF" dy=".3em" font-size="12px">${remainingTime}</text>
+                    </svg>
+                    Rezept senden
+                </a>
+                `;
+
+                const interval = setInterval(() => {
+                    remainingTime--;
+                    const textElement = btnRecipeSend.querySelector('text');
+                    if (textElement) {
+                        textElement.textContent = remainingTime;
+                    }
+
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        btnRecipeSend.innerHTML = "Rezept senden";
+                    }
+                }, 1000);
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log("Bin DOMcontentLoader...");
+
+                const buttonTogglePreRecipe = document.querySelector('.toggle-pre-recipe-button');
+                const containerPreRecipe = document.querySelector('.pre-recipe-container');
+
+                buttonTogglePreRecipe.addEventListener('click', function() {
+                    console.log("buttonTogglePreRecipe: "+buttonTogglePreRecipe)
+                    console.log("containerPreRecipe: "+containerPreRecipe)
+                    if (containerPreRecipe.style.display === 'none') {
+                        containerPreRecipe.style.display = 'block';
+                    } else {
+                        containerPreRecipe.style.display = 'none';
+                    }
+                });     
+            });            

@@ -1,0 +1,547 @@
+extends base
+
+block content
+    main.main.BackgroundImageSPS
+        br
+        div(style='float: right; margin-right: 100px;')
+            .sps__logo
+                img(src='/img/sps/Beckhoff_Logo.svg.png', alt='Beckhoff_Logo', style="filter: drop-shadow(gray 1rem 1rem 8px);")
+
+        if (dataPingSPS.includes('Ping zur SPS fehlgeschlagen'))
+            h2 Ping- result
+            pre(style='font-size: 11px; color: #323232;')= dataPingSPS
+
+        .container-flexSPS(style="display: flex; flex-wrap: wrap; gap: 10px;")
+            .sectionSPS(style="flex: 1; min-width: 380px;")
+                button.toggle-PingResult-button(type="button" style="opacity: 0.8;")
+                    a(style="color: black;") Info Ping
+                .container-PingResult(style="display: none;")
+                    div.form__group
+                        h4 Ping- result
+                        pre(style='font-size: 11px; color: #323232;')= dataPingSPS
+        .container-flexSPS(style="display: flex; flex-wrap: wrap; gap: 10px;")
+            .sectionSPS(style="flex: 1; min-width: 380px;")
+                button.toggle-DeviceInfo-button(type="button" style="opacity: 0.8;")
+                    a(style="color: black;") Info Device            
+                .container-DeviceInfo(style="display: none;")
+                    div.form__group
+                        h4 DeviceInfo
+                        pre(style='font-size: 11px; color: #323232;')= deviceInfo
+
+            .sectionSPS(style="flex: 1; min-width: 380px;")
+                button.toggle-UploadInfo-button(type="button" style="opacity: 0.8;")
+                    a(style="color: black;") Info Upload            
+                .container-UploadInfo(style="display: none;")
+                    div.form__group
+                        h4 UploadInfo- result
+                        pre(style='font-size: 11px; color: #323232;')= uploadInfo
+
+            .sectionSPS(style="flex: 1; min-width: 380px;")
+                button.toggle-SymbolVersion-button(type="button" style="opacity: 0.8;")
+                    a(style="color: black;") Info Symbol-Version            
+                .container-SymbolVersion(style="display: none;")
+                    div.form__group
+                        h4 SymbolVersion- result
+                        pre(style='font-size: 11px; color: #323232;')= symbolVersion
+
+            .sectionSPS(style="flex: 1; min-width: 380px;")
+                button.toggle-PlcRunTimeState-button(type="button" style="opacity: 0.8;")
+                    //-svg(class="heading-box__icon" style="height: 15px;")
+                        use(xlink:href="/img/icons.svg#icon-map-pin" style="color: green; ")
+                    a(style="color: black; ") Info Plc-Run-Time-State            
+                //-button.btn.btn--info.toggle-PlcRunTimeState-button(type="button")
+                    svg(class="heading-box__icon" style="height: 15px;")
+                        use(xlink:href="/img/icons.svg#icon-map-pin" style="color: green; ")
+                    a(style="color: green;") Info Plc-Run-Time-State
+                .container-PlcRunTimeState(style="display: none;")
+                    div.form__group
+                        h4 PlcRunTimeState- result
+                        pre(style='font-size: 11px; color: #323232;')= plcRunTimeState
+        br
+
+        //- //- Hauptcontainer für flexibles Layout
+        //- .container(style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;")
+
+        //-     //- Einzelne Karte für jeden Infobereich
+        //-     .card(style="flex: 1 1 45%; min-width: 300px; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;")
+        //-         button.btn.btn--info.toggle-PingResult-button(type="button")
+        //-             svg(class="heading-box__icon" style="height: 15px; width: 15px; color: green; margin-right: 5px;")
+        //-                 use(xlink:href="/img/icons.svg#icon-map-pin")
+        //-             span(style="color: green;") Info Ping
+        //-         //-.container-PingResult(style="display: none; margin-top: 10px;")
+        //-         .container-PingResult(style="margin-top: 10px;")
+        //-             div(class="form__group")
+        //-                 h4 Ping-Ergebnis
+        //-                 pre(style="font-size: 11px; color: #323232;")= dataPingSPS
+
+        //-     //-.card(style="flex: 1 1 45%; min-width: 300px; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;")
+        //-         .sps__logo
+        //-             img(src='/img/sps/Beckhoff_Logo.svg.png', alt='Beckhoff_Logo', style="filter: drop-shadow(gray 1rem 1rem 8px);")            
+        //-     .card(style="flex: 1 1 45%; min-width: 300px; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;")
+        //-         button.btn.btn--info.toggle-DeviceInfo-button(type="button")
+        //-             svg(class="heading-box__icon" style="height: 15px; width: 15px; color: green; margin-right: 5px;")
+        //-                 use(xlink:href="/img/icons.svg#icon-map-pin")
+        //-             span(style="color: green;") Info Device
+        //-         .container-DeviceInfo(style="display: none; margin-top: 10px;")
+        //-             div(class="form__group")
+        //-                 h4 DeviceInfo
+        //-                 pre(style="font-size: 11px; color: #323232;")= deviceInfo
+        //-     .card(style="flex: 1 1 45%; min-width: 300px; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;")
+        //-         button.btn.btn--info.toggle-UploadInfo-button(type="button")
+        //-             svg(class="heading-box__icon" style="height: 15px; width: 15px; color: green; margin-right: 5px;")
+        //-                 use(xlink:href="/img/icons.svg#icon-map-pin")
+        //-             span(style="color: green;") Info Upload
+        //-         .container-UploadInfo(style="display: none; margin-top: 10px;")
+        //-             div(class="form__group")
+        //-                 h4 UploadInfo- Ergebnis
+        //-                 pre(style="font-size: 11px; color: #323232;")= uploadInfo
+        //-     .card(style="flex: 1 1 45%; min-width: 300px; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;")
+        //-         button.btn.btn--info.toggle-SymbolVersion-button(type="button")
+        //-             svg(class="heading-box__icon" style="height: 15px; width: 15px; color: green; margin-right: 5px;")
+        //-                 use(xlink:href="/img/icons.svg#icon-map-pin")
+        //-             span(style="color: green;") Info Symbol-Version
+        //-         .container-SymbolVersion(style="display: none; margin-top: 10px;")
+        //-             div(class="form__group")
+        //-                 h4 SymbolVersion- Ergebnis
+        //-                 pre(style="font-size: 11px; color: #323232;")= symbolVersion
+        //-     .card(style="flex: 1 1 45%; min-width: 300px; border: 1px solid #ddd; border-radius: 8px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); background-color: #f9f9f9;")
+        //-         button.btn.btn--info.toggle-PlcRunTimeState-button(type="button")
+        //-             svg(class="heading-box__icon" style="height: 15px; width: 15px; color: green; margin-right: 5px;")
+        //-                 use(xlink:href="/img/icons.svg#icon-map-pin")
+        //-             span(style="color: green;") Info Plc-Run-Time-State
+        //-         .container-PlcRunTimeState(style="display: none; margin-top: 10px;")
+        //-             div(class="form__group")
+        //-                 h4 PlcRunTimeState- Ergebnis
+        //-                 pre(style="font-size: 11px; color: #323232;")= plcRunTimeState
+
+        .warning-SPSMomentcontainer
+            span.moment-icon ⚠️
+            .warning-textSPSMoment Attention, this is a snapshot!
+            span.moment-icon ⚠️
+        br    
+        if error
+            each err in error
+                pre(style="background-color: #f8f8f8; border: 1px solid #e0e0e0; font-size: 12px; color: red; white-space: pre-wrap; word-wrap: break-word;")=JSON.stringify(err, null, 2)
+                pre(style="background-color: #f8f8f8; border: 1px solid #e0e0e0; font-size: 12px; color: #323232;")=err.message
+                //-pre(style="background-color: #f8f8f8; border: 1px solid #e0e0e0; font-size: 12px; color: #323232;")=err.stack
+                //-pre(style="background-color: #f8f8f8; border: 1px solid #e0e0e0; font-size: 12px; color: #323232;") Es werden keine GVL- Daten geschickt!
+        
+        br
+        table.tableSPS 
+            div    
+                div(style="font-size: 18px; font-weight: bold; background-color: #f1f3f4; margin-bottom: 1px; text-align: center;") GVL- Data- PLC
+                //div(style="background-color: #f1f3f457;")
+                div(style="background-color: #f1f3f4bd;")
+                    a(style="padding: 2px; font-size:14px; font-weight: bold;") Draw-Positions:
+                    button(style="float: right; " id="toggleButtonMatrix") X
+                    //-div(style="padding: 3px;")
+                        div.ziehpositionenScrollBox(style="padding: 5px;")= dataGVL && dataGVL.ziehpositionen ? JSON.stringify(dataGVL.ziehpositionen, null, 2) : 'Keine Ziehpositionen verfügbar'
+                    //-br
+                    div(style="padding: 3px;")
+                        //div.ziehpositionenScrollBox(style="padding: 5px;")=JSON.stringify(dataGVL.ziehpositionen)            
+                        //-dataGVL && dataGVL.ziehpositionen ? JSON.stringify(dataGVL.ziehpositionen) : 'Keine Ziehpositionen verfügbar'
+                        div.ziehpositionenScrollBox(style="padding: 5px; font-size: 12px;" id="ziehpositionenContent")=dataGVL && dataGVL.ziehpositionen ? JSON.stringify(dataGVL.ziehpositionen) : 'Keine Ziehpositionen verfügbar'
+                        //-div.ziehpositionenScrollBox(style="padding: 5px; font-size: 12px;" id="ziehpositionenContent")
+                            if dataGVL && dataGVL.ziehpositionen
+                                each item in dataGVL.ziehpositionen
+
+                                    a(style=`color: ${item.Pos !== 0 || item.Verst !== 0 ? 'blue' : 'pink'};`) #{JSON.stringify(item)}
+                            //-if dataGVL && dataGVL.ziehpositionen
+                                each item in dataGVL.ziehpositionen
+                                    - const pos = item.Pos || 0;
+                                    - const verst = item.Verst || 0;
+                                    div(style=`color: ${pos !== 0 || verst !== 0 ? 'blue' : 'pink'};`) Pos: #{pos}, Verst: #{verst}
+                                    //-- const parsedItem = typeof item === 'string' ? JSON.parse(item) : item;
+                                    //-div(style=`color: ${parsedItem.Pos !== 0 || parsedItem.Verst !== 0 ? 'blue' : 'pink'};`) #{JSON.stringify(parsedItem)}
+                                    //-if item.Pos !== 0 || item.Verst !== 0
+                                    //-if (item !== '"Pos":0,"Verst":0')
+                                    //-if item.Pos !== 0 || item.Verst !== 0
+                                    //-div(style=`color: ${item.Pos !== 0 || item.Verst !== 0 ? 'blue' : 'pink'};`) #{JSON.stringify(item)}
+                                    //-     div(style="color: blue;") #{JSON.stringify(item)}
+                                    //- else
+                                    //-     div(style="color: pink;") #{JSON.stringify(item)}
+                            else
+                                div Keine Ziehpositionen verfügbar
+
+            colgroup
+                col(style="width: 20%;")
+                col(style="width: 40%;")
+                col(style="width: 10%;")
+                col(style="width: 15%;")
+                col(style="width: 15%;")                                
+            tr  
+                th(style="font-size: 16px;") Name
+                th(style="font-size: 16px;") Value
+                th(style="font-size: 16px;") Typ
+                th(style="font-size: 16px;") Index-Group
+                th(style="font-size: 16px;") Index-Offset
+            tr
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;                
+            tr
+                th(style="background-color: #f1f3f4bd;") vFileLesen
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vFileLesen && dataGVL.vFileLesen.value !== undefined ? dataGVL.vFileLesen.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vFileLesen && dataGVL.vFileLesen.type && dataGVL.vFileLesen.type.type !== undefined ? dataGVL.vFileLesen.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vFileLesen && dataGVL.vFileLesen.symbol && dataGVL.vFileLesen.symbol.indexGroup !== undefined ? dataGVL.vFileLesen.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vFileLesen && dataGVL.vFileLesen.symbol && dataGVL.vFileLesen.symbol.indexOffset !== undefined ? dataGVL.vFileLesen.symbol.indexOffset : 'n/a'
+            tr
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen1
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen1 && dataGVL.vPositionen1.value !== undefined ? dataGVL.vPositionen1.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen1 && dataGVL.vPositionen1.type && dataGVL.vPositionen1.type.type !== undefined ? dataGVL.vPositionen1.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen1 && dataGVL.vPositionen1.symbol && dataGVL.vPositionen1.symbol.indexGroup !== undefined ? dataGVL.vPositionen1.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen1 && dataGVL.vPositionen1.symbol && dataGVL.vPositionen1.symbol.indexOffset !== undefined ? dataGVL.vPositionen1.symbol.indexOffset : 'n/a'            
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen2
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen2 && dataGVL.vPositionen2.value !== undefined ? dataGVL.vPositionen2.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen2 && dataGVL.vPositionen2.type && dataGVL.vPositionen2.type.type !== undefined ? dataGVL.vPositionen2.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen2 && dataGVL.vPositionen2.symbol && dataGVL.vPositionen2.symbol.indexGroup !== undefined ? dataGVL.vPositionen2.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen2 && dataGVL.vPositionen2.symbol && dataGVL.vPositionen2.symbol.indexOffset !== undefined ? dataGVL.vPositionen2.symbol.indexOffset : 'n/a'             
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen3
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen3 && dataGVL.vPositionen3.value !== undefined ? dataGVL.vPositionen3.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen3 && dataGVL.vPositionen3.type && dataGVL.vPositionen3.type.type !== undefined ? dataGVL.vPositionen3.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen3 && dataGVL.vPositionen3.symbol && dataGVL.vPositionen3.symbol.indexGroup !== undefined ? dataGVL.vPositionen3.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen3 && dataGVL.vPositionen3.symbol && dataGVL.vPositionen3.symbol.indexOffset !== undefined ? dataGVL.vPositionen3.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen4
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen4 && dataGVL.vPositionen4.value !== undefined ? dataGVL.vPositionen4.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen4 && dataGVL.vPositionen4.type && dataGVL.vPositionen4.type.type !== undefined ? dataGVL.vPositionen4.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen4 && dataGVL.vPositionen4.symbol && dataGVL.vPositionen4.symbol.indexGroup !== undefined ? dataGVL.vPositionen4.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen4 && dataGVL.vPositionen4.symbol && dataGVL.vPositionen4.symbol.indexOffset !== undefined ? dataGVL.vPositionen4.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen5
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen5 && dataGVL.vPositionen5.value !== undefined ? dataGVL.vPositionen5.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen5 && dataGVL.vPositionen5.type && dataGVL.vPositionen5.type.type !== undefined ? dataGVL.vPositionen5.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen5 && dataGVL.vPositionen5.symbol && dataGVL.vPositionen5.symbol.indexGroup !== undefined ? dataGVL.vPositionen5.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen5 && dataGVL.vPositionen5.symbol && dataGVL.vPositionen5.symbol.indexOffset !== undefined ? dataGVL.vPositionen5.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen6
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen6 && dataGVL.vPositionen6.value !== undefined ? dataGVL.vPositionen6.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen6 && dataGVL.vPositionen6.type && dataGVL.vPositionen6.type.type !== undefined ? dataGVL.vPositionen6.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen6 && dataGVL.vPositionen6.symbol && dataGVL.vPositionen6.symbol.indexGroup !== undefined ? dataGVL.vPositionen6.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen6 && dataGVL.vPositionen6.symbol && dataGVL.vPositionen6.symbol.indexOffset !== undefined ? dataGVL.vPositionen6.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen7
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen7 && dataGVL.vPositionen7.value !== undefined ? dataGVL.vPositionen7.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen7 && dataGVL.vPositionen7.type && dataGVL.vPositionen7.type.type !== undefined ? dataGVL.vPositionen7.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen7 && dataGVL.vPositionen7.symbol && dataGVL.vPositionen7.symbol.indexGroup !== undefined ? dataGVL.vPositionen7.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen7 && dataGVL.vPositionen7.symbol && dataGVL.vPositionen7.symbol.indexOffset !== undefined ? dataGVL.vPositionen7.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen8
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen8 && dataGVL.vPositionen8.value !== undefined ? dataGVL.vPositionen8.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen8 && dataGVL.vPositionen8.type && dataGVL.vPositionen8.type.type !== undefined ? dataGVL.vPositionen8.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen8 && dataGVL.vPositionen8.symbol && dataGVL.vPositionen8.symbol.indexGroup !== undefined ? dataGVL.vPositionen8.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen8 && dataGVL.vPositionen8.symbol && dataGVL.vPositionen8.symbol.indexOffset !== undefined ? dataGVL.vPositionen8.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen9
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen9 && dataGVL.vPositionen9.value !== undefined ? dataGVL.vPositionen9.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen9 && dataGVL.vPositionen9.type && dataGVL.vPositionen9.type.type !== undefined ? dataGVL.vPositionen9.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen9 && dataGVL.vPositionen9.symbol && dataGVL.vPositionen9.symbol.indexGroup !== undefined ? dataGVL.vPositionen9.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen9 && dataGVL.vPositionen9.symbol && dataGVL.vPositionen9.symbol.indexOffset !== undefined ? dataGVL.vPositionen9.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vPositionen10
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen10 && dataGVL.vPositionen10.value !== undefined ? dataGVL.vPositionen10.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPositionen10 && dataGVL.vPositionen10.type && dataGVL.vPositionen10.type.type !== undefined ? dataGVL.vPositionen10.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen10 && dataGVL.vPositionen10.symbol && dataGVL.vPositionen10.symbol.indexGroup !== undefined ? dataGVL.vPositionen10.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPositionen10 && dataGVL.vPositionen10.symbol && dataGVL.vPositionen10.symbol.indexOffset !== undefined ? dataGVL.vPositionen10.symbol.indexOffset : 'n/a'                        
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;  
+            tr
+                th(style="background-color: #f1f3f4bd;") vZiehwagenposition
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vZiehwagenposition && dataGVL.vZiehwagenposition.value !== undefined ? dataGVL.vZiehwagenposition.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vZiehwagenposition && dataGVL.vZiehwagenposition.type && dataGVL.vZiehwagenposition.type.type !== undefined ? dataGVL.vZiehwagenposition.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vZiehwagenposition && dataGVL.vZiehwagenposition.symbol && dataGVL.vZiehwagenposition.symbol.indexGroup !== undefined ? dataGVL.vZiehwagenposition.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vZiehwagenposition && dataGVL.vZiehwagenposition.symbol && dataGVL.vZiehwagenposition.symbol.indexOffset !== undefined ? dataGVL.vZiehwagenposition.symbol.indexOffset : 'n/a'
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;          
+            tr
+                th(style="background-color: #f1f3f4bd;") vTippenPlus
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vTippenPlus && dataGVL.vTippenPlus.value !== undefined ? dataGVL.vTippenPlus.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vTippenPlus && dataGVL.vTippenPlus.type && dataGVL.vTippenPlus.type.type !== undefined ? dataGVL.vTippenPlus.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vTippenPlus && dataGVL.vTippenPlus.symbol && dataGVL.vTippenPlus.symbol.indexGroup !== undefined ? dataGVL.vTippenPlus.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vTippenPlus && dataGVL.vTippenPlus.symbol && dataGVL.vTippenPlus.symbol.indexOffset !== undefined ? dataGVL.vTippenPlus.symbol.indexOffset : 'n/a' 
+            tr
+                th(style="background-color: #f1f3f4bd;") vTippenMinus
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vTippenMinus && dataGVL.vTippenMinus.value !== undefined ? dataGVL.vTippenMinus.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vTippenMinus && dataGVL.vTippenMinus.type && dataGVL.vTippenMinus.type.type !== undefined ? dataGVL.vTippenMinus.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vTippenMinus && dataGVL.vTippenMinus.symbol && dataGVL.vTippenMinus.symbol.indexGroup !== undefined ? dataGVL.vTippenMinus.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vTippenMinus && dataGVL.vTippenMinus.symbol && dataGVL.vTippenMinus.symbol.indexOffset !== undefined ? dataGVL.vTippenMinus.symbol.indexOffset : 'n/a'              
+            tr
+                th(style="background-color: #f1f3f4bd;") vTippenEilgang
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vTippenEilgang && dataGVL.vTippenEilgang.value !== undefined ? dataGVL.vTippenEilgang.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vTippenEilgang && dataGVL.vTippenEilgang.type && dataGVL.vTippenEilgang.type.type !== undefined ? dataGVL.vTippenEilgang.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vTippenEilgang && dataGVL.vTippenEilgang.symbol && dataGVL.vTippenEilgang.symbol.indexGroup !== undefined ? dataGVL.vTippenEilgang.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vTippenEilgang && dataGVL.vTippenEilgang.symbol && dataGVL.vTippenEilgang.symbol.indexOffset !== undefined ? dataGVL.vTippenEilgang.symbol.indexOffset : 'n/a'                 
+            tr
+                th(style="background-color: #f1f3f4bd;") vPosTeachen
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosTeachen && dataGVL.vPosTeachen.value !== undefined ? dataGVL.vPosTeachen.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosTeachen && dataGVL.vPosTeachen.type && dataGVL.vPosTeachen.type.type !== undefined ? dataGVL.vPosTeachen.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosTeachen && dataGVL.vPosTeachen.symbol && dataGVL.vPosTeachen.symbol.indexGroup !== undefined ? dataGVL.vPosTeachen.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosTeachen && dataGVL.vPosTeachen.symbol && dataGVL.vPosTeachen.symbol.indexOffset !== undefined ? dataGVL.vPosTeachen.symbol.indexOffset : 'n/a'                
+            tr
+                th(style="background-color: #f1f3f4bd;") vPosAusgabe
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosAusgabe && dataGVL.vPosAusgabe.value !== undefined ? dataGVL.vPosAusgabe.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosAusgabe && dataGVL.vPosAusgabe.type && dataGVL.vPosAusgabe.type.type !== undefined ? dataGVL.vPosAusgabe.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosAusgabe && dataGVL.vPosAusgabe.symbol && dataGVL.vPosAusgabe.symbol.indexGroup !== undefined ? dataGVL.vPosAusgabe.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosAusgabe && dataGVL.vPosAusgabe.symbol && dataGVL.vPosAusgabe.symbol.indexOffset !== undefined ? dataGVL.vPosAusgabe.symbol.indexOffset : 'n/a'  
+            tr
+                th(style="background-color: #f1f3f4bd;") vPosSoll
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosSoll && dataGVL.vPosSoll.value !== undefined ? dataGVL.vPosSoll.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosSoll && dataGVL.vPosSoll.type && dataGVL.vPosSoll.type.type !== undefined ? dataGVL.vPosSoll.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosSoll && dataGVL.vPosSoll.symbol && dataGVL.vPosSoll.symbol.indexGroup !== undefined ? dataGVL.vPosSoll.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosSoll && dataGVL.vPosSoll.symbol && dataGVL.vPosSoll.symbol.indexOffset !== undefined ? dataGVL.vPosSoll.symbol.indexOffset : 'n/a'              
+            tr
+                th(style="background-color: #f1f3f4bd;") vPosOffset
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosOffset && dataGVL.vPosOffset.value !== undefined ? dataGVL.vPosOffset.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosOffset && dataGVL.vPosOffset.type && dataGVL.vPosOffset.type.type !== undefined ? dataGVL.vPosOffset.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosOffset && dataGVL.vPosOffset.symbol && dataGVL.vPosOffset.symbol.indexGroup !== undefined ? dataGVL.vPosOffset.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosOffset && dataGVL.vPosOffset.symbol && dataGVL.vPosOffset.symbol.indexOffset !== undefined ? dataGVL.vPosOffset.symbol.indexOffset : 'n/a'                    
+            tr
+                th(style="background-color: #f1f3f4bd;") vAktuelleZylPos
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vAktuelleZylPos && dataGVL.vAktuelleZylPos.value !== undefined ? dataGVL.vAktuelleZylPos.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vAktuelleZylPos && dataGVL.vAktuelleZylPos.type && dataGVL.vAktuelleZylPos.type.type !== undefined ? dataGVL.vAktuelleZylPos.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vAktuelleZylPos && dataGVL.vAktuelleZylPos.symbol && dataGVL.vAktuelleZylPos.symbol.indexGroup !== undefined ? dataGVL.vAktuelleZylPos.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vAktuelleZylPos && dataGVL.vAktuelleZylPos.symbol && dataGVL.vAktuelleZylPos.symbol.indexOffset !== undefined ? dataGVL.vAktuelleZylPos.symbol.indexOffset : 'n/a'                   
+            tr
+                th(style="background-color: #f1f3f4bd;") vPosDifferenz
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosDifferenz && dataGVL.vPosDifferenz.value !== undefined ? dataGVL.vPosDifferenz.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vPosDifferenz && dataGVL.vPosDifferenz.type && dataGVL.vPosDifferenz.type.type !== undefined ? dataGVL.vPosDifferenz.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosDifferenz && dataGVL.vPosDifferenz.symbol && dataGVL.vPosDifferenz.symbol.indexGroup !== undefined ? dataGVL.vPosDifferenz.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vPosDifferenz && dataGVL.vPosDifferenz.symbol && dataGVL.vPosDifferenz.symbol.indexOffset !== undefined ? dataGVL.vPosDifferenz.symbol.indexOffset : 'n/a'             
+            tr
+                th(style="background-color: #f1f3f4bd;") vFrg
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vFrg && dataGVL.vFrg.value !== undefined ? dataGVL.vFrg.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vFrg && dataGVL.vFrg.type && dataGVL.vFrg.type.type !== undefined ? dataGVL.vFrg.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vFrg && dataGVL.vFrg.symbol && dataGVL.vFrg.symbol.indexGroup !== undefined ? dataGVL.vFrg.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vFrg && dataGVL.vFrg.symbol && dataGVL.vFrg.symbol.indexOffset !== undefined ? dataGVL.vFrg.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vGeschw
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vGeschw && dataGVL.vGeschw.value !== undefined ? dataGVL.vGeschw.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vGeschw && dataGVL.vGeschw.type && dataGVL.vGeschw.type.type !== undefined ? dataGVL.vGeschw.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vGeschw && dataGVL.vGeschw.symbol && dataGVL.vGeschw.symbol.indexGroup !== undefined ? dataGVL.vGeschw.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vGeschw && dataGVL.vGeschw.symbol && dataGVL.vGeschw.symbol.indexOffset !== undefined ? dataGVL.vGeschw.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") vNeuStart
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vNeuStart && dataGVL.vNeuStart.value !== undefined ? dataGVL.vNeuStart.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vNeuStart && dataGVL.vNeuStart.type && dataGVL.vNeuStart.type.type !== undefined ? dataGVL.vNeuStart.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vNeuStart && dataGVL.vNeuStart.symbol && dataGVL.vNeuStart.symbol.indexGroup !== undefined ? dataGVL.vNeuStart.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vNeuStart && dataGVL.vNeuStart.symbol && dataGVL.vNeuStart.symbol.indexOffset !== undefined ? dataGVL.vNeuStart.symbol.indexOffset : 'n/a'                    
+            tr
+                th(style="background-color: #f1f3f4bd;") vSimGeschw
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vSimGeschw && dataGVL.vSimGeschw.value !== undefined ? dataGVL.vSimGeschw.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vSimGeschw && dataGVL.vSimGeschw.type && dataGVL.vSimGeschw.type.type !== undefined ? dataGVL.vSimGeschw.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vSimGeschw && dataGVL.vSimGeschw.symbol && dataGVL.vSimGeschw.symbol.indexGroup !== undefined ? dataGVL.vSimGeschw.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vSimGeschw && dataGVL.vSimGeschw.symbol && dataGVL.vSimGeschw.symbol.indexOffset !== undefined ? dataGVL.vSimGeschw.symbol.indexOffset : 'n/a'                 
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;  
+            tr
+                th(style="background-color: #f1f3f4bd;") vCsvName
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vCsvName && dataGVL.vCsvName.value !== undefined ? dataGVL.vCsvName.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.vCsvName && dataGVL.vCsvName.type && dataGVL.vCsvName.type.type !== undefined ? dataGVL.vCsvName.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vCsvName && dataGVL.vCsvName.symbol && dataGVL.vCsvName.symbol.indexGroup !== undefined ? dataGVL.vCsvName.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.vCsvName && dataGVL.vCsvName.symbol && dataGVL.vCsvName.symbol.indexOffset !== undefined ? dataGVL.vCsvName.symbol.indexOffset : 'n/a'                   
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;  
+            tr
+                th(style="background-color: #f1f3f4bd;") iIstZiehwagenGeber
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.iIstZiehwagenGeber && dataGVL.iIstZiehwagenGeber.value !== undefined ? dataGVL.iIstZiehwagenGeber.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.iIstZiehwagenGeber && dataGVL.iIstZiehwagenGeber.type && dataGVL.iIstZiehwagenGeber.type.type !== undefined ? dataGVL.iIstZiehwagenGeber.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.iIstZiehwagenGeber && dataGVL.iIstZiehwagenGeber.symbol && dataGVL.iIstZiehwagenGeber.symbol.indexGroup !== undefined ? dataGVL.iIstZiehwagenGeber.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.iIstZiehwagenGeber && dataGVL.iIstZiehwagenGeber.symbol && dataGVL.iIstZiehwagenGeber.symbol.indexOffset !== undefined ? dataGVL.iIstZiehwagenGeber.symbol.indexOffset : 'n/a'                  
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;                
+            tr
+                th(style="background-color: #f1f3f4bd;") RegToqUeberwach
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.regToqUeberwach && dataGVL.regToqUeberwach.value !== undefined ? dataGVL.regToqUeberwach.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.regToqUeberwach && dataGVL.regToqUeberwach.type && dataGVL.regToqUeberwach.type.type !== undefined ? dataGVL.regToqUeberwach.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.regToqUeberwach && dataGVL.regToqUeberwach.symbol && dataGVL.regToqUeberwach.symbol.indexGroup !== undefined ? dataGVL.regToqUeberwach.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.regToqUeberwach && dataGVL.regToqUeberwach.symbol && dataGVL.regToqUeberwach.symbol.indexOffset !== undefined ? dataGVL.regToqUeberwach.symbol.indexOffset : 'n/a'                         
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;       
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+            tr
+                th(style="background-color: #f1f3f4bd;") MAX_CSV_ROWS
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.max_CSV_Rows && dataGVL.max_CSV_Rows.value !== undefined ? dataGVL.max_CSV_Rows.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.max_CSV_Rows && dataGVL.max_CSV_Rows.type && dataGVL.max_CSV_Rows.type.type !== undefined ? dataGVL.max_CSV_Rows.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.max_CSV_Rows && dataGVL.max_CSV_Rows.symbol && dataGVL.max_CSV_Rows.symbol.indexGroup !== undefined ? dataGVL.max_CSV_Rows.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.max_CSV_Rows && dataGVL.max_CSV_Rows.symbol && dataGVL.max_CSV_Rows.symbol.indexOffset !== undefined ? dataGVL.max_CSV_Rows.symbol.indexOffset : 'n/a'                   
+            tr
+                th(style="background-color: #f1f3f4bd;") MAX_CSV_COLUMNS
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.max_CSV_Columns && dataGVL.max_CSV_Columns.value !== undefined ? dataGVL.max_CSV_Columns.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.max_CSV_Columns && dataGVL.max_CSV_Columns.type && dataGVL.max_CSV_Columns.type.type !== undefined ? dataGVL.max_CSV_Columns.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.max_CSV_Columns && dataGVL.max_CSV_Columns.symbol && dataGVL.max_CSV_Columns.symbol.indexGroup !== undefined ? dataGVL.max_CSV_Columns.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.max_CSV_Columns && dataGVL.max_CSV_Columns.symbol && dataGVL.max_CSV_Columns.symbol.indexOffset !== undefined ? dataGVL.max_CSV_Columns.symbol.indexOffset : 'n/a'               
+            tr
+                th(style="background-color: #f1f3f4bd;") MAX_CSV_FIELD_LENGTH
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.max_CSV_Field_Length && dataGVL.max_CSV_Field_Length.value !== undefined ? dataGVL.max_CSV_Field_Length.value : 'n/a'
+                td(style="color: blue; font-weight: bold;")= dataGVL && dataGVL.max_CSV_Field_Length && dataGVL.max_CSV_Field_Length.type && dataGVL.max_CSV_Field_Length.type.type !== undefined ? dataGVL.max_CSV_Field_Length.type.type : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.max_CSV_Field_Length && dataGVL.max_CSV_Field_Length.symbol && dataGVL.max_CSV_Field_Length.symbol.indexGroup !== undefined ? dataGVL.max_CSV_Field_Length.symbol.indexGroup : 'n/a'
+                td(style="color: black;")= dataGVL && dataGVL.max_CSV_Field_Length && dataGVL.max_CSV_Field_Length.symbol && dataGVL.max_CSV_Field_Length.symbol.indexOffset !== undefined ? dataGVL.max_CSV_Field_Length.symbol.indexOffset : 'n/a'              
+            tr  
+                th(style="background-color: #f1f3f493;") &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;
+                td &nbsp;     
+        br
+        br
+        a.btn.btn--small.btn--green(href="/api/v1/overviewInlogt") Back
+        br
+        br                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+        script.
+            document.addEventListener('DOMContentLoaded', function() {
+                const buttonTogglePingResult = document.querySelector('.toggle-PingResult-button');
+                const containerPingResult = document.querySelector('.container-PingResult');
+
+                buttonTogglePingResult.addEventListener('click', function() {
+                    if (containerPingResult.style.display === 'none') {
+                        containerPingResult.style.display = 'block';
+                    } else {
+                        containerPingResult.style.display = 'none';
+                    }
+                });   
+
+                const buttonToggleDeviceInfo = document.querySelector('.toggle-DeviceInfo-button');
+                const containerDeviceInfo = document.querySelector('.container-DeviceInfo');
+
+                buttonToggleDeviceInfo.addEventListener('click', function() {
+                    if (containerDeviceInfo.style.display === 'none') {
+                        containerDeviceInfo.style.display = 'block';
+                    } else {
+                        containerDeviceInfo.style.display = 'none';
+                    }
+                });   
+
+                const buttonToggleUploadInfo = document.querySelector('.toggle-UploadInfo-button');
+                const containerUploadInfo = document.querySelector('.container-UploadInfo');
+
+                buttonToggleUploadInfo.addEventListener('click', function() {
+                    if (containerUploadInfo.style.display === 'none') {
+                        containerUploadInfo.style.display = 'block';
+                    } else {
+                        containerUploadInfo.style.display = 'none';
+                    }
+                });   
+
+                const buttonToggleSymbolVersion = document.querySelector('.toggle-SymbolVersion-button');
+                const containerSymbolVersion = document.querySelector('.container-SymbolVersion');
+
+                buttonToggleSymbolVersion.addEventListener('click', function() {
+                    if (containerSymbolVersion.style.display === 'none') {
+                        containerSymbolVersion.style.display = 'block';
+                    } else {
+                        containerSymbolVersion.style.display = 'none';
+                    }
+                });   
+
+                const buttonTogglePlcRunTimeState = document.querySelector('.toggle-PlcRunTimeState-button');
+                const containerPlcRunTimeState = document.querySelector('.container-PlcRunTimeState');
+
+                buttonTogglePlcRunTimeState.addEventListener('click', function() {
+                    if (containerPlcRunTimeState.style.display === 'none') {
+                        containerPlcRunTimeState.style.display = 'block';
+                    } else {
+                        containerPlcRunTimeState.style.display = 'none';
+                    }
+                });   
+            });    
+
+            let isToggledMatrix = false;
+            const toggleButtonMatrix = document.getElementById('toggleButtonMatrix');
+            const ziehPositionenDiv = document.getElementById('ziehpositionenContent');
+
+            toggleButtonMatrix.addEventListener('click', function() {
+                    if (isToggledMatrix) {
+                        ziehPositionenDiv.style.backgroundColor = '#f1f3f4bd';
+                        ziehPositionenDiv.style.color = 'black';
+                    } else {
+                        ziehPositionenDiv.style.backgroundColor = 'black';
+                        ziehPositionenDiv.style.color = '#00ff41';
+                    }
+                    isToggledMatrix = !isToggledMatrix;
+            });            
+
+
+//------------------------------------------------PLC----------------------------------------------------------------------------------
+//-     VAR_GLOBAL
+//- 	Ziehpositionen 				: ARRAY [0..8000] OF VerstPos; // Ok zum schreiben
+
+//- 	vFileLesen					: BOOL;
+//- 	vPositionen1					: REAL;
+//- 	vPositionen2					: REAL;
+//- 	vPositionen3					: REAL;
+//- 	vPositionen4					: REAL;
+//- 	vPositionen5					: REAL;
+//- 	vPositionen6					: REAL;
+//- 	vPositionen7					: REAL;
+//- 	vPositionen8					: REAL;
+//- 	vPositionen9					: REAL;
+//- 	vPositionen10				: REAL;
+//- 	vZiehwagenposition			: INT;
+
+//- 	vTippenPlus					: BOOL;
+//- 	vTippenMinus				: BOOL;
+//- 	vTippenEilgang				: BOOL;
+//- 	vPosTeachen				: BOOL;
+//- 	vPosAusgabe				: REAL;
+//- 	vPosSoll						: REAL;
+//- 	vPosOffset					: REAL;
+//- 	vAktuelleZylPos				: REAL;
+//- 	vPosDifferenz					: REAL;
+//- 	vFrg							: BOOL;
+//- 	vGeschw						: REAL;
+//- 	vNeuStart					: BOOL;
+//- 	vSimGeschw					: TIME;
+
+//- 	vCsvName					: STRING; //Ok zum Schreiben
+
+//- 	iIstZiehwagenGeber			AT%I*	: UDINT;	(* Istwert Position Ziehwagen *)
+
+//- 	RegToqUeberwach			: BOOL;
+
+//- END_VAR
+
+//- VAR_GLOBAL CONSTANT
+//- 	MAX_CSV_ROWS 			: UDINT := 9001;
+//- 	MAX_CSV_COLUMNS 			: UDINT := 2;
+//- 	MAX_CSV_FIELD_LENGTH	: UDINT :=8;
+//- END_VAR

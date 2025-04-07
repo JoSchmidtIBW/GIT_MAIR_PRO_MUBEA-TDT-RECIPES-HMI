@@ -1,0 +1,21 @@
+footer.footer
+    .footer__logo
+        img(src='/img/Mubea_logo.svg.png', alt='Mubea logo')
+    ul.footer__nav
+        if user
+            li: a(href='/api/v1/aboutTDT') About TDT
+            li: a(href='/api/v1/aboutASMAG') About ASMAG
+            li: a(href='/api/v1/contact') Contact
+        else
+            li: a(href='/api/v1/aboutTDT_NotInlogt') About TDT
+            li: a(href='/api/v1/aboutASMAG_NotInlogt') About ASMAG
+            li: a(href='/api/v1/contact_NotInlogt') Contact        
+    p.footer__copyright &copy; by Matthias Trudewind, John Schmidt. All rights reserved. &nbsp &nbsp Version 1.0 &nbsp &nbsp
+        span#p1
+        script.
+           var date = new Date();
+           //var current_date = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+           var current_date = date.getDate() + "." + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + "." + date.getFullYear();
+           //String(date.getMonth()+ 1).padStart(2, '0')
+           //var current_date = date.getDate() + "." + String(date.getMonth()+ 1).padStart(2, '0') + "." + date.getFullYear();
+           document.getElementById("p1").innerHTML = current_date;

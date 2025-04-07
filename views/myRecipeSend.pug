@@ -1,0 +1,88 @@
+extends base
+
+block content
+    main.main
+        h1 My Orders
+        br
+        input#userID(value=userID, type='hidden')
+        br
+        //-pre=JSON.stringify(data,null, 2)
+        table#myRecipeSendTable.myRecipeSendTable.table
+            thead
+                tr
+                    th Ordernumber (FA)
+                    th Itemnumber 
+                    th Itemname
+                    //-th Mitarbeiter-<br>Nummer
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                    //-         spam.arrow-down
+                    th Lastname
+                    th Firstname
+                    th Send- date
+                    th Send- time
+                    //-th Rezept- Ansicht
+                tbody
+                    each myRecipeSend, index in data
+                        tr
+                            td= myRecipeSend.fa_number
+                            td= myRecipeSend.recipeDataSend.kopfDaten.artikelNummer
+                            td= myRecipeSend.recipeDataSend.kopfDaten.artikelName
+                            td= myRecipeSend.employeeSendBy.lastName
+                            td= myRecipeSend.employeeSendBy.firstName
+                            td 
+                                p= myRecipeSend.createdSendAt ? new Date(myRecipeSend.createdSendAt).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : '' 
+                            td
+                                p= myRecipeSend.createdSendAt ? new Date(myRecipeSend.createdSendAt).toLocaleString('de-DE', { hour: '2-digit', minute: '2-digit', hour12: false}) : ''
+                            //-td(style="height: 30px;")
+                                //button OK
+                                button.btn.btn--info.toggle-RecipeEye-button(type="button" data-index=index style="margin-left: 20px; margin-bottom: 0px; ")
+                                    svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 15px; length: 15px;")
+                                        use(xlink:href="/img/icons.svg#icon-eye" style="color: green; ")
+                                    a(style="color: green; margin-top: 2px; margin-bottom: 10px; margin-left: 1px; vertical-align: middle; display: inline-block; ")  Info                                
+                                //-.exampleImg-RecipeEye-container(style="display: none;")
+                                .exampleImg-RecipeEye-container(id=`exampleImg-RecipeEye-container-${index}` style="display: none;")
+                                    div(class="form__group") Gesendete Rezeptdaten:
+                                        //-JSON.stringify(data,null, 2)
+                                        //-h6=//recipeSPS.recipeDataSend
+                                        pre=JSON.stringify(recipeSPS.recipeDataSend,null, 2)
+                                        br                                       
+        br
+        br
+
+        a.btn.btn--small.btn--green(href="/api/v1/me") Back
+
+        //-script.
+           
+
+            document.addEventListener('DOMContentLoaded', function() {
+                //const buttonToggleExampleImgTDTAuftragMitVorzug = document.querySelector('.toggle-ExampleImg-TDTAuftragMitVorzug-button');
+                //const toggleButtonRecipeEye = document.getElementById('toggle-RecipeEye-btn');
+                const toggleButtons = document.querySelectorAll('.toggle-RecipeEye-button');
+                //const containerExampleRecipeEye = document.querySelector('.exampleImg-RecipeEye-container');
+                //const index = button.getAttribute('data-index');
+                //const index = toggleButtonRecipeEye.getAttribute('data-index');
+                //- const index = button.getAttribute('data-index');
+                //- const containerExampleRecipeEye = document.getElementById(`exampleImg-RecipeEye-container-${index}`);
+                //- toggleButtonRecipeEye.addEventListener('click', function() {
+                //-     if (containerExampleRecipeEye.style.display === 'none') {
+                //-         containerExampleRecipeEye.style.display = 'block';
+                //-     } else {
+                //-         containerExampleRecipeEye.style.display = 'none';
+                //-     }
+                //- });
+
+                toggleButtons.forEach((button) => {
+                    const index = button.getAttribute('data-index'); 
+                    const containerExampleRecipeEye = document.getElementById(`exampleImg-RecipeEye-container-${index}`);
+
+                    button.addEventListener('click', function () {
+                        if (containerExampleRecipeEye.style.display === 'none' || containerExampleRecipeEye.style.display === '') {
+                            containerExampleRecipeEye.style.display = 'block';
+                        } else {
+                            containerExampleRecipeEye.style.display = 'none';
+                        }
+                    });
+                });
+            });
