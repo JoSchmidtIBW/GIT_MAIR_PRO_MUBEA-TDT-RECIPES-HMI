@@ -3,6 +3,684 @@ header.header
         if user
             a.nav__el(href='/api/v1/overviewInlogt') Hlavní přehled
     .header__logo
+        .LogoBildText(style='display: flex;')
+            div(style='display: flex; align-items: center;')
+                img(src='/img/Mubea_logo.svg.png', alt='Mubea logo' style="margin-top: -10px; filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);     filter: brightness(1.5);")
+                a.logoTrack(style="margin-top: 22px;") Track
+                img(src='/img/Logo-Mair-Research.png', alt='Logo-Mair-Research' style="margin-top: 15px; display: flex; align-items: center; filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c); filter: brightness(1.1);")
+                a.logoTDT_ASMAG(style="margin-left: 3px; margin-right: 2px; margin-top: 26px; font-style: italic; filter: brightness(1.0); letter-spacing: 1px;") -TDT
+            div(style="padding: 3px; margin-top: 10px;")
+                //- <span class="effect-shine_OPC shine-green_OPC">Grün Shine OPC</span>
+                //- <span class="effect-shine_OPC shine-red_OPC">Rot Shine OPC</span>
+                //- <span class="shine-green_OPC neonTdOPCUA_state_good" style="--shadowDuration: 2s; --shadowDelay: 0.5s;">RUN</span>
+                //- <span>____</span>
+                //- <span class="shine-red_OPC  neonTdOPCUA_state_failed " style="--shadowDuration: 2s; --shadowDelay: 0.5s;">STOP</span>
+                //- <span>____</span>
+                //- <span class="neonTdOPCUA_state_failed shine-red_OPC_Wave  " style="--shadowDuration: 2s; --shadowDelay: 0.5s;">STOP</span>
+                //- <span class=" shine-red_OPC_Wave  neonTdOPCUA_state_failed" style="--shadowDuration: 2s; --shadowDelay: 0.5s;">STOP</span>                
+                //- <span class="blink-yellow_OPC">Blinkender Hintergrund OPC</span>
+                //- <span class="effect-shine_OPC" style="--shineDuration: 0.8s; --shadowDuration: 0.6s; --flashDuration: 1.2s; animation: shine_OPC var(--shineDuration) infinite, shadow-green_OPC var(--shadowDuration) infinite, flash-text_OPC var(--flashDuration) infinite;">Angepasster Shine + Flash OPC</span>
+                //- div
+                    a._P3.neonTdOPCUA_state_failed Fehlermeldung!
+                    a._P3(style="border: 2px solid red; height: 30px; color: white; font-weight: bold; font-size: 15px; --shineDuration: 1s; --shadowDuration: 2.2s; --blinkDuration: 5s;") FEHLERHAFTE SPS- VERBINDUNG! seit: 4.7.2025, 09:21:02
+                
+                //- a#aOPCUA.effect-shine2(style="border: 2px solid pink; height: 30px; color: black; font-weight: bold;font-size: 15px;") Server
+                //- a#aOPCUA_SPS_Simatic.effect-shine2(style="border: 2px solid red; height: 30px; color: black; font-weight: bold;font-size: 15px;") SPS
+                //- a#aOPCUA_DataStr.effect-shineBlue(style="--shadowDuration: 4s; border: 2px solid orange; height: 30px; color:rgb(14, 14, 15); font-weight: bold;font-size: 15px;") Daten
+                a#aOPCUA.effect-shine2(style="padding-right: 4px; padding-left: 2px; margin-left: 5px;  height: 30px; color: black; font-weight: bold; font-size: 16px;") Server
+                a#aOPCUA_SPS_Simatic.effect-shine2(style="padding-right: 4px; padding-left: 2px; margin-left: 3px; margin-left: 3px; height: 30px; color: black; font-weight: bold; font-size: 16px;") PLC
+                //a#aOPCUA_DataStr.effect-shineBlue(style="padding-left: 3px; padding-right: 3px; margin-right: 4px; margin-left: 3px; --shadowDuration: 4s; height: 30px; color:rgb(14, 14, 15); font-weight: bold;font-size: 16px;") Daten                
+                //-a#aOPCUA_DataStr.effect-shineWhiteBlue(style="padding-left: 3px; padding-right: 3px; margin-right: 4px; margin-left: 3px; --shadowDuration: 4s; height: 30px; color:#434346; font-weight: bold;font-size: 16px;") Daten
+                a#aOPCUA_DataStr.effect-shineWhiteBlue(style="padding-left: 3px; padding-right: 3px; margin-right: 4px; margin-left: 3px; --shadowDuration: 4s; height: 30px; font-weight: bold;font-size: 16px;") Data
+
+                //div#aSPS_Run.effect-shine(style="border: 2px solid lightgreen; margin-left: -2px; font-size: 16px; padding: 5px 5px; font-style: italic; font-family: 'Arial';") SPS
+                //-div._P3 FEHLERHAFTE SPS- VERBINDUNG! seit: 4.7.2025, 09:21:02
+                //-div._P3.shine_P3.shadowMoveRED_P3.blinkYellow_P3 FEHLERHAFTE SPS- VERBINDUNG! seit: 4.7.2025, 09:21:02
+                
+
+    nav.nav.nav--user
+        if user
+            a.nav__el.nav__el--logout Odhlásit se
+            a.nav__el.avatar(href='/api/v1/me')
+                img.nav__user-img(src=`/img/users/${user.photo}`, alt=`Photo of ${user.firstName}`)
+                span= user.firstName
+                span(style='margin-left:5px;')= user.lastName
+        else
+            // Comes from isloggedIn- Middleware, where res.locals.user = currentUser
+            a.nav__el.nav__el--cta(href='/api/v1/login') Přihlásit se
+
+    script. 
+        console.log("bin header")  
+
+        var socket = io();
+        
+        socket.on('connect', function() {
+            console.log('bin header: Verbunden mit dem Server');
+        });
+
+        const simaticOperationStatusCodeEmojis = {//Emojis
+            0: "NotSupported🔵",
+            1: "StopFwUpdate🔵",
+            3: "StopSelfInitialization🔵",
+            4: "Stop🔴",
+            6: "Startup🔵",
+            8: "Run🟢",
+            9: "RunRedundant🔵",
+            10: "Halt🟠",
+            11: "RunSyncUp🔵",
+            12: "SyncUp🔵",
+            13: "Defective🔵",
+            14: "ErrorSearch❌",
+            15: "NoPower❌",
+            16: "CiR🔵",
+            17: "STOPwithoutODIS🔵",
+            18: "RunODIS🔵"
+        };
+
+        const sps_opcua_StatusCode = {
+            0: "NotSupported",
+            1: "StopFwUpdate",
+            3: "StopSelfInitialization",
+            4: "Stop",
+            6: "Startup",
+            8: "Run",
+            9: "RunRedundant",
+            10: "Halt",
+            11: "RunSyncUp",
+            12: "SyncUp",
+            13: "Defective",
+            14: "ErrorSearch",
+            15: "NoPower",
+            16: "CiR",
+            17: "STOPwithoutODIS",
+            18: "RunODIS"
+        };
+ 
+        let aSPS_Run = document.getElementById('aSPS_Run');
+        let savedSPSStatusLocalStorage = localStorage.getItem('spsStatus');
+
+        let aOPCUA = document.getElementById('aOPCUA');
+        let aOPCUA_SPS_Simatic = document.getElementById('aOPCUA_SPS_Simatic');
+        let aOPCUA_DataStr = document.getElementById('aOPCUA_DataStr');
+        let savedOPCUAStatusLocalStorage = localStorage.getItem('spsOPCUA_StatusLocalStorage');
+        console.log('helllo savedOPCUAStatusLocalStorage:', savedOPCUAStatusLocalStorage)
+
+        aOPCUA_DataStr.classList.remove('effect-shineWhiteBlue');
+
+        setTimeout(() => {
+            if (savedOPCUAStatusLocalStorage) {
+                //aSPS_Run.textContent = savedSPSStatusLocalStorage;
+                aOPCUA.innerHTML = savedOPCUAStatusLocalStorage;
+
+                //-a#aOPCUA_DataStr.effect-shineBlue
+                
+                aOPCUA_DataStr.classList.add('effect-shineBlue');
+            }
+        }, 3000);   
+
+        socket.on('message', function(data) {
+            console.log('Nachricht vom Server erhalten: ' + data);
+        });       
+
+        socket.on('messageCSVData', function(data) {
+            console.log('CSVData-Nachricht vom Server erhalten: \n' + data);
+            localStorage.setItem('lastCSVData', data);
+        });       
+
+        let timeOfFailedConnectionSPS = ''; 
+        let timeOfFailedConnectionOPCUA = '';
+        let savedTimeOfFailedConnectionSPS = localStorage.getItem('timeOfFailedConnectionSPS');
+        let savedTimeOfFailedConnectionOPCUA = localStorage.getItem('timeOfFailedConnectionOPCUA');
+
+        socket.on('sps-Socket-data', function(data) {
+            console.log('sps-Socket-data vom Server erhalten: ' + JSON.stringify(data));
+
+            if (data.spsData_OPCUA === null || data.spsData_OPCUA === undefined || data.spsData_OPCUA === "") {    
+                console.log('bin iffffff')
+                if (!savedTimeOfFailedConnectionOPCUA) {
+                    let currentTimeOPCUA = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Zurich', day: '2-digit', month: '2-digit',  year: 'numeric',   hour: '2-digit',  minute: '2-digit', });
+                    localStorage.setItem('timeOfFailedConnectionOPCUA', currentTimeOPCUA);
+                    savedTimeOfFailedConnectionOPCUA = currentTimeOPCUA;
+                    
+                    aOPCUA.innerHTML = 'Žádné připojení! ' + savedTimeOfFailedConnectionOPCUA; //savedTimeOfFailedConnectionOPCUA;// + data.spsData_Opcua.currentFailedTimeOPCUA;//JSON.parse(JSON.stringify(data.spsData_OPCUA));
+                    aOPCUA.classList.remove('effect-shine_OPC', 'effect-shine2')
+                    aOPCUA.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA.style.setProperty('--shineDuration', '1.0s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.2s');
+                    aOPCUA.style.setProperty('--blinkDuration', '5s');
+                    
+                    aOPCUA_DataStr.innerHTML = '-';
+                    aOPCUA_DataStr.classList.remove('effect-shineWhiteBlue', 'effect-shineBlue');
+                    aOPCUA_DataStr.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    
+                    aOPCUA_SPS_Simatic.innerHTML = '- -Y- - ';
+                } else {
+                    aOPCUA.innerHTML = 'Žádné připojení! ' + savedTimeOfFailedConnectionOPCUA; //savedTimeOfFailedConnectionOPCUA;// + data.spsData_Opcua.currentFailedTimeOPCUA;//JSON.parse(JSON.stringify(data.spsData_OPCUA));
+                    aOPCUA.classList.remove('effect-shine_OPC', 'effect-shine2')
+                    aOPCUA.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA.style.setProperty('--shineDuration', '1.0s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.2s');
+                    aOPCUA.style.setProperty('--blinkDuration', '5s');
+                    
+                    aOPCUA_DataStr.innerHTML = '-';
+                    aOPCUA_DataStr.classList.remove('effect-shineWhiteBlue', 'effect-shineBlue');
+                    aOPCUA_DataStr.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    
+                    aOPCUA_SPS_Simatic.innerHTML = '- -X- - ';
+                }
+            }
+            else {
+                if (data.spsData_OPCUA.dataValueSPS_serverStatus?.value?.value?.state == null) {
+                    console.log('-XXXXXXX, speichere timeOfFailedConnectionOPCUA');
+                    
+                    let currentTimeOPCUA = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Zurich', day: '2-digit', month: '2-digit',  year: 'numeric',   hour: '2-digit',  minute: '2-digit', });
+                    const serverStatusState = data?.spsData_OPCUA?.dataValueSPS_serverStatus?.value?.value?.state ?? data.spsData_OPCUA;
+                    
+                    console.log('data.spsData_OPCUA: ', data.spsData_OPCUA)
+                    console.log('serverStatusState: ', serverStatusState)
+                    
+                    aOPCUA.classList.remove('effect-shine2', 'effect-shine_OPC');
+                    aOPCUA.style='';
+                    aOPCUA.style.color = 'white';//'red';
+                    aOPCUA.style.frontWeight = 'bold';
+                    aOPCUA.style.borderRadius = '8px';
+
+                    //- aOPCUA.style.boxShadow = 'inset 0 0 15px #444';
+                    //- aOPCUA.style.animation = 'shine2 0.5s infinite, shadowMoveRED 2.5s infinite, blinkYellow1 2s infinite';  
+
+                    aOPCUA.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA.style.setProperty('--shineDuration', '1.0s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.2s');
+                    aOPCUA.style.setProperty('--blinkDuration', '3.2s');
+
+                    localStorage.setItem('spsOPCUA_StatusLocalStorage', serverStatusState);
+
+                    let savedTimeOfFailedConnectionOPCUA_Now = localStorage.getItem('timeOfFailedConnectionOPCUA');
+                    console.log('savedTimeOfFailedConnectionOPCUA_Now: ',savedTimeOfFailedConnectionOPCUA_Now)
+                    if (!savedTimeOfFailedConnectionOPCUA_Now) {
+                        console.log('aOPCUA hat im String eine Fehlermeldung, aber savedTimeOfFailedConnectionOPCUA ist leer');
+                        localStorage.setItem('timeOfFailedConnectionOPCUA', currentTimeOPCUA);
+                        
+                        //console.log('let ctime: ', ctime)
+                        let savedTimeOfFailedConnectionOPCUA1 = localStorage.getItem('timeOfFailedConnectionOPCUA');
+                        console.log('savedTimeOfFailedConnectionOPCUA1: ',savedTimeOfFailedConnectionOPCUA1)
+                        aOPCUA.innerHTML = serverStatusState + ': ' + savedTimeOfFailedConnectionOPCUA1;
+                    } else {
+                        console.log('aOPCUA hat im String eine Fehlermeldung, aber savedTimeOfFailedConnectionOPCUA existiert');
+                        let savedTimeOfFailedConnectionOPCUA2 = localStorage.getItem('timeOfFailedConnectionOPCUA');
+                        aOPCUA.innerHTML = serverStatusState + ': ' + savedTimeOfFailedConnectionOPCUA2;
+                        console.log(savedTimeOfFailedConnectionOPCUA)
+                    }    
+                    
+                    aOPCUA_SPS_Simatic.innerHTML = '❌Chyba!';//data.spsData_OPCUA.spsSimaticData;
+                    
+                    aOPCUA_SPS_Simatic.classList.remove('effect-shine2', 'shine-green_OPC', 'neonTdOPCUA_state_good', 'shine-red_OPC',  'shine-red_OPC_Wave');
+                    aOPCUA_SPS_Simatic.classList.add('_P3', '.neonTdOPCUA_state_failed');
+                    aOPCUA_SPS_Simatic.style.setProperty('--shineDuration', '1.5s');
+                    aOPCUA_SPS_Simatic.style.setProperty('--shadowDuration', '2.5s');
+                    aOPCUA_SPS_Simatic.style.setProperty('--blinkDuration', '4s');
+                    aOPCUA_SPS_Simatic.style.color = 'red';
+
+
+                    aOPCUA_DataStr.classList.remove('_P3', 'neonTdOPCUA_state_failed', 'effect-shineWhiteBlue', 'effect-shineBlue');
+                    aOPCUA_DataStr.classList.add('effect-shineWhiteBlue')
+                    const dataStrValue = data?.spsData_OPCUA?.dataValue?.value?.value ?? 'Připojit';//'-YYY-';
+                    //aOPCUA_DataStr.innerHTML = dataStrValue;
+                    aOPCUA_DataStr.innerHTML = `<span class="dots-loading">${dataStrValue}<span class="dots"></span></span>`;
+ 
+                } else {
+                    console.log('-ZZZZZZZZZ');
+
+                    savedTimeOfFailedConnectionOPCUA = '';
+                    localStorage.removeItem('timeOfFailedConnectionOPCUA');
+                    const serverStatusState = data?.spsData_OPCUA?.dataValueSPS_serverStatus?.value?.value?.state ?? data.spsData_OPCUA;
+                    console.log('serverStatusState: ', serverStatusState)
+                    localStorage.setItem('spsOPCUA_StatusLocalStorage', serverStatusState);
+                    aOPCUA.classList.remove('_P3', 'neonTdOPCUA_state_failed');
+
+
+                    aOPCUA.innerHTML = serverStatusState;
+                    aOPCUA.style.paddingRight = '2px';
+                    //aOPCUA.classList.remove('effect-shine2');
+                    //aOPCUA.style.animation = 'shine2 0.5s infinite, shadowMoveGreen 2.5s infinite, blinkYellow1 2s infinite'; 
+                    aOPCUA.style.color = 'white';
+                    aOPCUA.style.animation = 'shine 2.6s infinite, shadowFlash 2.6s infinite';
+                    //--shineDuration: 0.8s; --shadowDuration: 0.6s; --flashDuration: 1.2s;
+                    aOPCUA.classList.add('effect-shine_OPC', 'effect-shine2');//effect-shine_OPC effect-shine2
+                    aOPCUA.style.setProperty('--shineDuration', '1.5s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.5s');
+                    aOPCUA.style.setProperty('--blinkDuration', '4s');
+
+                    let dataStrValue = data?.spsData_OPCUA?.dataValue?.value?.value ?? '-No PLC_Data-';
+                    if(dataStrValue.includes('>')){
+
+                        dataStrValue = dataStrValue.split('>')[0]; //'jojjjoj';
+                    }
+                    aOPCUA_DataStr.innerHTML = dataStrValue;
+                    //aOPCUA_DataStr.classList.remove('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA_DataStr.classList.remove('_P3', 'neonTdOPCUA_state_failed', 'effect-shineWhiteBlue', 'effect-shineBlue');
+                    aOPCUA_DataStr.classList.add('effect-shineWhiteBlue')
+                    //localStorage.setItem('opcuaStatus', `${serverStatusState}`); 
+
+                    console.log('data.spsData_OPCUA.spsSimaticData.value.value: ', data.spsData_OPCUA.spsSimaticData.value.value)
+                    
+                    if(data.spsData_OPCUA.spsSimaticData !== '-'){
+                        console.log('bin im  ______ data.spsData_OPCUA.spsSimaticData.value.value: ', data.spsData_OPCUA.spsSimaticData.value.value)
+                        console.log('sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value]: ', sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value])
+                        //-aOPCUA_SPS_Simatic.innerHTML = 'nunhuhnu';//sps_opcua_StatusCode
+                        if(sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value] !== 'Run'){
+                            console.log(simaticOperationStatusCodeEmojis[data.spsData_OPCUA.spsSimaticData.value.value])
+                            
+                            aOPCUA_SPS_Simatic.innerHTML = sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value];
+                            aOPCUA_SPS_Simatic.animation = 'shine 2.6s infinite, shadowFlash 2.6s infinite';
+                            aOPCUA_SPS_Simatic.classList.remove('_P3', 'effect-shine2', 'shine-green_OPC', 'neonTdOPCUA_state_good');
+                            aOPCUA_SPS_Simatic.classList.add('shine-red_OPC', 'neonTdOPCUA_state_failed');//shine-red_OPC  neonTdOPCUA_state_failed, shine-red_OPC_Wave
+                            aOPCUA_SPS_Simatic.style.color = 'white';//'rgb(247, 49, 35)';//'red';
+                            aOPCUA_SPS_Simatic.style.fontWeight = 'bold';
+                            //--shadowDuration: 2s; --shadowDelay: 0.5s;
+                            aOPCUA_SPS_Simatic.style.setProperty('--shineDuration', '0.5s');
+                            aOPCUA_SPS_Simatic.style.setProperty('--shadowDuration', '2.0s');
+                        } else {
+                            console.log('Run🟢')
+                            
+                            aOPCUA_SPS_Simatic.innerHTML = sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value]
+                            aOPCUA_SPS_Simatic.style.color = 'white';//'rgb(24, 192, 63)';//'green';// #444444
+                            //"--shadowDuration: 2s; --shadowDelay: 0.5s;"
+                            aOPCUA_SPS_Simatic.style.setProperty('--shineDuration', '0.5s');
+                            aOPCUA_SPS_Simatic.style.setProperty('--shadowDuration', '2.0s');
+
+                            
+                            //aOPCUA_SPS_Simatic.style.animation = 'shine2 4.6s infinite, shadowFlash 2.6s infinite';
+                            //aOPCUA_SPS_Simatic.style.animation = 'shine 0.5s infinite, shadowMoveGreen 2.0s infinite, blinkYellow1 2s infinite'; 
+                            aOPCUA_SPS_Simatic.classList.remove('_P3', 'effect-shine2', 'shine-red_OPC',  'neonTdOPCUA_state_failed', 'shine-red_OPC_Wave');
+                            aOPCUA_SPS_Simatic.classList.add('shine-green_OPC', 'neonTdOPCUA_state_good');
+                            
+                            aOPCUA_SPS_Simatic.style.fontWeight = 'bold';
+                        }
+                        //aOPCUA_SPS_Simatic.innerHTML = sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value]
+                        
+                    } else{
+                        console.log('---X---')//TODO:testen!!!
+                        aOPCUA_SPS_Simatic.innerHTML = data.spsData_OPCUA.spsSimaticData;
+                        aOPCUA_SPS_Simatic.classList.remove('effect-shine2', 'shine-green_OPC', 'neonTdOPCUA_state_good', 'shine-red_OPC',  'neonTdOPCUA_state_failed', 'shine-red_OPC_Wave');
+                        aOPCUA_SPS_Simatic.classList.add('_P3');
+                    }
+                }
+            }
+            
+
+            // --------------- SPS Beckhoff ------------------------------------------------------------------------------------------
+
+            //- if (data.spsData === null || data.spsData === undefined) {    
+            //-     if (!savedTimeOfFailedConnectionSPS){//savedTimeOfFailedConnectionSPS.length === 0) {
+        });  
+
+        socket.on('disconnect', function() {
+            console.log('WebSocket-Verbindung verloren. Versuche erneut zu verbinden...');
+            
+            setTimeout(function() {
+                socket.connect();
+            }, 5000);
+        });  
+
+
+
+
+
+
+
+
+
+//-header.header
+    nav.nav.nav--tours
+        if user
+            a.nav__el(href='/api/v1/overviewInlogt') Hlavní přehled
+    .header__logo
+        .LogoBildText(style='display: flex;')
+            div(style='display: flex; align-items: center;')
+                img(src='/img/Mubea_logo.svg.png', alt='Mubea logo' style="margin-top: -10px; filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);")
+                a.logoTrack(style="margin-top: 22px;") Track
+                img(src='/img/Logo-Mair-Research.png', alt='Logo-Mair-Research' style="margin-top: 15px; display: flex; align-items: center; filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);")
+                a.logoTDT_ASMAG(style="margin-left: 3px; margin-right: 2px; margin-top: 26px; font-style: italic;") -TDT
+            div(style="padding: 3px; margin-top: 10px;")
+                //- <span class="effect-shine_OPC shine-green_OPC">Grün Shine OPC</span>
+                //- <span class="effect-shine_OPC shine-red_OPC">Rot Shine OPC</span>
+                //- <span class="shine-green_OPC neonTdOPCUA_state_good" style="--shadowDuration: 2s; --shadowDelay: 0.5s;">RUN</span>
+                //- <span>____</span>
+                //- <span class="shine-red_OPC  neonTdOPCUA_state_failed " style="--shadowDuration: 2s; --shadowDelay: 0.5s;">STOP</span>
+                //- <span>____</span>
+                //- <span class="neonTdOPCUA_state_failed shine-red_OPC_Wave  " style="--shadowDuration: 2s; --shadowDelay: 0.5s;">STOP</span>
+                //- <span class=" shine-red_OPC_Wave  neonTdOPCUA_state_failed" style="--shadowDuration: 2s; --shadowDelay: 0.5s;">STOP</span>                
+                //- <span class="blink-yellow_OPC">Blinkender Hintergrund OPC</span>
+                //- <span class="effect-shine_OPC" style="--shineDuration: 0.8s; --shadowDuration: 0.6s; --flashDuration: 1.2s; animation: shine_OPC var(--shineDuration) infinite, shadow-green_OPC var(--shadowDuration) infinite, flash-text_OPC var(--flashDuration) infinite;">Angepasster Shine + Flash OPC</span>
+                //- div
+                    a._P3.neonTdOPCUA_state_failed Fehlermeldung!
+                    a._P3(style="border: 2px solid red; height: 30px; color: white; font-weight: bold; font-size: 15px; --shineDuration: 1s; --shadowDuration: 2.2s; --blinkDuration: 5s;") FEHLERHAFTE SPS- VERBINDUNG! seit: 4.7.2025, 09:21:02
+                
+                //- a#aOPCUA.effect-shine2(style="border: 2px solid pink; height: 30px; color: black; font-weight: bold;font-size: 15px;") Server
+                //- a#aOPCUA_SPS_Simatic.effect-shine2(style="border: 2px solid red; height: 30px; color: black; font-weight: bold;font-size: 15px;") SPS
+                //- a#aOPCUA_DataStr.effect-shineBlue(style="--shadowDuration: 4s; border: 2px solid orange; height: 30px; color:rgb(14, 14, 15); font-weight: bold;font-size: 15px;") Daten
+                a#aOPCUA.effect-shine2(style="padding-right: 4px; padding-left: 2px; margin-left: 5px;  height: 30px; color: black; font-weight: bold; font-size: 16px;") Server
+                a#aOPCUA_SPS_Simatic.effect-shine2(style="padding-right: 4px; padding-left: 2px; margin-left: 3px; margin-left: 3px; height: 30px; color: black; font-weight: bold; font-size: 16px;") PLC
+                a#aOPCUA_DataStr.effect-shineBlue(style="padding-left: 3px; padding-right: 3px; margin-right: 4px; margin-left: 3px; --shadowDuration: 4s; height: 30px; color:rgb(14, 14, 15); font-weight: bold;font-size: 16px;") Data               
+                
+
+                //div#aSPS_Run.effect-shine(style="border: 2px solid lightgreen; margin-left: -2px; font-size: 16px; padding: 5px 5px; font-style: italic; font-family: 'Arial';") SPS
+                //-div._P3 FEHLERHAFTE SPS- VERBINDUNG! seit: 4.7.2025, 09:21:02
+                //-div._P3.shine_P3.shadowMoveRED_P3.blinkYellow_P3 FEHLERHAFTE SPS- VERBINDUNG! seit: 4.7.2025, 09:21:02
+                
+
+    nav.nav.nav--user
+        if user
+            a.nav__el.nav__el--logout Odhlásit se
+            a.nav__el.avatar(href='/api/v1/me')
+                img.nav__user-img(src=`/img/users/${user.photo}`, alt=`Photo of ${user.firstName}`)
+                span= user.firstName
+                span(style='margin-left:5px;')= user.lastName
+        else
+            // Comes from isloggedIn- Middleware, where res.locals.user = currentUser
+            a.nav__el.nav__el--cta(href='/api/v1/login') Přihlásit se
+
+    script. 
+        console.log("bin header")  
+
+        var socket = io();
+        
+        socket.on('connect', function() {
+            console.log('bin header: Verbunden mit dem Server');
+        });
+
+        const simaticOperationStatusCodeEmojis = {//Emojis
+            0: "NotSupported🔵",
+            1: "StopFwUpdate🔵",
+            3: "StopSelfInitialization🔵",
+            4: "Stop🔴",
+            6: "Startup🔵",
+            8: "Run🟢",
+            9: "RunRedundant🔵",
+            10: "Halt🟠",
+            11: "RunSyncUp🔵",
+            12: "SyncUp🔵",
+            13: "Defective🔵",
+            14: "ErrorSearch❌",
+            15: "NoPower❌",
+            16: "CiR🔵",
+            17: "STOPwithoutODIS🔵",
+            18: "RunODIS🔵"
+        };
+
+        const sps_opcua_StatusCode = {
+            0: "NotSupported",
+            1: "StopFwUpdate",
+            3: "StopSelfInitialization",
+            4: "Stop",
+            6: "Startup",
+            8: "Run",
+            9: "RunRedundant",
+            10: "Halt",
+            11: "RunSyncUp",
+            12: "SyncUp",
+            13: "Defective",
+            14: "ErrorSearch",
+            15: "NoPower",
+            16: "CiR",
+            17: "STOPwithoutODIS",
+            18: "RunODIS"
+        };
+ 
+        let aSPS_Run = document.getElementById('aSPS_Run');
+        let savedSPSStatusLocalStorage = localStorage.getItem('spsStatus');
+
+        let aOPCUA = document.getElementById('aOPCUA');
+        let aOPCUA_SPS_Simatic = document.getElementById('aOPCUA_SPS_Simatic');
+        let aOPCUA_DataStr = document.getElementById('aOPCUA_DataStr');
+        let savedOPCUAStatusLocalStorage = localStorage.getItem('spsOPCUA_StatusLocalStorage');
+        console.log('helllo savedOPCUAStatusLocalStorage:', savedOPCUAStatusLocalStorage)
+
+        setTimeout(() => {
+            if (savedOPCUAStatusLocalStorage) {
+                //aSPS_Run.textContent = savedSPSStatusLocalStorage;
+                aOPCUA.innerHTML = savedOPCUAStatusLocalStorage;
+            }
+        }, 1000);   
+
+        socket.on('message', function(data) {
+            console.log('Nachricht vom Server erhalten: ' + data);
+        });       
+
+        socket.on('messageCSVData', function(data) {
+            console.log('CSVData-Nachricht vom Server erhalten: \n' + data);
+            localStorage.setItem('lastCSVData', data);
+        });       
+
+        let timeOfFailedConnectionSPS = ''; 
+        let timeOfFailedConnectionOPCUA = '';
+        let savedTimeOfFailedConnectionSPS = localStorage.getItem('timeOfFailedConnectionSPS');
+        let savedTimeOfFailedConnectionOPCUA = localStorage.getItem('timeOfFailedConnectionOPCUA');
+
+        socket.on('sps-Socket-data', function(data) {
+            console.log('sps-Socket-data vom Server erhalten: ' + JSON.stringify(data));
+
+            if (data.spsData_OPCUA === null || data.spsData_OPCUA === undefined || data.spsData_OPCUA === "") {    
+                console.log('bin iffffff')
+                if (!savedTimeOfFailedConnectionOPCUA) {
+                    let currentTimeOPCUA = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Zurich', day: '2-digit', month: '2-digit',  year: 'numeric',   hour: '2-digit',  minute: '2-digit', });
+                    localStorage.setItem('timeOfFailedConnectionOPCUA', currentTimeOPCUA);
+                    savedTimeOfFailedConnectionOPCUA = currentTimeOPCUA;
+                    
+                    aOPCUA.innerHTML = 'Žádné připojení! ' + savedTimeOfFailedConnectionOPCUA; //savedTimeOfFailedConnectionOPCUA;// + data.spsData_Opcua.currentFailedTimeOPCUA;//JSON.parse(JSON.stringify(data.spsData_OPCUA));
+                    aOPCUA.classList.remove('effect-shine_OPC', 'effect-shine2')
+                    aOPCUA.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA.style.setProperty('--shineDuration', '1.0s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.2s');
+                    aOPCUA.style.setProperty('--blinkDuration', '5s');
+                    
+                    aOPCUA_DataStr.innerHTML = '-';
+                    aOPCUA_DataStr.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    
+                    aOPCUA_SPS_Simatic.innerHTML = '- -Y- - ';
+                } else {
+                    aOPCUA.innerHTML = 'Žádné připojení! ' + savedTimeOfFailedConnectionOPCUA; //savedTimeOfFailedConnectionOPCUA;// + data.spsData_Opcua.currentFailedTimeOPCUA;//JSON.parse(JSON.stringify(data.spsData_OPCUA));
+                    aOPCUA.classList.remove('effect-shine_OPC', 'effect-shine2')
+                    aOPCUA.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA.style.setProperty('--shineDuration', '1.0s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.2s');
+                    aOPCUA.style.setProperty('--blinkDuration', '5s');
+                    
+                    aOPCUA_DataStr.innerHTML = '-';
+                    aOPCUA_DataStr.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    
+                    aOPCUA_SPS_Simatic.innerHTML = '- -X- - ';
+                }
+            }
+            else {
+                if (data.spsData_OPCUA.dataValueSPS_serverStatus?.value?.value?.state == null) {
+                    console.log('-XXXXXXX, speichere timeOfFailedConnectionOPCUA');
+                    
+                    let currentTimeOPCUA = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Zurich', day: '2-digit', month: '2-digit',  year: 'numeric',   hour: '2-digit',  minute: '2-digit', });
+                    const serverStatusState = data?.spsData_OPCUA?.dataValueSPS_serverStatus?.value?.value?.state ?? data.spsData_OPCUA;
+                    
+                    console.log('data.spsData_OPCUA: ', data.spsData_OPCUA)
+                    console.log('serverStatusState: ', serverStatusState)
+                    
+                    aOPCUA.classList.remove('effect-shine2', 'effect-shine_OPC');
+                    aOPCUA.style='';
+                    aOPCUA.style.color = 'white';//'red';
+                    aOPCUA.style.frontWeight = 'bold';
+                    aOPCUA.style.borderRadius = '8px';
+
+                    //- aOPCUA.style.boxShadow = 'inset 0 0 15px #444';
+                    //- aOPCUA.style.animation = 'shine2 0.5s infinite, shadowMoveRED 2.5s infinite, blinkYellow1 2s infinite';  
+
+                    aOPCUA.classList.add('_P3', 'neonTdOPCUA_state_failed')
+                    aOPCUA.style.setProperty('--shineDuration', '1.0s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.2s');
+                    aOPCUA.style.setProperty('--blinkDuration', '3.2s');
+
+                    localStorage.setItem('spsOPCUA_StatusLocalStorage', serverStatusState);
+
+                    let savedTimeOfFailedConnectionOPCUA_Now = localStorage.getItem('timeOfFailedConnectionOPCUA');
+                    console.log('savedTimeOfFailedConnectionOPCUA_Now: ',savedTimeOfFailedConnectionOPCUA_Now)
+                    if (!savedTimeOfFailedConnectionOPCUA_Now) {
+                        console.log('aOPCUA hat im String eine Fehlermeldung, aber savedTimeOfFailedConnectionOPCUA ist leer');
+                        localStorage.setItem('timeOfFailedConnectionOPCUA', currentTimeOPCUA);
+                        
+                        //console.log('let ctime: ', ctime)
+                        let savedTimeOfFailedConnectionOPCUA1 = localStorage.getItem('timeOfFailedConnectionOPCUA');
+                        console.log('savedTimeOfFailedConnectionOPCUA1: ',savedTimeOfFailedConnectionOPCUA1)
+                        aOPCUA.innerHTML = serverStatusState + ': ' + savedTimeOfFailedConnectionOPCUA1;
+                    } else {
+                        console.log('aOPCUA hat im String eine Fehlermeldung, aber savedTimeOfFailedConnectionOPCUA existiert');
+                        let savedTimeOfFailedConnectionOPCUA2 = localStorage.getItem('timeOfFailedConnectionOPCUA');
+                        aOPCUA.innerHTML = serverStatusState + ': ' + savedTimeOfFailedConnectionOPCUA2;
+                        console.log(savedTimeOfFailedConnectionOPCUA)
+                    }    
+                    
+                    aOPCUA_SPS_Simatic.innerHTML = '❌Chyba!';//data.spsData_OPCUA.spsSimaticData;
+                    
+                    aOPCUA_SPS_Simatic.classList.remove('effect-shine2', 'shine-green_OPC', 'neonTdOPCUA_state_good', 'shine-red_OPC',  'shine-red_OPC_Wave');
+                    aOPCUA_SPS_Simatic.classList.add('_P3', '.neonTdOPCUA_state_failed');
+                    aOPCUA_SPS_Simatic.style.setProperty('--shineDuration', '1.5s');
+                    aOPCUA_SPS_Simatic.style.setProperty('--shadowDuration', '2.5s');
+                    aOPCUA_SPS_Simatic.style.setProperty('--blinkDuration', '4s');
+                    aOPCUA_SPS_Simatic.style.color = 'red';
+
+                    const dataStrValue = data?.spsData_OPCUA?.dataValue?.value?.value ?? 'Připojit';//'-YYY-';
+                    //aOPCUA_DataStr.innerHTML = dataStrValue;
+                    aOPCUA_DataStr.innerHTML = `<span class="dots-loading">${dataStrValue}<span class="dots"></span></span>`;
+ 
+                } else {
+                    console.log('-ZZZZZZZZZ');
+
+                    savedTimeOfFailedConnectionOPCUA = '';
+                    localStorage.removeItem('timeOfFailedConnectionOPCUA');
+                    const serverStatusState = data?.spsData_OPCUA?.dataValueSPS_serverStatus?.value?.value?.state ?? data.spsData_OPCUA;
+                    console.log('serverStatusState: ', serverStatusState)
+                    localStorage.setItem('spsOPCUA_StatusLocalStorage', serverStatusState);
+                    aOPCUA.classList.remove('_P3', 'neonTdOPCUA_state_failed');
+
+
+                    aOPCUA.innerHTML = serverStatusState;
+                    //aOPCUA.classList.remove('effect-shine2');
+                    //aOPCUA.style.animation = 'shine2 0.5s infinite, shadowMoveGreen 2.5s infinite, blinkYellow1 2s infinite'; 
+                    aOPCUA.style.color = 'white';
+                    aOPCUA.style.animation = 'shine 2.6s infinite, shadowFlash 2.6s infinite';
+                    //--shineDuration: 0.8s; --shadowDuration: 0.6s; --flashDuration: 1.2s;
+                    aOPCUA.classList.add('effect-shine_OPC', 'effect-shine2');//effect-shine_OPC effect-shine2
+                    aOPCUA.style.setProperty('--shineDuration', '1.5s');
+                    aOPCUA.style.setProperty('--shadowDuration', '2.5s');
+                    aOPCUA.style.setProperty('--blinkDuration', '4s');
+
+                    const dataStrValue = data?.spsData_OPCUA?.dataValue?.value?.value ?? '-No SPS_Data-';
+                    aOPCUA_DataStr.innerHTML = dataStrValue;
+                    aOPCUA_DataStr.classList.remove('_P3', 'neonTdOPCUA_state_failed')
+                    //localStorage.setItem('opcuaStatus', `${serverStatusState}`); 
+
+                    console.log('data.spsData_OPCUA.spsSimaticData.value.value: ', data.spsData_OPCUA.spsSimaticData.value.value)
+                    
+                    if(data.spsData_OPCUA.spsSimaticData !== '-'){
+                        console.log('bin im  ______ data.spsData_OPCUA.spsSimaticData.value.value: ', data.spsData_OPCUA.spsSimaticData.value.value)
+                        console.log('sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value]: ', sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value])
+                        //-aOPCUA_SPS_Simatic.innerHTML = 'nunhuhnu';//sps_opcua_StatusCode
+                        if(sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value] !== 'Run'){
+                            console.log(simaticOperationStatusCodeEmojis[data.spsData_OPCUA.spsSimaticData.value.value])
+                            
+                            aOPCUA_SPS_Simatic.innerHTML = sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value];
+                            aOPCUA_SPS_Simatic.animation = 'shine 2.6s infinite, shadowFlash 2.6s infinite';
+                            aOPCUA_SPS_Simatic.classList.remove('_P3', 'effect-shine2', 'shine-green_OPC', 'neonTdOPCUA_state_good');
+                            aOPCUA_SPS_Simatic.classList.add('shine-red_OPC', 'neonTdOPCUA_state_failed');//shine-red_OPC  neonTdOPCUA_state_failed, shine-red_OPC_Wave
+                            aOPCUA_SPS_Simatic.style.color = 'white';//'rgb(247, 49, 35)';//'red';
+                            aOPCUA_SPS_Simatic.style.fontWeight = 'bold';
+                            //--shadowDuration: 2s; --shadowDelay: 0.5s;
+                            aOPCUA_SPS_Simatic.style.setProperty('--shineDuration', '0.5s');
+                            aOPCUA_SPS_Simatic.style.setProperty('--shadowDuration', '2.0s');
+                        } else {
+                            console.log('Run🟢')
+                            
+                            aOPCUA_SPS_Simatic.innerHTML = sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value]
+                            aOPCUA_SPS_Simatic.style.color = 'white';//'rgb(24, 192, 63)';//'green';// #444444
+                            //"--shadowDuration: 2s; --shadowDelay: 0.5s;"
+                            aOPCUA_SPS_Simatic.style.setProperty('--shineDuration', '0.5s');
+                            aOPCUA_SPS_Simatic.style.setProperty('--shadowDuration', '2.0s');
+
+                            
+                            //aOPCUA_SPS_Simatic.style.animation = 'shine2 4.6s infinite, shadowFlash 2.6s infinite';
+                            //aOPCUA_SPS_Simatic.style.animation = 'shine 0.5s infinite, shadowMoveGreen 2.0s infinite, blinkYellow1 2s infinite'; 
+                            aOPCUA_SPS_Simatic.classList.remove('_P3', 'effect-shine2', 'shine-red_OPC',  'neonTdOPCUA_state_failed', 'shine-red_OPC_Wave');
+                            aOPCUA_SPS_Simatic.classList.add('shine-green_OPC', 'neonTdOPCUA_state_good');
+                            
+                            aOPCUA_SPS_Simatic.style.fontWeight = 'bold';
+                        }
+                        //aOPCUA_SPS_Simatic.innerHTML = sps_opcua_StatusCode[data.spsData_OPCUA.spsSimaticData.value.value]
+                        
+                    } else{
+                        console.log('---X---')//TODO:testen!!!
+                        aOPCUA_SPS_Simatic.innerHTML = data.spsData_OPCUA.spsSimaticData;
+                        aOPCUA_SPS_Simatic.classList.remove('effect-shine2', 'shine-green_OPC', 'neonTdOPCUA_state_good', 'shine-red_OPC',  'neonTdOPCUA_state_failed', 'shine-red_OPC_Wave');
+                        aOPCUA_SPS_Simatic.classList.add('_P3');
+                    }
+                }
+            }
+            
+
+            // --------------- SPS Beckhoff ------------------------------------------------------------------------------------------
+
+            //- if (data.spsData === null || data.spsData === undefined) {    
+            //-     if (!savedTimeOfFailedConnectionSPS){//savedTimeOfFailedConnectionSPS.length === 0) {
+            //-         let currentTime = new Date().toLocaleString('de-DE', { timeZone: 'Europe/Zurich' });
+            //-         localStorage.setItem('timeOfFailedConnectionSPS', currentTime);
+            //-         savedTimeOfFailedConnectionSPS = currentTime;
+                    
+            //-         aSPS_Run.textContent = 'Fehlerhafte SPS- Verbindung!'.toUpperCase() + ( ' seit: ' + savedTimeOfFailedConnectionSPS || '');//JSON.stringify(data);
+            //-         aSPS_Run.style.borderRadius = '8px';
+            //-         aSPS_Run.style.marginLeft = '5px';
+            //-         aSPS_Run.style.boxShadow = 'inset 0 0 15px #444';
+            //-         aSPS_Run.style.animation = 'shine 0.5s infinite, shadowMoveRED 0.5s infinite, blinkYellow 2s infinite';   
+            //-         localStorage.setItem('spsStatus', 'Fehlerhafte SPS- Verbindung!'); 
+            //-     } else {
+            //-         aSPS_Run.textContent = 'Fehlerhafte SPS- Verbindung!'.toUpperCase() + ( ' seit: ' + savedTimeOfFailedConnectionSPS || '');//JSON.stringify(data);
+            //-         aSPS_Run.style.borderRadius = '8px';
+            //-         aSPS_Run.style.marginLeft = '5px';
+            //-         aSPS_Run.style.boxShadow = 'inset 0 0 15px #444';
+            //-         aSPS_Run.style.animation = 'shine 0.5s infinite, shadowMoveRED 0.5s infinite, blinkYellow 2s infinite';   
+            //-         localStorage.setItem('spsStatus', 'Fehlerhafte SPS- Verbindung!');
+            //-     }                
+            //- } else {
+            //-     if(JSON.stringify(data.spsData.adsStateStr) !== '"Run"'){
+            //-         //aSPS_Run.textContent = JSON.stringify(data);
+            //-         //aSPS_Run.textContent = JSON.stringify(data.spsData_OPCUA) + '<br>' + '\n' + JSON.stringify(data.spsData.adsStateStr) ;
+            //-         //aSPS_Run.innerHTML = JSON.parse(JSON.stringify(data.spsData_OPCUA)) + '<br>' +JSON.stringify(data.spsData.adsStateStr) ;
+            //-         aSPS_Run.innerHTML = JSON.parse(JSON.stringify(data.spsData.adsStateStr)) ;
+            //-         aSPS_Run.style.marginLeft = '5px';
+            //-         aSPS_Run.style.animation = 'shine 1.5s infinite, shadowMoveRED 2s infinite';
+            //-         localStorage.setItem('spsStatus',  JSON.stringify(data.spsData));
+            //-     } else {
+            //-         //aSPS_Run.textContent = data.adsStateStr;
+            //-         aSPS_Run.textContent = JSON.parse(JSON.stringify(data.spsData.adsStateStr));
+            //-         aSPS_Run.style.animation = 'shine 2.6s infinite, shadowFlash 2.6s infinite';
+            //-         localStorage.setItem('spsStatus', data.spsData.adsStateStr);
+            //-         timeOfFailedConnectionSPS = '';
+            //-         localStorage.removeItem('timeOfFailedConnectionSPS');
+            //-         savedTimeOfFailedConnectionSPS = '';
+            //-     }
+            //- }      
+        });  
+
+        socket.on('disconnect', function() {
+            console.log('WebSocket-Verbindung verloren. Versuche erneut zu verbinden...');
+            
+            setTimeout(function() {
+                socket.connect();
+            }, 5000);
+        });  
+
+
+
+//-header.header
+    nav.nav.nav--tours
+        if user
+            a.nav__el(href='/api/v1/overviewInlogt') Hlavní přehled
+    .header__logo
         .LogoBildText
             img(src='/img/Mubea_logo.svg.png', alt='Mubea logo' style="filter: drop-shadow(0px 0px 0px #444444) drop-shadow(0px 0px 1px #5c5c5c);")
             a.logoTrack Track

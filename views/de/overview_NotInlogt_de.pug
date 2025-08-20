@@ -26,7 +26,7 @@ block content
                     input#userSendData(value='{"_id":"000000000000000000000001","firstName":"Anonymous","lastName":"NoAccount","employeeNumber":50001,"language":"de","professional":"Aushilfe ohne Account","email":"","photo":"default.jpg","role":"user","department":["Zieherei"],"__v":0}', type="hidden")
                     div(style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;")
                         h3(style="margin-top: 5px; margin-left:10px;") Fertigungs- Auftrags- FA- Nummer:
-                        input#fa_Nummer(class="form__input_FA" type="number" placeholder="zB. 1000410101" required="required" min="1000000000" max="9999999999" onblur="validateFA_Nummer(this)")
+                        input#fa_Nummer(class="form__input_FA" type="number" placeholder="zB. 5100201" required="required" min="1000000" max="9999999" onblur="validateFA_Nummer(this)")
                     a.btn.btn--small.btn--green.btn--recipeSend_NotInlogt#recipeSendBtn(href="#" style="margin-right: 15px;") Rezept senden            
                 //-br 
 
@@ -107,8 +107,8 @@ block content
 
             function validateFA_Nummer(faNummerInput){
                 console.log('bin validateFANummer und input: ' + faNummerInput.value);
-                const faNummer_Min = 1000000000;
-                const faNummer_Max = 9999999999;
+                const faNummer_Min = 1000000;
+                const faNummer_Max = 9999999;
 
                 if (faNummerInput.value < faNummer_Min) {
                     displayMessage_isError_isSuccess('Die Auftrags- Fertigungs- Nummer ist zu klein!', true);
