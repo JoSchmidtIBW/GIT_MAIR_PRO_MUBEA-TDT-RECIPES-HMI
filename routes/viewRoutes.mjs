@@ -18,6 +18,7 @@ import {
   getCreateUser,
   getUpdateRecipe,
   getSPS,
+  getSPS_OPCUA,
   getRecipesSendSPSLog,
   getRecipeStatistic,
   getMyRecipeSend,
@@ -118,11 +119,16 @@ router.get(
   getRecipeStatistic,
 );
 
-router.get('/manage_users', protect, restrictTo('admin'), getManageUsers);
+router.get(
+  '/manage_users',
+  protect,
+  restrictTo('admin', 'Chef'),
+  getManageUsers,
+);
 router.get(
   '/manage_users/:id',
   protect,
-  restrictTo('admin'), //, 'Chef'),
+  restrictTo('admin', 'Chef'), //, 'Chef'),
   getUpdateUser,
 );
 
@@ -130,6 +136,8 @@ router.get('/createUser', protect, restrictTo('admin', 'Chef'), getCreateUser);
 
 router.get('/recipes/updateRecipe/:id', protect, getUpdateRecipe);
 
+//TODO: restrictTo machen...
 router.get('/getSPS', protect, getSPS);
+router.get('/getSPS_OPCUA', protect, getSPS_OPCUA);
 
 export default router;

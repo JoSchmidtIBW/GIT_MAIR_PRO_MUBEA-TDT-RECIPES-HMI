@@ -61,6 +61,11 @@
 
 :root {
   --section-rotate: 9vw;
+  /* Neue Animationszeiten */
+  --shineDuration: 0.5s;
+  --shadowDuration: 0.5s;
+  --blinkDuration: 2s;
+  --flashDuration: 1s;
 }
 
 ::-moz-selection {
@@ -105,8 +110,8 @@ body {
 }
 
 .main {
-  /*background-color: #f7f7f7;*/
-  background-color: #f0baba;
+  background-color: #f7f7f7;
+  /*background-color: #f0baba;*/
   padding: 4rem 4rem 1rem;
   -webkit-box-flex: 1;
   -ms-flex: 1;
@@ -616,8 +621,9 @@ body {
 }
 
 .header {
-  /*background-color: #444;*/
-  background-color: #b95757;
+  background-color: #444;
+  /*background-color: #b95757;*/
+  /*background-color: #797878;*/
   padding: 0 5rem;
   height: 8rem;
   position: relative;
@@ -1185,8 +1191,8 @@ body {
 }
 
 .footer {
-  /*background-color: #f7f7f7;*/
-  background-color: #ca9f9f;
+  background-color: #f7f7f7;
+  /*background-color: #ca9f9f;*/
   padding: 1rem 2rem 1rem 2rem;
   font-size: 1.4rem;
   display: grid;
@@ -1277,7 +1283,8 @@ body {
 .nav--tours {
   -webkit-box-flex: 0;
   -ms-flex: 0 1 40%;
-  flex: 0 1 40%;
+  /*flex: 0 1 40%;*/
+  flex: 0 1 30%;
 }
 
 @media only screen and (max-width: 62.5em) {
@@ -3120,7 +3127,8 @@ span.logoBildTextAboutMubeaASMA {
 .tableSPS th,
 .tableSPS td,
 .tableSPS caption {
-  border: thin solid #a0a0a0;
+  /*border: thin solid #a0a0a0;*/
+  border: thin solid #f1f3f4cf;
 }
 
 .tableSPS {
@@ -3144,7 +3152,9 @@ span.logoBildTextAboutMubeaASMA {
 
 .tableSPS th,
 .tableSPS caption {
-  background-color: #f1f3f4;
+  /*background-color: #f1f3f4;*/
+  /*background-color: #f1f3f4de;*/
+  background-color: #f1f3f496;
   font-weight: 700;
 }
 
@@ -3221,7 +3231,7 @@ span.logoBildTextAboutMubeaASMA {
 */
 .effect-shine {
   font-weight: bold;
-  font-size: 20px;
+  /*font-size: 20px;*/
   /*color: #00ff00; /* Neon-Grün */
   color: white;
   position: relative;
@@ -3563,3 +3573,885 @@ span.logoBildTextAboutMubeaASMA {
   margin-left: 4px;
 }
 /*-----------------------------------------------------------------------------*/
+.neonTdOPCUA_state_good {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 3em;
+  font-weight: bold;
+  /*font-style: italic;*/
+  letter-spacing: 0.1em;
+  color: white;
+  text-shadow:
+    0 0 5px rgb(105, 240, 161),
+    0 0 10px rgb(105, 240, 161),
+    0 0 20px green,
+    0 0 40px green,
+    0 0 60px green,
+    0 0 90px green,
+    0 0 120px green,
+    0 0 160px green;
+}
+
+.neonTdOPCUA_state_failed {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 3em;
+  font-weight: bold;
+  /*font-style: italic;*/
+  letter-spacing: 0.1em;
+  color: white;
+  text-shadow:
+    0 0 5px rgb(247, 152, 152),
+    0 0 10px rgb(247, 152, 152),
+    0 0 20px red,
+    0 0 40px red,
+    0 0 60px red,
+    0 0 90px red,
+    0 0 120px red,
+    0 0 160px red;
+}
+
+.neonTdOPCUA_state_good2 {
+  font-family: sans-serif;
+  text-transform: uppercase;
+  font-size: 3em;
+  font-weight: bold;
+  /*font-style: italic;*/
+  letter-spacing: 0.1em;
+  /*color: white;*/
+  text-shadow:
+    0 0 5px rgb(39, 185, 100),
+    0 0 10px rgb(32, 160, 85),
+    0 0 20px green,
+    0 0 40px green,
+    0 0 60px green,
+    0 0 90px green,
+    0 0 120px green,
+    0 0 160px green;
+}
+/*---------------------------------------------------------------------------------------------*/
+.effect-shine2 {
+  font-weight: bold;
+  font-size: 20px;
+  /*color: #00ff00; /* Neon-Grün */
+  color: white;
+  position: relative;
+
+  /* Start ohne text-shadow Animation */
+  -webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.6) 30%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 70%
+  );
+  -webkit-mask-size: 200%;
+  /*animation: shine2 5s infinite;*/ /*deaktivieren*/
+}
+
+@keyframes shine2 {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+
+/* Synchronisiere den text-shadow mit der Bewegung */
+@keyframes shadowMoveGreen2 {
+  0% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00,
+      0 0 4px #00ff00,
+      0 0 5px #00ff00;
+  }
+  /* 0% {
+    text-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00,
+      0 0 15px #00ff00,
+      0 0 20px #00ff00,
+      0 0 25px #00ff00;
+  }
+  50% {
+    text-shadow:
+      0 0 15px #00ff00,
+      0 0 30px #00ff00,
+      0 0 45px #00ff00,
+      0 0 60px #00ff00,
+      0 0 75px #00ff00;
+  }
+  100% {
+    text-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00,
+      0 0 15px #00ff00,
+      0 0 20px #00ff00,
+      0 0 25px #00ff00;
+  }*/
+}
+
+/*
+@keyframes shadowFlash {
+  /*0% {
+    text-shadow: none;
+  }*/
+/*
+  0% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00,
+      0 0 4px #00ff00,
+      0 0 5px #00ff00;
+  }
+  5% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00;
+  }
+  50% {
+    text-shadow: none;
+  }
+  100% {
+    text-shadow: none;
+  }
+}*/
+@keyframes shadowFlash {
+  0% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00;
+  }
+  10% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00;
+  }
+  15% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00;
+  }
+  20%,
+  100% {
+    text-shadow: none;
+  }
+}
+
+/* Kombiniere beide Animationen */
+.effect-shine2 {
+  animation:
+    shine2 3s infinite,
+    shadowMoveGreen2 3s infinite;
+}
+
+@keyframes shadowMoveRED {
+  0% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }
+  /*
+  50% {
+    text-shadow:
+      0 0 10px #ff0000,
+      0 0 20px #ff0000,
+      0 0 30px #ff0000,
+      0 0 40px #ff0000,
+      0 0 50px #ff0000;
+  }
+  100% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }*/
+}
+
+@keyframes blinkYellow1 {
+  0% {
+    background-color: yellow;
+  }
+  15% {
+    background-color: #f5eb5b;
+  }
+  100% {
+    background-color: #444;
+  }
+}
+
+/*@keyframes blinkYellow {
+  0% {
+    box-shadow: 0 0 20px 20px yellow;
+  }
+  50% {
+    box-shadow: 0 0 20px 20px #444;
+  }
+  100% {
+
+    box-shadow: 0 0 20px 0 #444;
+  }
+}*/
+
+/*-------------------------------------------/*
+/* Grund-Effekt: Shine-Maske */
+.effect-shine_OPC {
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  position: relative;
+
+  -webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.6) 30%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 70%
+  );
+  -webkit-mask-size: 200%;
+  animation: shine_OPC var(--shineDuration) infinite;
+}
+
+@keyframes shine_OPC {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+
+/* GRÜN: Neon Text-Glow */
+.shine-green_OPC {
+  animation: shadow-green_OPC var(--shadowDuration) infinite;
+}
+
+@keyframes shadow-green_OPC {
+  0% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00,
+      0 0 4px #00ff00,
+      0 0 5px #00ff00;
+  }
+}
+
+.shine-green_OPC_Wave {
+  animation: shadow-green_OPC_Wave var(--shadowDuration) infinite;
+}
+
+@keyframes shadow-green_OPC_Wave {
+  0%,
+  100% {
+    text-shadow: none; /* Kein Effekt */
+  }
+  25% {
+    text-shadow:
+      0 0 2px #00ff00,
+      0 0 4px #00ff00; /* Leichter Schimmer */
+  }
+  50% {
+    text-shadow:
+      0 0 5px #00ff00,
+      0 0 10px #00ff00,
+      0 0 15px #00ff00; /* Starker Umriss */
+  }
+  75% {
+    text-shadow:
+      0 0 2px #00ff00,
+      0 0 4px #00ff00; /* Wieder leichter Schein */
+  }
+}
+
+/* ROT: Neon Text-Glow */
+.shine-red_OPC {
+  animation: shadow-red_OPC var(--shadowDuration) infinite;
+}
+
+@keyframes shadow-red_OPC {
+  0% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }
+}
+
+.shine-red_OPC_Wave {
+  animation: shadow-red_OPC_Wave var(--shadowDuration) infinite;
+}
+
+@keyframes shadow-red_OPC_Wave {
+  0% {
+    text-shadow:
+      0 0 5px rgb(247, 152, 152),
+      0 0 10px rgb(247, 152, 152),
+      0 0 20px #444;
+  }
+  50% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 20px red,
+      0 0 40px red,
+      0 0 60px red,
+      0 0 90px red,
+      0 0 120px red,
+      0 0 160px red; /* Volle Power */
+  }
+  100% {
+    text-shadow:
+      0 0 5px #444,
+      0 0 10px #444,
+      0 0 20px rgb(247, 152, 152);
+  }
+}
+
+@keyframes shadow-red_OPC_Wave2 {
+  0%,
+  100% {
+    text-shadow: none; /* Kein Effekt */
+  }
+  25% {
+    text-shadow:
+      0 0 2px #ff0000,
+      0 0 4px #ff0000; /* Leichter Schimmer */
+  }
+  50% {
+    text-shadow:
+      0 0 5px #ff0000,
+      0 0 10px #ff0000,
+      0 0 15px #ff0000; /* Starker Umriss */
+  }
+  75% {
+    text-shadow:
+      0 0 2px #ff0000,
+      0 0 4px #ff0000; /* Wieder leichter Schein */
+  }
+}
+
+/* GELB: Blinkender Hintergrund */
+.blink-yellow_OPC {
+  animation: blink-yellow_OPC var(--blinkDuration) infinite;
+  border-radius: 8px;
+  box-shadow: rgb(68, 68, 68) 0px 0px 15px inset;
+}
+
+@keyframes blink-yellow_OPC {
+  0% {
+    background-color: yellow;
+  }
+  15% {
+    background-color: #f5eb5b;
+  }
+  100% {
+    background-color: #444;
+  }
+}
+
+/* Optionaler Blitz-Effekt für Text-Flash */
+.flash-text_OPC {
+  animation: flash-text_OPC var(--flashDuration) infinite;
+}
+
+@keyframes flash-text_OPC {
+  0%,
+  10%,
+  15% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00;
+  }
+  20%,
+  100% {
+    text-shadow: none;
+  }
+}
+/*-------------------------*/
+.alert-box_OPC {
+  border: 2px solid lightgreen;
+  margin-left: 5px;
+  font-size: 16px;
+  padding: 5px;
+  font-style: italic;
+  font-family: Arial;
+  border-radius: 8px;
+  box-shadow: rgb(68, 68, 68) 0px 0px 15px inset;
+  animation:
+    shine_OPC 0.5s ease 0s infinite normal none running,
+    /*shadow-red_OPC 0.5s ease 0s infinite normal none running,*/ shadowMoveRED
+      2s ease 0s infinite normal none running,
+    blink-yellow_OPC 2s ease 0s infinite normal none running,
+    flash-text_OPC 2s ease 0s infinite normal none running;
+}
+
+/*------------------------------------------------------OP"*/
+.effect-shine_2OP {
+  font-weight: bold;
+  font-size: 20px;
+  color: white;
+  position: relative;
+
+  -webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.6) 30%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 70%
+  );
+  -webkit-mask-size: 200%;
+  animation: shine_2OP 3s infinite;
+}
+
+@keyframes shine_2OP {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+
+/* GRÜN: Neon Text-Glow */
+.shine-green_2OP {
+  animation: shadow-green_2OP 3s infinite;
+}
+
+@keyframes shadow-green_2OP {
+  0% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00,
+      0 0 4px #00ff00,
+      0 0 5px #00ff00;
+  }
+}
+
+/* ROT: Neon Text-Glow */
+.shine-red_2OP {
+  animation: shadow-red_2OP 3s infinite;
+}
+
+@keyframes shadow-red_2OP {
+  0% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }
+}
+
+/* Spezielle Animation NUR für .alert-box_2OP */
+@keyframes shadowMoveRED_2OP {
+  0% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }
+}
+
+/* GELB: Blinkender Hintergrund */
+.blink-yellow_2OP {
+  animation: blink-yellow_2OP 2s infinite;
+  border-radius: 8px;
+  box-shadow: rgb(68, 68, 68) 0px 0px 15px inset;
+}
+
+@keyframes blink-yellow_2OP {
+  0% {
+    background-color: yellow;
+  }
+  15% {
+    background-color: #f5eb5b;
+  }
+  100% {
+    background-color: #444;
+  }
+}
+
+/* Optionaler Blitz-Effekt für Text-Flash */
+.flash-text_2OP {
+  animation: flash-text_2OP 2s infinite;
+}
+
+@keyframes flash-text_2OP {
+  0%,
+  10%,
+  15% {
+    text-shadow:
+      0 0 1px #00ff00,
+      0 0 2px #00ff00,
+      0 0 3px #00ff00;
+  }
+  20%,
+  100% {
+    text-shadow: none;
+  }
+}
+
+/*-------------------------*/
+.alert-box_2OP {
+  border: 2px solid lightgreen;
+  margin-left: 5px;
+  font-size: 16px;
+  padding: 5px;
+  font-style: italic;
+  font-family: Arial;
+  border-radius: 8px;
+  box-shadow: rgb(68, 68, 68) 0px 0px 15px inset;
+  animation:
+    shine_2OP 0.5s ease 0s infinite normal none running,
+    shadowMoveRED_2OP 2s ease 0s infinite normal none running,
+    blink-yellow_2OP 2s ease 0s infinite normal none running,
+    flash-text_2OP 2s ease 0s infinite normal none running;
+}
+/*-------------------P3----------------------------------*/
+
+._P3 {
+  /*border: 2px solid lightgreen;*/
+  /*margin-left: 5px;*/
+  font-size: 16px;
+  padding: 5px;
+  font-weight: bold;
+  font-style: italic;
+  font-family: Arial;
+  color: 'withe';
+  border-radius: 8px;
+  box-shadow: rgb(68, 68, 68) 0px 0px 15px inset;
+  /*animation:
+    shine_P3 0.5s ease 0s infinite normal none running,
+    shadowMoveRED_P3 0.5s ease 0s infinite normal none running,
+    blinkYellow_P3 2s ease 0s infinite normal none running;
+  */
+  animation:
+    shine_P3 var(--shineDuration, 0.5s) ease 0s infinite normal none running,
+    shadowMoveRED_P3 var(--shadowDuration, 0.5s) ease 0s infinite normal none
+      running,
+    blinkYellow_P3 var(--blinkDuration, 2s) ease 0s infinite normal none running;
+}
+
+@keyframes shine_P3 {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+
+@keyframes shadowMoveRED_P3 {
+  0% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }
+}
+
+@keyframes blinkYellow_P3 {
+  0% {
+    background-color: rgb(255, 255, 83);
+  }
+  /*15% {*/
+  30% {
+    background-color: #444;
+  }
+  100% {
+    background-color: #444;
+  }
+}
+
+/*------------------------P33--------------------------------------------------*/
+/* 
+._P3 {
+  border: 2px solid lightgreen;
+  margin-left: 5px;
+  font-size: 16px;
+  padding: 5px;
+  font-weight: bold;
+  font-style: italic;
+  font-family: Arial;
+  color: white; 
+  border-radius: 8px;
+  box-shadow: rgb(68, 68, 68) 0px 0px 15px inset;
+}
+
+
+.shine_P3 {
+  animation: shine_P3 0.5s ease infinite;
+}
+
+.shadowMoveRED_P3 {
+  animation: shadowMoveRED_P3 0.5s ease infinite;
+}
+
+.blinkYellow_P3 {
+  animation: blinkYellow_P3 2s ease infinite;
+}
+
+@keyframes shine_P3 {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}
+
+@keyframes shadowMoveRED_P3 {
+  0% {
+    text-shadow:
+      0 0 1px #ff0000,
+      0 0 2px #ff0000,
+      0 0 3px #ff0000,
+      0 0 4px #ff0000,
+      0 0 5px #ff0000;
+  }
+}
+
+@keyframes blinkYellow_P3 {
+  0% {
+    background-color: yellow;
+  }
+  15% {
+    background-color: #444;
+  }
+  100% {
+    background-color: #444;
+  }
+}
+*/
+
+.effect-shineBlue {
+  font-weight: bold;
+  font-size: 20px;
+  /*color: #00ff00; /* Neon-Grün */
+  /*color: rgb(74, 152, 216);*/
+  position: relative;
+  color: #434346;
+
+  /* Start ohne text-shadow Animation */
+  /*-webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.6) 30%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 70%
+  );*/
+  -webkit-mask-size: 200%;
+  /*animation: shine2 5s infinite;*/ /*deaktivieren*/
+  animation: shadow-blue_OPC6 var(--shadowDuration) infinite ease-in-out;
+}
+
+@keyframes shadow-blue_OPC {
+  0% {
+    text-shadow:
+      0 0 1px #fcfcfc,
+      0 0 2px #fcfcfc,
+      0 0 3px #fcfcfc,
+      0 0 4px #fcfcfc,
+      0 0 5px #fcfcfc;
+  }
+  /*20% {
+    text-shadow:
+      0 0 1px #fcfcfc,
+      0 0 2px #0f0bfc,
+      0 0 3px #0f0bfc,
+      0 0 4px #acaafd,
+      0 0 5px #42a7fa;
+  }*/
+}
+
+@keyframes shadow-blue_OPC3 {
+  0%,
+  100% {
+    text-shadow:
+      0 0 1px #ffffff,
+      /* Kein Schatten */ 0 0 2px #1900ff,
+      0 0 0px transparent,
+      0 0 0px transparent,
+      0 0 0px transparent;
+  }
+  50% {
+    text-shadow:
+      0 0 1px #ffffff,
+      0 0 4px #1900ff,
+      0 0 6px #317aff,
+      0 0 8px #74a8ff;
+    /*0 0 10px #74a8ff;*/
+  }
+}
+
+@keyframes shadow-blue_OPC5 {
+  0%,
+  100% {
+    text-shadow:
+      0 0 1px #ffffff,
+      0 0 2px #ffffff,
+      0 0 4px #317aff;
+  }
+  50% {
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 4px #74a8ff,
+      0 0 8px #317aff,
+      0 0 12px #317aff;
+  }
+}
+
+@keyframes shadow-blue_OPC6 {
+  0%,
+  100% {
+    text-shadow:
+      0 0 1px #ffffff,
+      /* ganz feiner weißer Schein → Lesbarkeit */ 0 0 2px #ffffff,
+      /* leicht stärker weiß */ 0 0 1px #1900ff; /* schwacher blauer Glow */
+  }
+  50% {
+    text-shadow:
+      0 0 2px #ffffff,
+      /* Lesbarkeit bleibt erhalten */ 0 0 4px #74a8ff,
+      /* heller blauer Glow */ 0 0 8px #317aff,
+      /* stärkerer blauer Glow */ 0 0 12px #317aff; /* weicher Rand-Großglow */
+  }
+}
+
+@keyframes shadow-blue_OPC4 {
+  0%,
+  100% {
+    text-shadow:
+      0 0 1px #ffffff,
+      0 0 2px #1900ff;
+  }
+  50% {
+    text-shadow:
+      0 0 2px #ffffff,
+      0 0 8px #317aff;
+  }
+}
+
+@keyframes shadow-blue1_OPC {
+  0% {
+    text-shadow:
+      0 0 1px #ffffff,
+      0 0 2px #f540b2,
+      0 0 3px #1900ff;
+
+    /*0 0 4px #1900ff,
+      0 0 5px #1900ff;*/
+  }
+}
+
+.effect-shineWhiteBlue {
+  font-weight: bold;
+  font-size: 20px;
+  /*color: #00ff00; /* Neon-Grün */
+  /*color: rgb(74, 152, 216);*/
+  position: relative;
+  color: #ebebf7;
+
+  /* Start ohne text-shadow Animation */
+  /*-webkit-mask-image: linear-gradient(
+    -75deg,
+    rgba(0, 0, 0, 0.6) 30%,
+    #000 50%,
+    rgba(0, 0, 0, 0.6) 70%
+  );*/
+  -webkit-mask-size: 200%;
+  /*animation: shine2 5s infinite;*/ /*deaktivieren*/
+  animation: shadow-blue1_OPC var(--shadowDuration) infinite ease-in-out;
+}
+
+/*------------------------*/
+.dots-loading .dots::after {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  text-align: left;
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0% {
+    content: '';
+  }
+  25% {
+    content: '.';
+  }
+  50% {
+    content: '..';
+  }
+  75% {
+    content: '...';
+  }
+  100% {
+    content: '';
+  }
+}
+
+.myButtonX {
+  background: url(/img/gif/hacker-gif-2.gif) no-repeat;
+  cursor: pointer;
+  border: none;
+  /*width: 100px;*/
+  height: 100px;
+}
+
+/*.myButtonX:active 
+{   
+    background:url(./images/but2.png) no-repeat;
+}*/
+
+.hacker-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* Abstand zwischen X und GIF */
+  background-color: #111;
+  /*border: 2px solid #00ff00;*/
+  color: #00ff00;
+  filter: opacity(0.5);
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  height: 40px; /* Einheitliche Höhe */
+}
+
+.hacker-button:hover {
+  background-color: #00ff00;
+  filter: blur(1px);
+  color: #111;
+  border: 1px solid #111;
+}
+
+.hacker-button img {
+  height: 32px;
+  width: 32px;
+  /*object-fit: contain;*/
+  filter: saturate(10);
+}

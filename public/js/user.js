@@ -37,11 +37,12 @@ export const showUsers_de = async () => {
         paging: true,
         //scrollY: 400,
         language: {
-          lengthMenu: 'Display _MENU_ Nutzer pro Seite',
+          search: 'Suche:',
+          lengthMenu: 'Zeige: _MENU_ Nutzer pro Seite',
           zeroRecords: 'Nothing found - sorry',
           info: 'Zeige _START_ to _END_ of _TOTAL_ Nutzer',
           infoEmpty: 'No records available',
-          infoFiltered: '(filtered from _MAX_ total records)',
+          infoFiltered: '(Gefiltert von _MAX_ total Nutzer)',
           paginate: {
             first: 'Erste',
             last: 'Letzte',

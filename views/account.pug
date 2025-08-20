@@ -31,7 +31,7 @@ block content
                             +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)
                             
 
-                - if(user.role === 'admin')
+                - if(user.role === 'admin'|| user.role === 'Chef')
                     .admin-nav
                         h5.admin-nav__heading= `${user.role}`
                         ul.side-nav

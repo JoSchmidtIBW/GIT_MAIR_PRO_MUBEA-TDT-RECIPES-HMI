@@ -2027,7 +2027,7 @@ if (updateRecipeDataForm) {
     // console.log(role);
 
     // console.log(departmentString);
-    // //TODO: CHeck if Array or only String
+    // //todo...: CHeck if Array or only String
     // const departmentsArray = departmentString.split(',');
 
     // console.log(departmentsArray);

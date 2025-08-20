@@ -32,6 +32,115 @@ export async function writeCSV_File(fileNameToWrite, dataToWrite) {
   }
 }
 
+export function formatZiehPositionsData_OPCUA_toWriteCSV_File(
+  new_RECIPE_NAME_toWrite,
+  //writeZiehPositionenArr,
+  ziehPositionenDatatypFloatArr,
+  ziehPositionWithSpeedDirectionUnique,
+  ziehPosition_DIN,
+  ziehPositionWithWriteByDobbleUnique,
+  ziehPositionsArrUnique,
+  ziehPositionsArrDoubleValues_x_z_dVerst,
+  fixLaengenArr,
+  ziehPositionsArr_x_z_dVerst_ZwischenstuekZeroValues_toShowMe,
+) {
+  console.log('Bin formatZiehPositionsData_toWriteCSV_File');
+  //TODO: CSV_ Datem Schreiben!
+  let dataToWrite = new_RECIPE_NAME_toWrite; // + '\n' + '\n';//,'';
+  dataToWrite += '\n' + '\n';
+
+  for (let i = 0; i < ziehPositionenDatatypFloatArr.length; i++) {
+    dataToWrite +=
+      ziehPositionenDatatypFloatArr[i].POS +
+      ',' +
+      ziehPositionenDatatypFloatArr[i].Speed +
+      ',' +
+      ziehPositionenDatatypFloatArr[i].Acceleration +
+      ',' +
+      ziehPositionenDatatypFloatArr[i].Stroke +
+      '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  for (let i = 0; i < ziehPositionWithSpeedDirectionUnique.length; i++) {
+    dataToWrite +=
+      ziehPositionWithSpeedDirectionUnique[i].x +
+      ',' +
+      ziehPositionWithSpeedDirectionUnique[i].z +
+      ',' +
+      ziehPositionWithSpeedDirectionUnique[i].dVerst +
+      ',' +
+      ziehPositionWithSpeedDirectionUnique[i].vSpeed +
+      '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  for (let i = 0; i < ziehPosition_DIN.length; i++) {
+    dataToWrite += JSON.stringify(ziehPosition_DIN[i]) + '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  for (let i = 0; i < ziehPositionWithWriteByDobbleUnique.length; i++) {
+    dataToWrite +=
+      ziehPositionWithWriteByDobbleUnique[i].x +
+      ',' +
+      ziehPositionWithWriteByDobbleUnique[i].z +
+      ',' +
+      ziehPositionWithWriteByDobbleUnique[i].doubleDVerst +
+      '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  for (let i = 0; i < ziehPositionsArrUnique.length; i++) {
+    dataToWrite += JSON.stringify(ziehPositionsArrUnique[i]) + '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  // for (let i = 0; i < ziehPositionenArr_toWrite.length; i++) {
+  //   dataToWrite +=
+  //     ziehPositionenArr_toWrite[i].Pos +
+  //     ',' +
+  //     ziehPositionenArr_toWrite[i].Verst +
+  //     '\n';
+  // }
+  // dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+  for (let i = 0; i < ziehPositionsArrDoubleValues_x_z_dVerst.length; i++) {
+    dataToWrite +=
+      ziehPositionsArrDoubleValues_x_z_dVerst[i].x +
+      ',' +
+      ziehPositionsArrDoubleValues_x_z_dVerst[i].z +
+      ',' +
+      ziehPositionsArrDoubleValues_x_z_dVerst[i].dVerst +
+      '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  for (let i = 0; i < fixLaengenArr.length; i++) {
+    dataToWrite += JSON.stringify(fixLaengenArr[i]) + '\n';
+  }
+
+  dataToWrite += '\n' + '\n' + '\n' + '\n' + '\n';
+
+  for (
+    let i = 0;
+    i < ziehPositionsArr_x_z_dVerst_ZwischenstuekZeroValues_toShowMe.length;
+    i++
+  ) {
+    dataToWrite +=
+      JSON.stringify(
+        ziehPositionsArr_x_z_dVerst_ZwischenstuekZeroValues_toShowMe[i],
+      ) + '\n';
+  }
+
+  return dataToWrite;
+}
+
 export function formatZiehPositionsData_toWriteCSV_File(
   ziehPositionenArr_toWrite,
   ziehPositionsArrDoubleValues_x_z_dVerst,
