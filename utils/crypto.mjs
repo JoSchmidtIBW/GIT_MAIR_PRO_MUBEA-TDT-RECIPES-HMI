@@ -14,10 +14,10 @@ import CryptoJS from 'crypto-js';
 // console.log('key: ' + key);
 
 const key = CryptoJS.SHA256(process.env.CRYPTOJS_SECRET_KEY);
-console.log(
-  'Bin crypto.mjs und process.env.CRYPTOJS_SECRET_KEY: ' +
-    process.env.CRYPTOJS_SECRET_KEY,
-);
+// console.log(
+//   'Bin crypto.mjs und process.env.CRYPTOJS_SECRET_KEY: ' +
+//     process.env.CRYPTOJS_SECRET_KEY,
+// );
 //console.log('Key in decryptPassword:', key.toString());
 
 export function decryptPassword(encryptedPassword) {

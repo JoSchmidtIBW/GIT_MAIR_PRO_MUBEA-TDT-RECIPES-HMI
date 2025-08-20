@@ -5,6 +5,19 @@ import AppError from '../utils/appError.mjs';
 import { decryptPassword } from '../utils/crypto.mjs';
 import { execAsyncPing } from '../utils/execAsyncPing.mjs';
 
+import { DataType } from 'node-opcua-variant'; //console.log("Type:", DataType[dataValue.value.dataType]); // => "String"
+
+import {
+  readPLC_RECIPE_NAME,
+  readServerStatus_OPCUA,
+  readTDT_ExchangeArea,
+  //readPLC_Status_OPCUA,
+  readSimaticStatus,
+  readPLC_Informations,
+} from '../models/services/sps_OPCUA_Service.mjs';
+
+import { disconnectOPCUA } from '../models/sps_OPCUA_Connector.mjs';
+
 import {
   readDataBySymbolName,
   readDataAll_GVL,
@@ -196,56 +209,108 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
   console.log('Bin viewController...getOverviewInlogt');
   let recipesTDT = await getFindRecipesTDTtoLoad();
 
-  //const gvl_vCsvName = 'GVL.vCsvName';
-  const gvl_vCsvName = process.env.PLC_GVL_VCSVNAME;
-  console.log('gvl_vCsvName:', gvl_vCsvName);
+  // const gvl_vCsvName = 'GVL.vCsvName';
+  // const gvl_vCsvName = process.env.PLC_GVL_VCSVNAME;
+  // console.log('gvl_vCsvName:', gvl_vCsvName);
+
+  // //PLC_OPCUA_NODEID__STRUCKTNAME=ns=3;s="Baustein_1_DB_1"
+  // const plc_OPCUA_STRUCKTNAME = process.env.PLC_OPCUA_NODEID__STRUCKTNAME;
+  // //PLC_OPCUA_NODEID__RECIPE_NAME="RECIPE_NAME"#`ns=3;s="Baustein_1_DB_1"."RECIPE_NAME"`
+  // const plc_OPCUA_RECIPE_NAME = process.env.PLC_OPCUA_NODEID__RECIPE_NAME;
+  // const plc_OPCUA_STRUCKTNAME_RECIPE_NAME = `${plc_OPCUA_STRUCKTNAME}.${plc_OPCUA_RECIPE_NAME}`;
 
   let loadedSPS_recipe_vCsvName = '';
+
+  let loadedSPS_OPCUA_RECIPE_NAME = '';
+  let loadedPLC_OPCUA_RECIPE_NAME = '';
+
   let loadedSPS_recipe;
   let artikelNummerLoad;
   let [, artikelInfo] = ['', '']; // = loadedSPS_recipe.split('>');
   try {
-    loadedSPS_recipe_vCsvName = await readDataBySymbolName(gvl_vCsvName);
-    loadedSPS_recipe = loadedSPS_recipe_vCsvName.value;
-    console.log('loadedSPS_recipe: ' + loadedSPS_recipe);
+    //loadedSPS_recipe_vCsvName = await readDataBySymbolName(gvl_vCsvName);
 
-    artikelNummerLoad = loadedSPS_recipe.split(' >')[0];
-    [, artikelInfo] = loadedSPS_recipe.split('>');
-    if (loadedSPS_recipe.includes(' >')) {
-      artikelNummerLoad = loadedSPS_recipe.split(' >')[0];
-      [, artikelInfo] = loadedSPS_recipe.split('>');
+    loadedSPS_OPCUA_RECIPE_NAME = await readPLC_RECIPE_NAME(); // readDataBySymbolName(gvl_vCsvName);
+    console.log('loadedSPS_OPCUA_RECIPE_NAME: ', loadedSPS_OPCUA_RECIPE_NAME);
+    console.log(
+      'loadedSPS_OPCUA_RECIPE_NAME.value.value: ',
+      loadedSPS_OPCUA_RECIPE_NAME.value.value,
+    );
+
+    if (loadedSPS_OPCUA_RECIPE_NAME.value.value === null) {
+      loadedPLC_OPCUA_RECIPE_NAME = '';
+    } else {
+      loadedPLC_OPCUA_RECIPE_NAME = loadedSPS_OPCUA_RECIPE_NAME.value.value;
+    }
+
+    console.log(
+      '----> loadedPLC_OPCUA_RECIPE_NAME: ',
+      loadedPLC_OPCUA_RECIPE_NAME,
+    );
+
+    // loadedSPS_recipe = loadedSPS_recipe_vCsvName.value;
+    // console.log('loadedSPS_recipe: ' + loadedSPS_recipe);
+
+    artikelNummerLoad = loadedPLC_OPCUA_RECIPE_NAME.split(' >')[0];
+    console.log('artikelNummerLoad : ', artikelNummerLoad);
+    [, artikelInfo] = loadedPLC_OPCUA_RECIPE_NAME.split('>');
+    if (loadedPLC_OPCUA_RECIPE_NAME.includes(' >')) {
+      artikelNummerLoad = loadedPLC_OPCUA_RECIPE_NAME.split(' >')[0];
+      [, artikelInfo] = loadedPLC_OPCUA_RECIPE_NAME.split('>');
       //[artikelNummerLoad, artikelInfo] = loadedSPS_recipe.split(' >');
     } else {
-      artikelNummerLoad = loadedSPS_recipe; // Falls kein " >" enthalten ist, wird der gesamte String als artikelNummerLoad gesetzt
+      artikelNummerLoad = loadedPLC_OPCUA_RECIPE_NAME; // Falls kein " >" enthalten ist, wird der gesamte String als artikelNummerLoad gesetzt
       artikelInfo = '';
+      console.log('artikelInfo_:', artikelInfo);
     }
   } catch (error) {
-    loadedSPS_recipe_vCsvName =
-      'Fehler beim Lesen readDataBySymbolName' + error;
+    loadedPLC_OPCUA_RECIPE_NAME =
+      'Fehler beim Lesen readPLC_RECIPE_NAME' + error;
     console.error(error.message);
-    loadedSPS_recipe = 'Fehler beim Lesen readDataBySymbolName' + error;
+    //loadedSPS_recipe = 'Fehler beim Lesen readDataBySymbolName' + error;
+    loadedPLC_OPCUA_RECIPE_NAME =
+      'Fehler beim Lesen readPLC_RECIPE_NAME' + error;
     //console.error(error.message);
   }
 
   //loadedSPS_recipe_vCsvName = await readDataBySymbolName(gvl_vCsvName);
+  // console.log(
+  //   'JSON.stringify(loadedSPS_recipe_vCsvName): ' +
+  //     JSON.stringify(loadedSPS_recipe_vCsvName),
+  // );
+
   console.log(
-    'JSON.stringify(loadedSPS_recipe_vCsvName): ' +
-      JSON.stringify(loadedSPS_recipe_vCsvName),
+    'JSON.stringify(loadedPLC_OPCUA_RECIPE_NAME): ' +
+      JSON.stringify(loadedPLC_OPCUA_RECIPE_NAME),
   );
 
-  console.log('loadedSPS_recipe_vCsvName: ' + loadedSPS_recipe_vCsvName);
+  // console.log('loadedSPS_recipe_vCsvName: ' + loadedSPS_recipe_vCsvName);
   // let loadedSPS_recipe = loadedSPS_recipe_vCsvName.value;
   // console.log('loadedSPS_recipe: ' + loadedSPS_recipe);
 
-  //const artikelNummerLoad = loadedSPS_recipe.split(' >')[0];
-  console.log('artikelNummerLoad: ' + artikelNummerLoad);
+  // const artikelNummerLoad = loadedPLC_OPCUA_RECIPE_NAME.split(' >')[0];
+  // console.log('artikelNummerLoad: ' + artikelNummerLoad);
   // const artikelNameLoad = loadedSPS_recipe.split('-')[]
 
-  //const [, artikelInfo] = loadedSPS_recipe.split('>');
-  //[, artikelInfo] = loadedSPS_recipe.split('>');
+  //const [, artikelInfo] = loadedPLC_OPCUA_RECIPE_NAME.split('>');
+  [, artikelInfo] = loadedPLC_OPCUA_RECIPE_NAME.split('>');
+  console.log('artikelInfo_ [, artikelInfo]:', [, artikelInfo]);
+  console.log('artikelInfo______:', artikelInfo);
+  if (artikelInfo === undefined) {
+    artikelInfo = '';
+  }
+  console.log('artikelInfo______****:', artikelInfo);
 
+  //loadedSPS_recipe: 10186190 > 23.60x4.10-3.00 - 1470mm-8000mm-7-15m/min 14.07.2025:09.41
+  //                  10188735 > 18.10x2.25-1.85 - 1572mm-8730mm-7-15m/min -1-30- 100›|‹100 - 13.08.2025:07.53
+
+  // const regex =
+  //   /([\d.x\-]+) - (\d+)mm-(\d+)mm-(\d+)-([\d.]+)m\/min (\d{2}\.\d{2}\.\d{4}):(\d{2}\.\d{2})/;
+
+  let isFindInDB = '';
   const regex =
-    /([\d.x\-]+) - (\d+)mm-(\d+)mm-(\d+)-([\d.]+)m\/min (\d{2}\.\d{2}\.\d{4}):(\d{2}\.\d{2})/;
+    /([\d.x\-]+) - (\d+)mm-(\d+)mm-(\d+)-([\d.]+)m\/min(?: -(\d+)-(\d+)-\s*(\d+›\|‹\d+))? - (\d{2}\.\d{2}\.\d{4}):(\d{2}\.\d{2})/;
+
   const match = artikelInfo.match(regex);
 
   let artikelNameLoad = '';
@@ -253,8 +318,8 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
   let mehrfachLaengeLoad = '';
   let anzahlFixLaengenLoad = '';
   let ziehGeschwindigkeitLoad = '';
-  let datumLoad = '';
-  let uhrzeitLoad = '';
+  // let datumLoad = '';
+  // let uhrzeitLoad = '';
 
   if (match) {
     artikelNameLoad = match[1];
@@ -262,8 +327,11 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
     mehrfachLaengeLoad = match[3];
     anzahlFixLaengenLoad = match[4];
     ziehGeschwindigkeitLoad = match[5];
-    datumLoad = match[6];
-    uhrzeitLoad = match[7];
+    // "zusatz1": "1",
+    // "zusatz2": "30",
+    // "zusatz3": "100›|‹100",
+    // datumLoad = match[6];
+    // uhrzeitLoad = match[7];
 
     // console.log('artikelNummerLoad: ' + artikelNummerLoad);
     // console.log('ArtikelnameLoad:', artikelNameLoad);
@@ -275,6 +343,7 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
     // console.log('UhrzeitLoad:', uhrzeitLoad);
   } else {
     console.log('Format nicht erkannt!');
+    isFindInDB = ' !!! - Nicht in DB gefunden - !!!';
   }
 
   const recipeDetails = {
@@ -290,13 +359,14 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
   //   await getFindOneRecipeByDetails(recipeDetails);
 
   let recipefindLoadedinSPSinDB;
+
   try {
     recipefindLoadedinSPSinDB = await getFindOneRecipeByDetails(recipeDetails);
   } catch (err) {
     recipefindLoadedinSPSinDB = false;
+    isFindInDB = ' !!! - Nicht in DB gefunden - !!!';
   }
 
-  let isFindInDB = '';
   if (recipefindLoadedinSPSinDB) {
     //console.log('recipefindLoadedinSPSinDB:', recipefindLoadedinSPSinDB);
     // console.log(
@@ -310,8 +380,14 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
   }
   console.log('isFindInDB: ' + isFindInDB);
 
-  if (loadedSPS_recipe === '') {
-    loadedSPS_recipe = 'Es wurde kein Rezept auf die SPS geladen!';
+  if (
+    loadedPLC_OPCUA_RECIPE_NAME === '' ||
+    isFindInDB === ' !!! - Nicht in DB gefunden - !!!' ||
+    artikelNummerLoad.length !== 8
+  ) {
+    loadedPLC_OPCUA_RECIPE_NAME =
+      loadedPLC_OPCUA_RECIPE_NAME +
+      ' - Es wurde kein Rezept auf die SPS geladen!';
   }
 
   //console.log('recipesTDT: ' + recipesTDT);
@@ -326,14 +402,27 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
     res.status(200).render('overviewInlogt_de', {
       title: 'overviewIN',
       data: recipesTDT,
-      dataSPS: loadedSPS_recipe,
+      dataSPS: loadedPLC_OPCUA_RECIPE_NAME,
       // ? loadedSPS_recipe
       // : 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+
       recipefindLoadedinSPSinDB: JSON.stringify(
         recipefindLoadedinSPSinDB,
         null,
         2,
       ), //recipefindLoadedinSPSinDB,
+
+      // recipefindLoadedinSPSinDB: JSON.stringify(
+      //   recipefindLoadedinSPSinDB,
+      //   (key, value) => {
+      //     if (typeof value === 'number') {
+      //       return Number(value.toFixed(2)); //Number(value.toFixed(2)); // Oder String(value.toFixed(2)) wenn du "1.00" sehen willst
+      //     }
+      //     return value;
+      //   },
+      //   2,
+      // ),
+
       isFindInDB: isFindInDB,
       user: req.user,
     });
@@ -341,7 +430,7 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
     res.status(200).render('overviewInlogt_cs', {
       title: 'overviewIN',
       data: recipesTDT,
-      dataSPS: loadedSPS_recipe,
+      dataSPS: loadedPLC_OPCUA_RECIPE_NAME, //loadedSPS_recipe,
       // ? loadedSPS_recipe
       // : 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       recipefindLoadedinSPSinDB: JSON.stringify(
@@ -356,7 +445,7 @@ export const getOverviewInlogt = catchAsync(async (req, res, next) => {
     res.status(200).render('overviewInlogt', {
       title: 'overviewIN',
       data: recipesTDT,
-      dataSPS: loadedSPS_recipe,
+      dataSPS: loadedPLC_OPCUA_RECIPE_NAME, //loadedSPS_recipe,
       // ? loadedSPS_recipe
       // : 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
       recipefindLoadedinSPSinDB: JSON.stringify(
@@ -375,61 +464,89 @@ export const getOverview = catchAsync(async (req, res, next) => {
   console.log(req.user);
 
   //const gvl_vCsvName_NotInlogt = 'GVL.vCsvName';
-  const gvl_vCsvName_NotInlogt = process.env.PLC_GVL_VCSVNAME;
-  console.log('gvl_vCsvName_NotInlogt:', gvl_vCsvName_NotInlogt);
+  // const gvl_vCsvName_NotInlogt = process.env.PLC_GVL_VCSVNAME;
+  // console.log('gvl_vCsvName_NotInlogt:', gvl_vCsvName_NotInlogt);
+
+  let loadedSPS_recipe_vCsvName = '';
+
+  let loadedSPS_OPCUA_RECIPE_NAME_NotInlogt = '';
+  let loadedPLC_OPCUA_RECIPE_NAME_NotInlogt = '';
+
+  // let loadedSPS_recipe_NotInlogt;
+  // let artikelNummerLoad_NotInlogt;
+  // let [, artikelInfo_NotInlogt] = ['', '']; // = loadedSPS_recipe.split('>');
 
   let loadedSPS_recipe_vCsvName_NotInlogt = '';
   let loadedSPS_recipe_NotInlogt;
   let artikelNummerLoad_NotInlogt;
   let [, artikelInfo_NotInlogt] = ['', '']; // = loadedSPS_recipe.split('>');
-  try {
-    loadedSPS_recipe_vCsvName_NotInlogt = await readDataBySymbolName(
-      gvl_vCsvName_NotInlogt,
-    );
-    loadedSPS_recipe_NotInlogt = loadedSPS_recipe_vCsvName_NotInlogt.value;
-    console.log('loadedSPS_recipe_NotInlogt: ' + loadedSPS_recipe_NotInlogt);
 
-    artikelNummerLoad_NotInlogt = loadedSPS_recipe_NotInlogt.split(' >')[0];
-    [, artikelInfo_NotInlogt] = loadedSPS_recipe_NotInlogt.split('>');
-    if (loadedSPS_recipe_NotInlogt.includes(' >')) {
-      artikelNummerLoad_NotInlogt = loadedSPS_recipe_NotInlogt.split(' >')[0];
-      [, artikelInfo_NotInlogt] = loadedSPS_recipe_NotInlogt.split('>');
-      //[artikelNummerLoad, artikelInfo] = loadedSPS_recipe.split(' >');
+  try {
+    loadedSPS_OPCUA_RECIPE_NAME_NotInlogt = await readPLC_RECIPE_NAME(); // readDataBySymbolName(gvl_vCsvName);
+    console.log(
+      'loadedSPS_OPCUA_RECIPE_NAME_NotInlogt: ',
+      loadedSPS_OPCUA_RECIPE_NAME_NotInlogt,
+    );
+    console.log(
+      'loadedSPS_OPCUA_RECIPE_NAME_NotInlogt.value.value: ',
+      loadedSPS_OPCUA_RECIPE_NAME_NotInlogt.value.value,
+    );
+
+    if (loadedSPS_OPCUA_RECIPE_NAME_NotInlogt.value.value === null) {
+      loadedPLC_OPCUA_RECIPE_NAME_NotInlogt = '';
     } else {
-      artikelNummerLoad_NotInlogt = loadedSPS_recipe_NotInlogt; // Falls kein " >" enthalten ist, wird der gesamte String als artikelNummerLoad gesetzt
-      artikelInfo_NotInlogt = ''; // artikelInfo bleibt leer
+      loadedPLC_OPCUA_RECIPE_NAME_NotInlogt =
+        loadedSPS_OPCUA_RECIPE_NAME_NotInlogt.value.value;
+    }
+
+    console.log(
+      '----> loadedPLC_OPCUA_RECIPE_NAME_NotInlogt: ',
+      loadedPLC_OPCUA_RECIPE_NAME_NotInlogt,
+    );
+
+    artikelNummerLoad_NotInlogt =
+      loadedPLC_OPCUA_RECIPE_NAME_NotInlogt.split(' >')[0];
+    console.log('artikelNummerLoad_NotInlogt : ', artikelNummerLoad_NotInlogt);
+    [, artikelInfo_NotInlogt] =
+      loadedPLC_OPCUA_RECIPE_NAME_NotInlogt.split('>');
+    if (loadedPLC_OPCUA_RECIPE_NAME_NotInlogt.includes(' >')) {
+      artikelNummerLoad_NotInlogt =
+        loadedPLC_OPCUA_RECIPE_NAME_NotInlogt.split(' >')[0];
+      [, artikelInfo_NotInlogt] =
+        loadedPLC_OPCUA_RECIPE_NAME_NotInlogt.split('>');
+    } else {
+      artikelNummerLoad_NotInlogt = loadedPLC_OPCUA_RECIPE_NAME_NotInlogt; // Falls kein " >" enthalten ist, wird der gesamte String als artikelNummerLoad gesetzt
+      artikelInfo_NotInlogt = '';
+      console.log('artikelInfo__NotInlogt:', artikelInfo_NotInlogt);
     }
   } catch (error) {
-    loadedSPS_recipe_vCsvName_NotInlogt =
-      'Fehler beim Lesen readDataBySymbolName' + error;
+    loadedPLC_OPCUA_RECIPE_NAME_NotInlogt =
+      'Fehler beim Lesen readPLC_RECIPE_NAME_NotInlogt' + error;
     console.error(error.message);
-    loadedSPS_recipe_NotInlogt =
-      'Fehler beim Lesen readDataBySymbolName' + error;
-    //console.error(error.message);
+    loadedPLC_OPCUA_RECIPE_NAME_NotInlogt =
+      'Fehler beim Lesen readPLC_RECIPE_NAME_NotInlogt' + error;
   }
 
-  //loadedSPS_recipe_vCsvName = await readDataBySymbolName(gvl_vCsvName);
   console.log(
-    'JSON.stringify(loadedSPS_recipe_vCsvName_NotInlogt): ' +
-      JSON.stringify(loadedSPS_recipe_vCsvName_NotInlogt),
+    'JSON.stringify(loadedPLC_OPCUA_RECIPE_NAME_NotInlogt): ' +
+      JSON.stringify(loadedPLC_OPCUA_RECIPE_NAME_NotInlogt),
   );
 
-  console.log(
-    'loadedSPS_recipe_vCsvName_NotInlogt: ' +
-      loadedSPS_recipe_vCsvName_NotInlogt,
-  );
-  // let loadedSPS_recipe = loadedSPS_recipe_vCsvName.value;
-  // console.log('loadedSPS_recipe: ' + loadedSPS_recipe);
+  [, artikelInfo_NotInlogt] = loadedPLC_OPCUA_RECIPE_NAME_NotInlogt.split('>');
+  console.log('artikelInfo__NotInlogt [, artikelInfo_NotInlogt]:', [
+    ,
+    artikelInfo_NotInlogt,
+  ]);
+  console.log('artikelInfo_______NotInlogt:', artikelInfo_NotInlogt);
+  if (artikelInfo_NotInlogt === undefined) {
+    artikelInfo_NotInlogt = '';
+  }
+  console.log('artikelInfo_______NotInlogt****:', artikelInfo_NotInlogt);
 
-  //const artikelNummerLoad = loadedSPS_recipe.split(' >')[0];
-  console.log('artikelNummerLoad_NotInlogt: ' + artikelNummerLoad_NotInlogt);
-  // const artikelNameLoad = loadedSPS_recipe.split('-')[]
-
-  //const [, artikelInfo] = loadedSPS_recipe.split('>');
-  //[, artikelInfo] = loadedSPS_recipe.split('>');
-
+  let isFindInDB_NotInlogt = '';
   const regex_NotInlogt =
-    /([\d.x\-]+) - (\d+)mm-(\d+)mm-(\d+)-([\d.]+)m\/min (\d{2}\.\d{2}\.\d{4}):(\d{2}\.\d{2})/;
+    /([\d.x\-]+) - (\d+)mm-(\d+)mm-(\d+)-([\d.]+)m\/min(?: -(\d+)-(\d+)-\s*(\d+›\|‹\d+))? - (\d{2}\.\d{2}\.\d{4}):(\d{2}\.\d{2})/;
+
   const match_NotInlogt = artikelInfo_NotInlogt.match(regex_NotInlogt);
 
   let artikelNameLoad_NotInlogt = '';
@@ -437,8 +554,8 @@ export const getOverview = catchAsync(async (req, res, next) => {
   let mehrfachLaengeLoad_NotInlogt = '';
   let anzahlFixLaengenLoad_NotInlogt = '';
   let ziehGeschwindigkeitLoad_NotInlogt = '';
-  let datumLoad_NotInlogt = '';
-  let uhrzeitLoad_NotInlogt = '';
+  // let datumLoad = '';
+  // let uhrzeitLoad = '';
 
   if (match_NotInlogt) {
     artikelNameLoad_NotInlogt = match_NotInlogt[1];
@@ -446,8 +563,11 @@ export const getOverview = catchAsync(async (req, res, next) => {
     mehrfachLaengeLoad_NotInlogt = match_NotInlogt[3];
     anzahlFixLaengenLoad_NotInlogt = match_NotInlogt[4];
     ziehGeschwindigkeitLoad_NotInlogt = match_NotInlogt[5];
-    datumLoad_NotInlogt = match_NotInlogt[6];
-    uhrzeitLoad_NotInlogt = match_NotInlogt[7];
+    // "zusatz1": "1",
+    // "zusatz2": "30",
+    // "zusatz3": "100›|‹100",
+    // datumLoad = match[6];
+    // uhrzeitLoad = match[7];
 
     // console.log('artikelNummerLoad: ' + artikelNummerLoad);
     // console.log('ArtikelnameLoad:', artikelNameLoad);
@@ -459,77 +579,205 @@ export const getOverview = catchAsync(async (req, res, next) => {
     // console.log('UhrzeitLoad:', uhrzeitLoad);
   } else {
     console.log('Format nicht erkannt!');
+    isFindInDB_NotInlogt = ' !!! - Nenalezen v databázi - !!!';
   }
 
   const recipeDetails_NotInlogt = {
     artikelNummer: Number(artikelNummerLoad_NotInlogt),
-    //artikelName: artikelNameLoad_NotInlogt,
+    //artikelName: artikelNameLoad,
     ziehGeschwindigkeit: ziehGeschwindigkeitLoad_NotInlogt,
     fixLaenge: Number(fixLaengeLoad_NotInlogt),
     mehrfachlaenge: Number(mehrfachLaengeLoad_NotInlogt),
     anzahlFixlaengenProMehrfachlaenge: Number(anzahlFixLaengenLoad_NotInlogt),
   };
 
-  // const recipefindLoadedinSPSinDB =
-  //   await getFindOneRecipeByDetails(recipeDetails);
-
   let recipefindLoadedinSPSinDB_NotInlogt;
+
   try {
     recipefindLoadedinSPSinDB_NotInlogt = await getFindOneRecipeByDetails(
       recipeDetails_NotInlogt,
     );
   } catch (err) {
     recipefindLoadedinSPSinDB_NotInlogt = false;
+    isFindInDB_NotInlogt = ' !!! - Nenalezen v databázi - Zkusit znovu - !!!';
   }
 
-  let isFindInDB_NotInlogt = '';
   if (recipefindLoadedinSPSinDB_NotInlogt) {
-    console.log(
-      'recipefindLoadedinSPSinDB_NotInlogt:',
-      recipefindLoadedinSPSinDB_NotInlogt,
-    );
-    console.log(
-      'recipefindLoadedinSPSinDB_NotInlogt:',
-      JSON.stringify(recipefindLoadedinSPSinDB_NotInlogt, null, 2),
-    );
+    //console.log('recipefindLoadedinSPSinDB:', recipefindLoadedinSPSinDB);
+    // console.log(
+    //   'recipefindLoadedinSPSinDB:',
+    //   JSON.stringify(recipefindLoadedinSPSinDB, null, 2),
+    // );
     isFindInDB_NotInlogt = ' -';
   } else {
     console.log('Kein Rezept gefunden.');
-    isFindInDB_NotInlogt = ' !!! - Nicht in DB gefunden - Zkusit znovu - !!!';
+    isFindInDB_NotInlogt = ' !!! - Nenalezen v databázi - Zkusit znovu - !!!';
   }
-  console.log('isFindInDB_NotInlogt: ' + isFindInDB_NotInlogt);
+  console.log('isFindInDB: ' + isFindInDB_NotInlogt);
 
-  if (loadedSPS_recipe_NotInlogt === '') {
-    loadedSPS_recipe_NotInlogt = 'Es wurde kein Rezept auf die SPS geladen!';
+  if (
+    loadedPLC_OPCUA_RECIPE_NAME_NotInlogt === '' ||
+    isFindInDB_NotInlogt ===
+      ' !!! - Nenalezen v databázi - Zkusit znovu - !!!' ||
+    artikelNummerLoad_NotInlogt.length !== 8
+  ) {
+    loadedPLC_OPCUA_RECIPE_NAME_NotInlogt =
+      loadedPLC_OPCUA_RECIPE_NAME_NotInlogt +
+      ' - Do PLC nebyl nahrán žádný recept!';
   }
 
-  //console.log('recipesTDT: ' + recipesTDT);
-  //console.log('recipesTDT:', JSON.stringify(recipesTDT, null, 2));
-
-  //TODO: überprüfen ob nicht eine Fehlermeldung kommen soll
   if (recipesTDT_NotInlogt.length === 0) {
-    recipesTDT_NotInlogt = 'Es sind keine Daten gefunden worden';
+    recipesTDT_NotInlogt = 'Nenalezena žádná data';
   }
 
-  // res.status(200).render('overview_NotInlogt_de', {
-  //   title: 'Übersicht',
-  //   data: recipesTDT_NotInlogt,
-  //   dataSPS: loadedSPS_recipe_NotInlogt,
-  //   // ? loadedSPS_recipe
-  //   // : 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-  //   recipefindLoadedinSPSinDB: JSON.stringify(
+  // try {
+  //   loadedSPS_recipe_vCsvName_NotInlogt = await readDataBySymbolName(
+  //     gvl_vCsvName_NotInlogt,
+  //   );
+  //   loadedSPS_recipe_NotInlogt = loadedSPS_recipe_vCsvName_NotInlogt.value;
+  //   console.log('loadedSPS_recipe_NotInlogt: ' + loadedSPS_recipe_NotInlogt);
+
+  //   artikelNummerLoad_NotInlogt = loadedSPS_recipe_NotInlogt.split(' >')[0];
+  //   [, artikelInfo_NotInlogt] = loadedSPS_recipe_NotInlogt.split('>');
+  //   if (loadedSPS_recipe_NotInlogt.includes(' >')) {
+  //     artikelNummerLoad_NotInlogt = loadedSPS_recipe_NotInlogt.split(' >')[0];
+  //     [, artikelInfo_NotInlogt] = loadedSPS_recipe_NotInlogt.split('>');
+  //     //[artikelNummerLoad, artikelInfo] = loadedSPS_recipe.split(' >');
+  //   } else {
+  //     artikelNummerLoad_NotInlogt = loadedSPS_recipe_NotInlogt; // Falls kein " >" enthalten ist, wird der gesamte String als artikelNummerLoad gesetzt
+  //     artikelInfo_NotInlogt = ''; // artikelInfo bleibt leer
+  //   }
+  // } catch (error) {
+  //   loadedSPS_recipe_vCsvName_NotInlogt =
+  //     'Fehler beim Lesen readDataBySymbolName' + error;
+  //   console.error(error.message);
+  //   loadedSPS_recipe_NotInlogt =
+  //     'Fehler beim Lesen readDataBySymbolName' + error;
+  //   //console.error(error.message);
+  // }
+
+  // //loadedSPS_recipe_vCsvName = await readDataBySymbolName(gvl_vCsvName);
+  // console.log(
+  //   'JSON.stringify(loadedSPS_recipe_vCsvName_NotInlogt): ' +
+  //     JSON.stringify(loadedSPS_recipe_vCsvName_NotInlogt),
+  // );
+
+  // console.log(
+  //   'loadedSPS_recipe_vCsvName_NotInlogt: ' +
+  //     loadedSPS_recipe_vCsvName_NotInlogt,
+  // );
+  // // let loadedSPS_recipe = loadedSPS_recipe_vCsvName.value;
+  // // console.log('loadedSPS_recipe: ' + loadedSPS_recipe);
+
+  // //const artikelNummerLoad = loadedSPS_recipe.split(' >')[0];
+  // console.log('artikelNummerLoad_NotInlogt: ' + artikelNummerLoad_NotInlogt);
+  // // const artikelNameLoad = loadedSPS_recipe.split('-')[]
+
+  // //const [, artikelInfo] = loadedSPS_recipe.split('>');
+  // //[, artikelInfo] = loadedSPS_recipe.split('>');
+
+  // const regex_NotInlogt =
+  //   /([\d.x\-]+) - (\d+)mm-(\d+)mm-(\d+)-([\d.]+)m\/min (\d{2}\.\d{2}\.\d{4}):(\d{2}\.\d{2})/;
+  // const match_NotInlogt = artikelInfo_NotInlogt.match(regex_NotInlogt);
+
+  // let artikelNameLoad_NotInlogt = '';
+  // let fixLaengeLoad_NotInlogt = '';
+  // let mehrfachLaengeLoad_NotInlogt = '';
+  // let anzahlFixLaengenLoad_NotInlogt = '';
+  // let ziehGeschwindigkeitLoad_NotInlogt = '';
+  // let datumLoad_NotInlogt = '';
+  // let uhrzeitLoad_NotInlogt = '';
+
+  // if (match_NotInlogt) {
+  //   artikelNameLoad_NotInlogt = match_NotInlogt[1];
+  //   fixLaengeLoad_NotInlogt = match_NotInlogt[2];
+  //   mehrfachLaengeLoad_NotInlogt = match_NotInlogt[3];
+  //   anzahlFixLaengenLoad_NotInlogt = match_NotInlogt[4];
+  //   ziehGeschwindigkeitLoad_NotInlogt = match_NotInlogt[5];
+  //   datumLoad_NotInlogt = match_NotInlogt[6];
+  //   uhrzeitLoad_NotInlogt = match_NotInlogt[7];
+
+  //   // console.log('artikelNummerLoad: ' + artikelNummerLoad);
+  //   // console.log('ArtikelnameLoad:', artikelNameLoad);
+  //   // console.log('FixlängeLoad:', fixLaengeLoad);
+  //   // console.log('MehrfachlängeLoad:', mehrfachLaengeLoad);
+  //   // console.log('Anzahl FixlängenLoad:', anzahlFixLaengenLoad);
+  //   // console.log('ZiehgeschwindigkeitLoad:', ziehGeschwindigkeitLoad);
+  //   // console.log('DatumLoad:', datumLoad);
+  //   // console.log('UhrzeitLoad:', uhrzeitLoad);
+  // } else {
+  //   console.log('Format nicht erkannt!');
+  // }
+
+  // const recipeDetails_NotInlogt = {
+  //   artikelNummer: Number(artikelNummerLoad_NotInlogt),
+  //   //artikelName: artikelNameLoad_NotInlogt,
+  //   ziehGeschwindigkeit: ziehGeschwindigkeitLoad_NotInlogt,
+  //   fixLaenge: Number(fixLaengeLoad_NotInlogt),
+  //   mehrfachlaenge: Number(mehrfachLaengeLoad_NotInlogt),
+  //   anzahlFixlaengenProMehrfachlaenge: Number(anzahlFixLaengenLoad_NotInlogt),
+  // };
+
+  // // const recipefindLoadedinSPSinDB =
+  // //   await getFindOneRecipeByDetails(recipeDetails);
+
+  // let recipefindLoadedinSPSinDB_NotInlogt;
+  // try {
+  //   recipefindLoadedinSPSinDB_NotInlogt = await getFindOneRecipeByDetails(
+  //     recipeDetails_NotInlogt,
+  //   );
+  // } catch (err) {
+  //   recipefindLoadedinSPSinDB_NotInlogt = false;
+  // }
+
+  // let isFindInDB_NotInlogt = '';
+  // if (recipefindLoadedinSPSinDB_NotInlogt) {
+  //   console.log(
+  //     'recipefindLoadedinSPSinDB_NotInlogt:',
   //     recipefindLoadedinSPSinDB_NotInlogt,
-  //     null,
-  //     2,
-  //   ), //recipefindLoadedinSPSinDB,
-  //   isFindInDB: isFindInDB_NotInlogt,
-  //   user: req.user,
-  // });
+  //   );
+  //   console.log(
+  //     'recipefindLoadedinSPSinDB_NotInlogt:',
+  //     JSON.stringify(recipefindLoadedinSPSinDB_NotInlogt, null, 2),
+  //   );
+  //   isFindInDB_NotInlogt = ' -';
+  // } else {
+  //   console.log('Kein Rezept gefunden.');
+  //   isFindInDB_NotInlogt = ' !!! - Nicht in DB gefunden - Zkusit znovu - !!!';
+  // }
+  // console.log('isFindInDB_NotInlogt: ' + isFindInDB_NotInlogt);
+
+  // if (loadedSPS_recipe_NotInlogt === '') {
+  //   loadedSPS_recipe_NotInlogt = 'Es wurde kein Rezept auf die SPS geladen!';
+  // }
+
+  // //console.log('recipesTDT: ' + recipesTDT);
+  // //console.log('recipesTDT:', JSON.stringify(recipesTDT, null, 2));
+
+  // //TODO: überprüfen ob nicht eine Fehlermeldung kommen soll
+  // if (recipesTDT_NotInlogt.length === 0) {
+  //   recipesTDT_NotInlogt = 'Es sind keine Daten gefunden worden';
+  // }
+
+  // // res.status(200).render('overview_NotInlogt_de', {
+  // //   title: 'Übersicht',
+  // //   data: recipesTDT_NotInlogt,
+  // //   dataSPS: loadedSPS_recipe_NotInlogt,
+  // //   // ? loadedSPS_recipe
+  // //   // : 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+  // //   recipefindLoadedinSPSinDB: JSON.stringify(
+  // //     recipefindLoadedinSPSinDB_NotInlogt,
+  // //     null,
+  // //     2,
+  // //   ), //recipefindLoadedinSPSinDB,
+  // //   isFindInDB: isFindInDB_NotInlogt,
+  // //   user: req.user,
+  // // });
 
   res.status(200).render('overview_NotInlogt_cs', {
     title: 'Přehled',
     data: recipesTDT_NotInlogt,
-    dataSPS: loadedSPS_recipe_NotInlogt,
+    dataSPS: loadedPLC_OPCUA_RECIPE_NAME_NotInlogt, //loadedSPS_recipe_NotInlogt,
     // ? loadedSPS_recipe
     // : 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
     recipefindLoadedinSPSinDB: JSON.stringify(
@@ -1036,6 +1284,7 @@ export const getUpdateUser = catchAsync(async (req, res, next) => {
   //.select('+password')
   //.populate('machinery');
 
+  console.log('currentUser: ' + currentUser);
   console.log('userToUpdate: ' + userToUpdate);
 
   // let iv = CryptoJS.enc.Base64.parse(''); //giving empty initialization vector
@@ -1054,8 +1303,19 @@ export const getUpdateUser = catchAsync(async (req, res, next) => {
     return next(new AppError('There is no User with that ID.', 404));
   }
 
-  // That no one can change the Admin
-  if (userToUpdate.role === 'admin' && req.user.role !== 'admin') {
+  console.log('currentUser.role: ' + currentUser.role);
+  console.log('userToUpdate._id: ' + userToUpdate._id);
+
+  // That no one can change the Admin, NO_ACCOUNT_DUMMY, NO_NAME_IN_OLD_RECIPE_DUMMY, DELETED_USER_DUMMY
+  if (
+    (userToUpdate.role === 'admin' && req.user.role !== 'admin') ||
+    (userToUpdate._id.toString() === '000000000000000000000000' &&
+      req.user.role === 'Chef') ||
+    (userToUpdate._id.toString() === '000000000000000000000001' &&
+      req.user.role === 'Chef') ||
+    (userToUpdate._id.toString() === '643c1f042df0321cb8a06a50' &&
+      req.user.role === 'Chef')
+  ) {
     res.status(401).render('error', {
       msg: 'You do not have permission to perform this action!',
     });
@@ -1097,14 +1357,22 @@ export const getUpdateUser = catchAsync(async (req, res, next) => {
           currentUser: currentUser,
         },
       });
+    } else if (req.user.language === 'cs') {
+      res.status(200).render('updateUserByChef_cs', {
+        title: 'Aktualizovat uživatele',
+        data: {
+          userToUpdate: userToUpdate,
+          currentUser: currentUser,
+        },
+      });
     } else {
-      //   res.status(200).render('updateUserByChef', {
-      //     title: 'Update user',
-      //     data: {
-      //       userToUpdate: userToUpdate,
-      //       currentUser: currentUser,
-      //     },
-      //   });
+      res.status(200).render('updateUserByChef', {
+        title: 'Update user',
+        data: {
+          userToUpdate: userToUpdate,
+          currentUser: currentUser,
+        },
+      });
     }
   }
 });
@@ -1327,3 +1595,259 @@ export const getContact_NotInlogt = catchAsync(async (req, res, next) => {
     title: 'Kontakt',
   });
 });
+
+export const getSPS_OPCUA = catchAsync(async (req, res, next) => {
+  console.log('bin getSPS_OPCUA');
+  const plc_OPCUA_WITHSIMATIC = process.env.PLC_OPCUA_WITHSIMATIC;
+
+  const typeMap = {
+    'ns=0;i=1': 'BOOL / Boolean',
+    'ns=0;i=2': 'SINT / SByte',
+    'ns=0;i=3': 'USINT / Byte',
+    'ns=0;i=4': 'INT / Int16',
+    'ns=0;i=5': 'UINT / UInt16',
+    'ns=0;i=6': 'DINT / Int32',
+    'ns=0;i=7': 'UDINT / UInt32',
+    'ns=0;i=8': 'LINT / Int64',
+    'ns=0;i=9': 'ULINT / UInt64',
+    'ns=0;i=10': 'REAL / Float',
+    'ns=0;i=11': 'LREAL / Double',
+    'ns=0;i=12': 'WSTRING / String',
+    'ns=0;i=13': 'LDT / DateTime',
+    'ns=0;i=19': 'DWORD / StatusCode',
+    'ns=3;i=3001': 'BYTE / Byte',
+    'ns=3;i=3002': 'WORD / Word',
+    'ns=3;i=3003': 'DWORD / DWord',
+    'ns=3;i=3004': 'LWORD / LWord',
+    'ns=3;i=3011': 'DT / Date_And_Time',
+    'ns=3;i=3012': 'CHAR / Char',
+    'ns=3;i=3013': 'WCHAR / WChar',
+    'ns=3;i=3014': 'STRING / String',
+  };
+
+  const accessMap = {
+    3: 'read/write',
+    1: 'read',
+    2: 'write',
+  };
+
+  //TODO: wenn SimaticWith === 1!!!
+  let dataPLC_Simatic_Obj_Emty = {
+    value: {
+      dataType: '-',
+      arrayType: '-',
+      value: '-',
+    },
+    statusCode: {
+      value: '-',
+      description: '-',
+      name: '-',
+    },
+    sourceTimestamp: '-',
+    sourcePicoseconds: '-',
+    serverTimestamp: '-',
+    serverPicoseconds: '-',
+  };
+
+  await disconnectOPCUA();
+
+  let plcSimaticStatus = dataPLC_Simatic_Obj_Emty;
+  let plcInformations = '-';
+  if (plc_OPCUA_WITHSIMATIC === '1') {
+    try {
+      plcSimaticStatus = await withTimeout(readSimaticStatus(), 10000);
+      console.log('🟦 ✅ plcSimaticStatus: '); //, plcSimaticStatus);
+    } catch (err) {
+      console.log('‼️ Fehler beim Lesen von readSimaticStatus: ' + err);
+      //plcSimaticStatus = dataPLC_Simatic_Obj_Emty;
+    }
+    //await pause(1000);
+
+    try {
+      //console.log('Mache readPLC_Informations()...');
+      plcInformations = await withTimeout(readPLC_Informations(), 10000);
+      console.log('🟦 ✅ plcInformations: '); //, plcInformations);
+    } catch (err) {
+      console.log('‼️ Fehler beim Lesen von readPLC_Informations: ' + err);
+      plcInformations = '-';
+    }
+  }
+
+  try {
+    const serverStatus = await withTimeout(readServerStatus_OPCUA(), 20000);
+    console.log('🟦 ✅ serverStatus:', serverStatus);
+
+    await pause(3000);
+
+    const data_TDT_ExchaneArea = await withTimeout(
+      readTDT_ExchangeArea(),
+      50000,
+    );
+
+    console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiir');
+
+    // if (plcSimaticStatus === dataPLC_Simatic_Obj_Emty) {
+    //   // Verbindung ist evtl. zu spät gekommen
+    //   // Optional: noch einmal lesen oder UI-Message zeigen
+    // }
+
+    //await pause(5000);
+    await disconnectOPCUA();
+
+    // res.status(200).render('getSPS_OPC_UA_de', {
+    //   title: 'getSPS_OPCUA',
+    //   dataPLC: serverStatus,
+    //   dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+    //   dataPLCInfo: plcInformations,
+    //   data_TDT_ExchaneArea: data_TDT_ExchaneArea,
+    //   typeMap,
+    //   accessMap,
+    // });
+
+    if (req.user.language === 'de') {
+      res.status(200).render('getSPS_OPC_UA_de', {
+        title: 'getSPS_OPCUA',
+        dataPLC: serverStatus,
+        dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+        dataPLCInfo: plcInformations,
+        data_TDT_ExchaneArea: data_TDT_ExchaneArea,
+        typeMap,
+        accessMap,
+      });
+    } else if (req.user.language === 'cs') {
+      res.status(200).render('getSPS_OPC_UA_cs', {
+        title: 'getSPS_OPCUA',
+        dataPLC: serverStatus,
+        dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+        dataPLCInfo: plcInformations,
+        data_TDT_ExchaneArea: data_TDT_ExchaneArea,
+        typeMap,
+        accessMap,
+      });
+    } else {
+      res.status(200).render('getSPS_OPC_UA', {
+        title: 'getSPS_OPCUA',
+        dataPLC: serverStatus,
+        dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+        dataPLCInfo: plcInformations,
+        data_TDT_ExchaneArea: data_TDT_ExchaneArea,
+        typeMap,
+        accessMap,
+      });
+    }
+  } catch (err) {
+    let dataPLC_Server_Obj_Emty = {
+      startTime: '-',
+      currentTime: '-',
+      state: '-',
+      buildInfo: {
+        productUri: '-',
+        manufacturerName: '-',
+        productName: '-',
+        softwareVersion: '-',
+        buildNumber: '-',
+        buildDate: '-',
+      },
+      secondsTillShutdown: 0,
+      shutdownReason: {},
+    };
+
+    console.log('Fehler beim öffnen der Seite getSPS_OPCUA:', err);
+
+    // res.status(200).render('getSPS_OPC_UA_de', {
+    //   title: 'getSPS_OPCUA',
+    //   dataPLC: dataPLC_Server_Obj_Emty, //'hallo keine verbindung?', //serverStatus,
+    //   dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+    //   dataPLCInfo: plcInformations,
+    //   data_RECIPE_NAME: '-',
+    //   typeMap,
+    //   accessMap,
+    // });
+
+    if (req.user.language === 'de') {
+      res.status(200).render('getSPS_OPC_UA_de', {
+        title: 'getSPS_OPCUA',
+        dataPLC: dataPLC_Server_Obj_Emty, //'hallo keine verbindung?', //serverStatus,
+        dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+        dataPLCInfo: plcInformations,
+        data_RECIPE_NAME: '-',
+        typeMap,
+        accessMap,
+      });
+    } else if (req.user.language === 'cs') {
+      res.status(200).render('getSPS_OPC_UA_cs', {
+        title: 'getSPS_OPCUA',
+        dataPLC: dataPLC_Server_Obj_Emty, //'hallo keine verbindung?', //serverStatus,
+        dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+        dataPLCInfo: plcInformations,
+        data_RECIPE_NAME: '-',
+        typeMap,
+        accessMap,
+      });
+    } else {
+      res.status(200).render('getSPS_OPC_UA', {
+        title: 'getSPS_OPCUA',
+        dataPLC: dataPLC_Server_Obj_Emty, //'hallo keine verbindung?', //serverStatus,
+        dataSimatic: plcSimaticStatus, //dataPLC_Simatic_Obj_Emty,
+        dataPLCInfo: plcInformations,
+        data_RECIPE_NAME: '-',
+        typeMap,
+        accessMap,
+      });
+    }
+  }
+});
+
+function withTimeout(promise, ms = 10000) {
+  const timeout = new Promise((_, reject) =>
+    setTimeout(
+      () =>
+        reject(
+          new Error(
+            'Timeout beim OPC-UA Zugriff, weil die Zeit für das Ergebnis als Promise abgelaufen ist... :(',
+          ),
+        ),
+      ms,
+    ),
+  );
+  return Promise.race([promise, timeout]);
+}
+
+function pause(milliseconds) {
+  console.log('Bin Pause von: ' + milliseconds + 'milliseconds');
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+// 🔹 Namespace 0 (Standard OPC UA Typen)
+// NodeId	IEC-Typ	OPC UA Typ
+// ns=0;i=1	BOOL	Boolean
+// ns=0;i=2	SINT	SByte
+// ns=0;i=3	USINT	Byte
+// ns=0;i=4	INT	Int16
+// ns=0;i=5	UINT	UInt16
+// ns=0;i=6	DINT	Int32
+// ns=0;i=7	UDINT	UInt32
+// ns=0;i=8	LINT	Int64
+// ns=0;i=9	ULINT	UInt64
+// ns=0;i=10	REAL	Float
+// ns=0;i=11	LREAL	Double
+// ns=0;i=12	WSTRING	String
+// ns=0;i=13	LDT	DateTime
+// ns=0;i=19	DWORD	StatusCode
+
+// 🔹 Namespace 3 (Vendor-spezifisch – z. B. Beckhoff)
+// NodeId	IEC-Typ	OPC UA Typ
+// ns=3;i=3001	BYTE	Byte
+// ns=3;i=3002	WORD	Word
+// ns=3;i=3003	DWORD	DWord
+// ns=3;i=3004	LWORD	LWord
+// ns=3;i=3011	DT	Date_And_Time
+// ns=3;i=3012	CHAR	Char
+// ns=3;i=3013	WCHAR	WChar
+// ns=3;i=3014	STRING	String
+
+// const typeMap = {
+//   'ns=0;i=11': 'Double',
+//   'ns=0;i=1': 'Boolean',
+//   'ns=0;i=4': 'Int32',
+// };

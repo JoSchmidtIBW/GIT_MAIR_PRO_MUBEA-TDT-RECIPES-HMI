@@ -25,13 +25,17 @@ Darüber hinaus verwendet die Applikation Axios für die Kommunikation mit APIs 
 
 Die Webapplikation dient dazu, einen ersten bestehenden, Java-basierten Prototypen durch eine effizientere Prototypen- Lösung zu ersetzen. Mit ihr soll es möglich sein, neben dem Senden von Rezepten an eine SPS, auch über ein Login Rezepte zu erstellen und zu bearbeiten.
 
+Die SPS- Schnittstelle ist OPC UA, und die SPS von Siemens
+
 **Eigenschaften**
 
 - Mehrsprachigkeit
-  - Die Applikation ist auf Deutsch und auf Englisch verfügbar
+  - Die Applikation ist auf Deutsch, Tschechisch und auf Englisch verfügbar
 - Flexibilität bei Rezeptdaten:
   - Laden und Verarbeiten bestehender Rezepte,
+    (Bei alten Rezepten ohne Geschwindigkeit dornVor und dornZurück, wird ein default-wert von 100% hinzugefügt)
   - Neu erstellte Rezepte können auch als .TXT- Dateien im ursprünglichen Format abgespeichert werden
+    (mit Geschwindigkeit dornVor und dornZurück)
 - Rezept- Erstellung
   - Rezepte können schneller und einfacher erstellt werden
   - Fehler bei der Rezept-Erstellung und Zeitverlust der Behebung werden minimiert.
@@ -101,7 +105,7 @@ DEV_PORT=8555
 PROD_PORT=8557
 
 #DB Configuration
-#const DB = 'mongodb://127.0.0.1:27017/Mubea_PRO_MAIR_TDT';
+#const DB = 'mongodb://127.0.0.1:27017/TDT_MubeaDB';
 DB_CONNECTOR=mongodb
 DB_HOST=127.0.0.1
 DB_PORT=27017
@@ -128,6 +132,77 @@ PLC_ROUTER_TCP_PORT=48898 # Offener TCP-Port auf der SPS
 #PLC / Globale_Variablen
 PLC_GVL_VCSVNAME=GVL.vCsvName #gvl_vCsvName 'GVL.vCsvName'
 PLC_GVL_NAME=GVL #gvl_Name 'GVL'
+
+#--------------------------------------------
+#OPC-UA_PLC
+#const endpointUrl = 'opc.tcp://127.0.0.1:4334/UA/MyServer'; // Dein OPC UA Server
+#const nodeIdToMonitor = 'ns=1;s=MyStringVariable'; // Die zu überwachende Variable
+PLC_OPCUA_DEVICE=myDevice #brauche ich im moment noch nicht 05.06.2025
+#PLC_OPCUA_ENDPOINTURL=opc.tcp://127.0.0.1:4334/UA/MyServer
+PLC_OPCUA_ENDPOINTURL=opc.tcp://192.168.0.112:4840#/UA/MyServer
+PLC_OPCUA_STRUCTNAME=Baustein_1#Baustein_1_DB_1#Baustein_1#Baustein_1_DB_1#TDT_ExchangeArea #myDevice stimmt nicht... #brauche ich im moment noch nicht 05.06.2025
+PLC_OPCUA_NODEIDTOMONITOR=ns=1;s=MyStringVariable
+#PLC_OPCUA_VARIABLE=MyStringVariable
+#  const nodeId = `ns=4;s=${DEVICE}.${STRUCT}.${VARIABLE}`;
+#  ns=4;s=myDevice.TDT_ExchangeArea.MyStringVariable
+#PLC_OPCUA_NODEID_RECIPE_NAME=ns=1;s=RECIPE_NAME funktioniert
+#PLC_OPCUA_NODEID_RECIPE_NAME=ns=3;s=Baustein_1_DB_1.RECIPE_NAME
+#PLC_OPCUA_NODEID_RECIPE_NAME=ns=3;s="Baustein_1"."RECIPE_NAME"
+#PLC_OPCUA_NODEID_RECIPE_NAME=ns=3;s=Baustein_1.RECIPE_NAME
+PLC_OPCUA_NODEID_RECIPE_NAME=ns=3;s=RECIPE_NAME
+#PLC_OPCUA_NODEID_STEP_POSITIONS=ns=1;s=STEP_POSITIONS funktioniert
+#PLC_OPCUA_NODEID_STEP_POSITIONS=ns=3;s=Baustein_1.STEP_POSITIONS
+PLC_OPCUA_NODEID_STEP_POSITIONS=ns=3;s=STEP_POSITIONS
+#PLC_OPCUA_NODEID_STEP_POSITIONS_NODE_POS=ns=1;s=STEP_POSITIONS.Pos funktioniert
+#PLC_OPCUA_NODEID_STEP_POSITIONS_NODE_POS=ns=3;s=STEP_POSITIONS.Pos
+#PLC_OPCUA_NODEID_STEP_POSITIONS_NODE_POS=ns=3;s=Baustein_1.STEP_POSITIONS.Pos
+PLC_OPCUA_NODEID_STEP_POSITIONS_NODE_POS=ns=3;s=STEP_POSITIONS.Pos
+PLC_OPCUA_STEP_POSITIONS_ARRAY_SIZE=200#1
+PLC_OPCUA_STEP_POSITIONS_ARRAY_START_VALUE=1#0#1
+PLC_OPCUA_ACCELERATION_VALUE=9000#9.5# 9mm2 --> 0-9000
+PLC_OPCUA_WITHSIMATIC=1#1 for PLC-Siemens-Simatic is activ
+
+
+PLC_OPCUA_NODEID__STRUCKTNAME=ns=3;s="Baustein_1_DB_1"
+PLC_OPCUA_NODEID__RECIPE_NAME="RECIPE_NAME"#`ns=3;s="Baustein_1_DB_1"."RECIPE_NAME"`
+PLC_OPCUA_NODEID__STEP_POSITIONS="STEP_POSITIONS"
+PLC_OPCUA_NODEID__STPO_POS="Pos"
+PLC_OPCUA_NODEID__STPO_POS_POS=POS
+PLC_OPCUA_NODEID__STPO_POS_SPEED=Speed
+PLC_OPCUA_NODEID__STPO_POS_ACCELERATION=Acceleration
+PLC_OPCUA_NODEID__STPO_POS_STROKE=Stroke
+#`ns=3;s="Baustein_1_DB_1"."RECIPE_NAME"`,
+# const prefix = `ns=3;s="Baustein_1_DB_1"."STEP_POSITIONS"."Pos"[${i}]`;
+
+#        readValueOnly(clientSession.sessionOPCUA, `${prefix}.POS`),
+#        readValueOnly(clientSession.sessionOPCUA, `${prefix}.Speed`),
+#        readValueOnly(clientSession.sessionOPCUA, `${prefix}.Acceleration`),
+#        readValueOnly(clientSession.sessionOPCUA, `${prefix}.Stroke`),
+
+
+
+
+#`ns=3;s=V_"Baustein_1"."STEP_POSITIONS".Pos[${i}]`
+
+
+#NodeId="ns=3;i=3063" BrowseName="3:SimaticOperatingState" SPS Run Stop...
+#NodeId="ns=3;i=1002" BrowseName="3:SimaticDeviceType
+# NodeId="ns=3;s=PLC PLC with OPC UA...
+#NodeId="ns=3;s=PLC" BrowseName="3:PLC_1" PLC instance which supports you with OPC UA functionality
+#--------------------------------------------
+
+#PLC ASMAG Beckhoff / SPS Configuration
+#PLC_IP=192.168.111.10#192.168.112.10 # ipSPSZumAnPingen = '192.168.112.10';
+#PLC_LOCAL_AMS_NET_ID=10.28.8.118.1.1#192.168.112.1.1 # localAmsNetId: '192.168.112.1.1', // Lokale AMS-Net-ID // ist ev TwinCat von meinem PC
+#PLC_TARGET_AMS_NET_ID=5.25.221.30.1.1 # targetAmsNetId: '5.70.225.241.1.1', // AMS-Net-ID der Beckhoff-SPS
+#PLC_TARGET_ADS_PORT=801#802#801 # Ziel-ADS-Port, Standard-ADS-Port wie 851, 852, 801
+#PLC_ROUTER_TCP_PORT=48898 # Offener TCP-Port auf der SPS
+#PLC_GLOBALE_VARIABLEN_GVL=""#Globale_Variablen #GVL
+#PLC_GVL_VCSVNAME=vCsvName
+
+# ASMAG - Paths for file storage (.TXT-recipes and .CSV- PLC-Positions/adjustment)
+#FILE_STORAGE_PATH=C:\\Users\\Arb-US_WS\\Desktop
+#FOLDER_STORAGE_RECIPES_CSV=\\myRecipesAndCSVFromAPP
 
 # Paths for file storage (.TXT-recipes and .CSV- PLC-Positions/adjustment)
 FILE_STORAGE_PATH=C:\\Users\\Schmidtjo\\Work Folders\\Desktop

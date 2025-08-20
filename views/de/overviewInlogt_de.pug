@@ -9,6 +9,11 @@ block content
                 h2#recipeSendStatus(style="margin-left: 10px; color: blue;")=dataSPS+isFindInDB
             #rightStatusBtn
                 if(user.role === 'admin' || user.role === 'Chef')
+                    //- button.btn.btn--info-big#sps-btn_OPCUA(type="button", style="margin-right: 10px; margin-top: 4px;")
+                    //-     svg#sps-btn-svg_OPCUA(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                    //-         use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
+                    //-     a#sps-btn-a_OPCUA(href="/api/v1/getSPS_OPCUA", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") SPS_OPC-UA
+
                     button.btn.btn--info-big.toggle-pre-csvData-button(type="button" style="margin-right: 10px; margin-top: 4px; ")
                         svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
                             use(xlink:href="/img/icons.svg#icon-arrow-down" style="color: green; ")
@@ -19,23 +24,58 @@ block content
                             use(xlink:href="/img/icons.svg#icon-arrow-down" style="color: green; ")
                         a(style="color: green; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") Gesendete Rezept- Übersicht
 
-                    button.btn.btn--info-big#sps-btn(type="button", style="margin-left: 10px; margin-top: 4px;")
+                    button.btn.btn--info-big#sps-btn_OPCUA(type="button", style="margin-left: 10px; margin-top: 4px;")
+                        svg#sps-btn-svg_OPCUA(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
+                        a#sps-btn-a_OPCUA(href="/api/v1/getSPS_OPCUA", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") SPS_OPC-UA
+
+                    button.btn.btn--info-big#sps-btn(type="button", style="margin-left: 10px; margin-top: 4px; display: none;")
                         svg#sps-btn-svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
                             use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
                         a#sps-btn-a(href="/api/v1/getSPS", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") SPS       
-                    .pre-recipe-container(style="display: none; margin-left: -600px;")
+                    .pre-recipe-container(style="display: none; margin-left: -1090px; background-color: rgb(243, 239, 239);" id="recipeDataContainer")
                         br
-                        pre#recipefindLoadedinSPSinDBrightDiv=recipefindLoadedinSPSinDB
-                        pre#sendDataA 
+                        button.hacker-button(style="float: right; margin-right: 10px;" id="toggleButtonRecipeHackerMatrix")
+                            span(style="font-size: 10px;") X
+                            img(src="/img/gif/hacker-gif-5.gif", alt="Hacker", draggable="false")
+                        br                            
+                        pre#recipefindLoadedinSPSinDBrightDiv(style="font-size: 15px;")=recipefindLoadedinSPSinDB
+                        pre#sendDataA(style="font-size: 15px;")
                         br      
 
-                    .pre-csvData-container(style="display: none; margin-left: -600px;")
+                    //.pre-csvData-container(style="display: none; margin-left: -600px;")
+                    .pre-csvData-container(style="display: none; margin-left: -1080px; background-color: lightgray;" id='csvDataContainer')
+                        //bottom hoi
+                        //button(class="myButtonX", style="float: right; " id="toggleButtonMatrix") X
+                        //-button(class="myButtonX", style="float: right; ") X
+                        //-<button>  <img src="/img/gif/hacker-gif-2.gif"/></button>
+                        
+                        //-button(style="float: right;") X
+                            img(src="/img/gif/hacker-gif-4.gif" style="height: 40px; width: 40px; filter: saturate(10);")
+                        //-button(img(src='/img/Logo-Mair-Research.png'))
                         br
-                        //h1#CSVDataLocalStorage Halllllooooooo
+                        //-button.hacker-button#toggleButtonMatrix
+                        button.hacker-button(style="float: right; margin-right: 10px;" id="toggleButtonHackerMatrix")
+                            span(style="font-size: 10px;") X
+                            img(src="/img/gif/hacker-gif-4.gif", alt="Hacker", draggable="false")
+                        br
+                        //-pre#CSVDataLocalStorage(style="font-size: 14px;")
+                        pre(style="color: red; font-size: 15px; font-waight: bold; margin-left: 500px;") ACHTUNG: Zuerst Seite aktualisieren!!!
+                        br
+                        br
                         pre#CSVDataLocalStorage(style="font-size: 14px;")
+
                         //pre#recipefindLoadedinSPSinDBrightDiv=recipefindLoadedinSPSinDB
 
                 else
+                    button.btn.btn--info-big#sps-btn_OPCUA(type="button", style="margin-right: 10px; margin-top: 4px; display none;")
+                        svg#sps-btn-svg_OPCUA(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
+                        a#sps-btn-a_OPCUA(href="/api/v1/getSPS_OPCUA", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") SPS_OPC-UA                
+                    button.btn.btn--info-big#sps-btn(type="button", style="margin-left: 10px; margin-top: 4px; display:none;")
+                        svg#sps-btn-svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
+                        a#sps-btn-a(href="/api/v1/getSPS_OPCUA", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") SPS_opc-ua                
                     button.btn.btn--info-big.toggle-pre-csvData-button(type="button" style="margin-right: 10px; margin-top: 4px; display: none;")
                     button.btn.btn--info-big.toggle-pre-recipe-button(type="button" style="margin-left: 0px; margin-top: 4px; display: none;")
                         svg(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
@@ -61,7 +101,7 @@ block content
                     
                     div(style="display: flex; align-items: center; gap: 5px; margin-bottom: 5px;")
                         h3(style="margin-top: 5px; margin-left:10px;") Fertigungs- Auftrags- FA- Nummer:
-                        input#fa_Nummer(class="form__input_FA" type="number" placeholder="zB. 1000410101" required="required" min="1000000000" max="9999999999" onblur="validateFA_Nummer(this)")
+                        input#fa_Nummer(class="form__input_FA" type="number" placeholder="zB. 5100201" required="required" min="1000000" max="9999999" onblur="validateFA_Nummer(this)")
                     a.btn.btn--small.btn--green.btn--recipeSend#recipeSendBtn(href="#" style="margin-right: 15px;") Rezept senden
                     
                 //-br 
@@ -150,8 +190,8 @@ block content
 
             function validateFA_Nummer(faNummerInput){
                 console.log('bin validateFANummer und input: ' + faNummerInput.value);
-                const faNummer_Min = 1000000000;
-                const faNummer_Max = 9999999999;
+                const faNummer_Min = 1000000;
+                const faNummer_Max = 9999999;
 
                 if (faNummerInput.value < faNummer_Min) {
                     displayMessage_isError_isSuccess('Die Auftrags- Fertigungs- Nummer ist zu klein!', true);
@@ -163,8 +203,72 @@ block content
                 }
             }
 
+            const btnSPS_OPCUA = document.getElementById("sps-btn_OPCUA");
+            //btnSPS_OPCUA.addEventListener("click", spinnerFunction_OPCUA);//Original
+            btnSPS_OPCUA.addEventListener("click", spinnerFunctionSPS_OPCUA);
+
+            //- button.btn.btn--info-big#sps-btn_OPCUA(type="button", style="margin-right: 10px; margin-top: 4px;")
+            //-     svg#sps-btn-svg_OPCUA(class="heading-box__icon" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;")
+            //-         use(xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; ")
+            //-     //-a#sps-btn-a_OPCUA(href="/api/v1/getSPS_OPCUA", style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ") SPS_OPC-UA
+
+           const linkSPSa_OPCUA = document.getElementById("sps-btn-a_OPCUA");
+            
+            function spinnerFunction_OPCUA() {
+                console.log('Bin SpinnerFunction_OPCUA');                
+                document.getElementById("sps-btn-svg_OPCUA").innerHTML = `<svg ><use class="loaderSPS" xlink:href="/img/icons.svg#icon-loader"></use></svg>`                
+                window.location.href = linkSPSa_OPCUA.href;
+            }
+
+
+            function spinnerFunctionSPS_OPCUA() {
+                console.log('Bin spinnerFunctionSPS_OPCUA'); 
+                const duration = 30; 
+                let remainingTime = duration;
+
+                window.location.href = "/api/v1/getSPS_OPCUA";
+
+                btnSPS_OPCUA.innerHTML = `
+                <a>
+                    <svg  style="height: 50px; width: 40px; padding-bottom: 5px; margin-left: -8px; margin-bottom: -33px;" viewBox="0 0 40 40">
+                    <!-- Kreis -->
+                    <circle cx="20" cy="8" r="9" stroke="#747474"  stroke-width="3" fill="none" stroke-dasharray="3 4" class="loaderRecipe"></circle>
+                    <!-- Countdown-Text -->
+                    <text x="50%" y="21%" text-anchor="middle" fill="#747474" dy=".3em" font-size="12px">${remainingTime}</text>
+
+                    </svg>
+                    SPS_OPC-UA
+                </a>
+                `;
+                //    <use xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; "></use>
+                const interval = setInterval(() => {
+                    remainingTime--;
+                    const textElement = btnSPS_OPCUA.querySelector('text');
+                    if (textElement) {
+                        textElement.textContent = remainingTime;
+                    }
+
+                    if (remainingTime <= 0) {
+                        clearInterval(interval);
+                        //btnSPS_OPCUA.innerHTML = "hoihoi";
+                        btnSPS_OPCUA.innerHTML = `
+                            <svg class="heading-box__icon" id="sps-btn-svg_OPCUA" style="margin-left: 0px; margin-top: 2px; height: 24px; length: 24px;">
+                            <use xlink:href="/img/icons.svg#icon-upload" style="color: #5d5d5d; "></use>
+                            </svg><a id="sps-btn-a_OPCUA" href="/api/v1/getSPS_OPCUA" style="color: #747474; font-weight: 500; margin-top: 0px; margin-bottom: 16px; margin-left: 1px; margin-right: 5px; vertical-align: middle; display: inline-block; ">SPS_OPC-UA</a>
+                        `;                        
+
+                    }
+                }, 1000);
+
+                //btnSPS_OPCUA.innerHTML = "halllo";
+
+            }            
+
+
             const btnRecipeSend = document.getElementById("recipeSendBtn");
             btnRecipeSend.addEventListener("click", spinnerFunctionRecipeSend);
+
+
 
             function spinnerFunctionRecipeSend() {
                 const duration = 5; 
@@ -181,6 +285,8 @@ block content
                     Rezept senden
                 </a>
                 `;
+
+                
 
                 const interval = setInterval(() => {
                     remainingTime--;
@@ -199,12 +305,16 @@ block content
             const btnSPSa = document.getElementById("sps-btn");
             btnSPSa.addEventListener("click", spinnerFunction);
 
+
+
             const linkSPS = document.getElementById("sps-btn-a");
             
             function spinnerFunction() {
                 document.getElementById("sps-btn-svg").innerHTML = `<svg ><use class="loaderSPS" xlink:href="/img/icons.svg#icon-loader"></use></svg>`                
                 window.location.href = linkSPS.href;
             }
+
+
 
             const btnSaveAllRecipteToTXT = document.getElementById("saveAllRecipteToTXT_FilesBtn");
             btnSaveAllRecipteToTXT.addEventListener("click", spinnerFunctionSaveAllRecipteToTXT);
@@ -216,6 +326,52 @@ block content
                 //- }, 5000);
             }            
 
+            let isToggledHackerMatrixRecipe = false;
+            const toggleButtonHackerMatrixRecipe = document.getElementById('toggleButtonRecipeHackerMatrix');
+            const recipeDataContainer = document.getElementById('recipeDataContainer');
+            const textRecipefindLoadedinSPS = document.getElementById('recipefindLoadedinSPSinDBrightDiv');
+
+            toggleButtonHackerMatrixRecipe.addEventListener('click', function() {
+                    if (isToggledHackerMatrixRecipe) {
+                        recipeDataContainer.style.backgroundColor = 'rgb(243, 239, 239)';
+                        toggleButtonHackerMatrixRecipe.style.file = 'opacity(0.5);';
+                        textRecipefindLoadedinSPS.style.backgroundColor = 'rgb(243, 239, 239)';
+                        textRecipefindLoadedinSPS.style.color = '#777';
+                    } else {
+                        recipeDataContainer.style.backgroundColor = 'black';
+                        recipeDataContainer.style.color = 'rgb(0, 255, 65)';
+                        toggleButtonHackerMatrixRecipe.style.filter = 'contrast(0.5)';
+                        textRecipefindLoadedinSPS.style.backgroundColor = 'black';
+                        textRecipefindLoadedinSPS.style.color ='rgb(0, 255, 65)';
+                        textRecipefindLoadedinSPS.style.marginLeft = '500px';
+                    }
+                    isToggledHackerMatrixRecipe = !isToggledHackerMatrixRecipe;
+            });  
+
+            let isToggledHackerMatrix = false;
+            const toggleButtonHackerMatrix = document.getElementById('toggleButtonHackerMatrix');
+            const csvDataContainer = document.getElementById('csvDataContainer');
+            const textCSVData = document.getElementById('CSVDataLocalStorage');
+
+            toggleButtonHackerMatrix.addEventListener('click', function() {
+                    if (isToggledHackerMatrix) {
+                        csvDataContainer.style.backgroundColor = 'lightgrey';
+                        csvDataContainer.style.color = 'pink';
+                        toggleButtonHackerMatrix.style.file = 'opacity(0.5);';
+                        textCSVData.style.backgroundColor = 'lightgrey';
+                        textCSVData.style.color = 'green';
+                    } else {
+                        csvDataContainer.style.backgroundColor = 'black';
+                        //csvDataContainer.style.color = '#00ff41';
+                        csvDataContainer.style.color = 'rgb(0, 255, 65)';
+                        toggleButtonHackerMatrix.style.filter = 'contrast(0.5)';
+                        textCSVData.style.backgroundColor = 'black';
+                        textCSVData.style.color ='rgb(0, 255, 65)';
+                        textCSVData.style.marginLeft = '500px';
+                        //isToggledHackerMatrix = true;
+                    }
+                    isToggledHackerMatrix = !isToggledHackerMatrix;
+            });                   
             
             document.addEventListener('DOMContentLoaded', function() {
                 console.log("Bin DOMcontentLoader...");
@@ -251,7 +407,12 @@ block content
                     if (containerPreCsvData.style.display === 'none') {
                         
                         preCSVDataLocalStorage.style.color = 'green';
-                        preCSVDataLocalStorage.innerHTML = 'ACHTUNG: Zuerst Seite aktualisieren!!! \n\n' + lastCSVDataLocalStorage;
+                        //preCSVDataLocalStorage.innerHTML = 'ACHTUNG: Zuerst Seite aktualisieren!!! \n\n' + lastCSVDataLocalStorage;
+                        preCSVDataLocalStorage.innerHTML = lastCSVDataLocalStorage;
+                        //- preCSVDataLocalStorage.innerHTML =
+                        //- '<span style="color: red;">ACHTUNG: Zuerst Seite aktualisieren!!!</span><br><br>' +
+                        //- '<span style="color: green;">' + lastCSVDataLocalStorage + '</span>';
+
                         containerPreCsvData.style.display = 'block';
                         containerPreRecipe.style.display = 'none';
                     } else {

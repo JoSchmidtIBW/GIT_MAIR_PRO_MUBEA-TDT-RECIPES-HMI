@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+dotenv.config({ path: './config.env' });
 import { connectSPS } from '../spsConnector.mjs';
 
 let client;
@@ -227,8 +229,10 @@ export const writeData_vCsvName_Ziehpositionen = async (
 ) => {
   try {
     console.log('Bin spsService: writeData_WithSymbolNameAndValue');
-    const newWriteVCsvName = 'GVL.vCsvName';
-    const newWriteZiehpositionen = 'GVL.Ziehpositionen';
+    //const newWriteVCsvName = 'GVL.vCsvName';
+    //const newWriteZiehpositionen = 'GVL.Ziehpositionen';
+    const newWriteVCsvName = `${process.env.PLC_GVL_VCSVNAME}`;
+    const newWriteZiehpositionen = `${process.env.PLC_GVL_NAME}.Ziehpositionen`;
 
     console.log('new_vCsvName: ' + new_vCsvName);
     console.log('new_ziehpositionen: ' + new_ziehpositionen);
@@ -276,10 +280,14 @@ export const writeData_ZiehPositionsArray = async (
     const maxPositionsToOverwrite = 600; // 8000-zieharray.length Attention: time to write is long!
 
     for (let i = 0; i < ziehPositionenArr_toWrite.length; i++) {
-      await client.writeSymbol(`GVL.Ziehpositionen[${i}]`, {
-        Pos: ziehPositionenArr_toWrite[i].Pos,
-        Verst: ziehPositionenArr_toWrite[i].Verst,
-      });
+      //await client.writeSymbol(`GVL.Ziehpositionen[${i}]`, {
+      await client.writeSymbol(
+        `${process.env.PLC_GVL_NAME}.Ziehpositionen[${i}]`,
+        {
+          Pos: ziehPositionenArr_toWrite[i].Pos,
+          Verst: ziehPositionenArr_toWrite[i].Verst,
+        },
+      );
       //console.log(`Ziehposition für Pos ${pos.Pos} erfolgreich geschrieben.`);
     }
 
@@ -288,10 +296,14 @@ export const writeData_ZiehPositionsArray = async (
       i <= maxPositionsToOverwrite;
       i++
     ) {
-      await client.writeSymbol(`GVL.Ziehpositionen[${i}]`, {
-        Pos: 0,
-        Verst: 0,
-      });
+      //await client.writeSymbol(`GVL.Ziehpositionen[${i}]`, {
+      await client.writeSymbol(
+        `${process.env.PLC_GVL_NAME}.Ziehpositionen[${i}]`,
+        {
+          Pos: 0,
+          Verst: 0,
+        },
+      );
       //console.log(`Wert für Pos ${i} gelöscht (0, 0).`);
     }
 

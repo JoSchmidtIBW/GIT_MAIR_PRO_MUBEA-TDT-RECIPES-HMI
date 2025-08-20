@@ -21,6 +21,7 @@ import viewRoute from './routes/viewRoutes.mjs';
 import recipeRoute from './routes/recipeRoute.mjs';
 import userRoute from './routes/userRoute.mjs';
 import spsRoute from './routes/spsRoute.mjs';
+import sps_OPCUA_Route from './routes/sps_OPCUA_Route.mjs';
 import recipeSendSPSLogRoute from './routes/recipeSendSPSLogRoute.mjs';
 import recipeStatisticRoute from './routes/recipeStatisticRoute.mjs';
 
@@ -69,7 +70,8 @@ const cspOptions = {
   directives: {
     defaultSrc: ["'self'"],
     fontSrc: ["'self'", 'https://fonts.gstatic.com'],
-    scriptSrc: ["'self'", 'code.jquery.com', 'cdn.datatables.net'],
+    //scriptSrc: ["'self'", 'code.jquery.com', 'cdn.datatables.net'],
+    scriptSrc: ["'self'"],
     connectSrc: [
       "'self'",
       'http://127.0.0.1:8555',
@@ -80,7 +82,7 @@ const cspOptions = {
   },
 };
 
-//TODO: wegen webSocket vorübergehend deaktiviert!
+// Muss ev. wegen webSocket vorübergehend deaktiviert werden!
 app.use(helmet.contentSecurityPolicy(cspOptions));
 
 app.use(helmet.xssFilter()); // nun kann man im inputfeld zb beim Login nicht <script>alert("XSS")</script> schreiben, und es kommt kein alert    aber nicht mit script testen, sondern mit <iframe src=javascript:alert(1)>
@@ -177,12 +179,18 @@ app.get('/delete-cookie', (req, res) => {
   res.redirect('/');
 });
 
+// Dummy-Handler für Chrome-spezifische DevTools-Anfragen
+app.get('/.well-known/appspecific/com.chrome.devtools.json', (req, res) => {
+  res.sendStatus(204); // No Content, verhindert Fehlermeldung im Log
+});
+
 // API- ROUTES
 app.use('/', startRoute);
 app.use('/api/v1', viewRoute); // has to be the first   Hier sollte nicht /api/v1/ stehen....
 app.use('/api/v1/recipes', recipeRoute);
 app.use('/api/v1/users', userRoute);
-app.use('/api/v1/sps', spsRoute);
+//app.use('/api/v1/sps', spsRoute);
+app.use('/api/v1/sps', sps_OPCUA_Route);
 app.use('/api/v1/recipeSendSPSLog', recipeSendSPSLogRoute);
 app.use('/api/v1/recipeStatistic', recipeStatisticRoute);
 
@@ -208,6 +216,6 @@ export default app;
 
 // app.post('/xx', (req, res) => {
 //   const text = req.body.hiddenField;
-//   console.log(text); // Dieser Befehl gibt den Text in der Terminalkonsole aus
+//   console.log(text);
 //   res.send('Daten empfangen');
 // });

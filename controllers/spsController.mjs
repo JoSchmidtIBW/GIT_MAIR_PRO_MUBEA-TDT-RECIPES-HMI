@@ -130,8 +130,8 @@ export const getWriteRecipeToSPS = catchAsync(async (req, res, next) => {
   console.log('vDornZurueckSPS SPSLoad:', vDornZurueckSPS);
 
   //**************************************************************************************************** */
-  const faNummer_Min = 1000000000;
-  const faNummer_Max = 9999999999;
+  const faNummer_Min = 1000000;
+  const faNummer_Max = 9999999;
 
   if (recipeToSend === '') {
     console.log('getWriteRecipeToSPS: recipeToSend ist leer!');

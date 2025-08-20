@@ -27,15 +27,15 @@ router.get('/logout', logout);
 router.patch('/updateMyPassword', protect, updatePassword);
 router.patch('/updateMe', protect, uploadUserPhoto, resizeUserPhoto, updateMe);
 
-router.get('/', protect, restrictTo('admin'), getAllUser);
+router.get('/', protect, restrictTo('admin', 'Chef'), getAllUser);
 
 //All routes are only for admin and Chef after this middleware
 //router.use(restrictTo('admin', 'Chef'));
 
 //router.post('/createNewUser', createUser);
 //router.route('/:id').get(protect, getUser).patch(updateUser).delete(deleteUser);  // funktioniert nicht, ev reihenfolge middlewares beachten
-router.patch('/:id', protect, restrictTo('admin'), updateUser);
-router.delete('/:id', protect, restrictTo('admin'), deleteUser);
-router.post('/createNewUser', protect, restrictTo('admin'), createUser);
+router.patch('/:id', protect, restrictTo('admin', 'Chef'), updateUser);
+router.delete('/:id', protect, restrictTo('admin', 'Chef'), deleteUser);
+router.post('/createNewUser', protect, restrictTo('admin', 'Chef'), createUser);
 
 export default router;
