@@ -5,7 +5,10 @@ import he from 'he';
 import { parseString } from 'xml2js';
 import { dataInXml } from '../utils/dataInXMLTXT.mjs';
 import { writeTXT_File } from '../utils/writeTXT_File.mjs';
-import { getFindUserByIDWithoutPasswordCreatedAt } from '../models/services/userService.mjs';
+import {
+  getFindUserByIDWithoutPasswordCreatedAt,
+  getFindUserByFirstLastName,
+} from '../models/services/userService.mjs';
 
 import {
   getAllRecipesTDT_de,
@@ -2797,7 +2800,39 @@ export const getConvertOldRecipesToMongoDB = catchAsync(
           : [];
         console.log('kommentarOLD:', kommentarOLD);
         console.log('kommentarOld.length: ' + kommentarOLD.length);
+        //-------------------------------------------------------------------------------------
+        // let kommentarArr = [];
 
+        // if (kommentarOLD.length === 0) {
+        //   // dein "kein Kommentar"-Fallback
+        // } else {
+        //   for (let i = 0; i < kommentarOLD.length; i++) {
+        //     // Hier die i-te Zeile nochmal aufteilen
+        //     const einzelneZeilen = kommentarOLD[i]
+        //       .split(/\r?\n/) // nach Zeilenumbruch trennen
+        //       .map((line) => line.trim())
+        //       .filter((line) => line !== '');
+
+        //     for (const zeile of einzelneZeilen) {
+        //       console.log('zeile-i_: ' + zeile);
+
+        //       const regex1 = /^(.*?) (\d{2}\.\d{2}\.\d{4}) (\w+)$/;
+        //       const regex2 = /^(.*?) (\d{2}\.\d{2}\.\d{4}) (\w+) (\w+)$/;
+
+        //       let match1 = regex1.exec(zeile);
+        //       let match2 = regex2.exec(zeile);
+
+        //       if (match1) {
+        //         // deine match1-Logik …
+        //       } else if (match2) {
+        //         // deine match2-Logik …
+        //       } else {
+        //         // fallback
+        //       }
+        //     }
+        //   }
+        // }
+        //------------------------------------------------------------------------------------
         let kommentarArr = [];
         let zeile = '';
 
@@ -2817,139 +2852,189 @@ export const getConvertOldRecipesToMongoDB = catchAsync(
           });
         } else {
           for (let i = 0; i < kommentarOLD.length; i++) {
-            zeile = kommentarOLD[i].trim();
-            console.log('zeile-i: ' + zeile);
+            const zeilen = kommentarOLD[i]
+              .split(/\r?\n/)
+              .map((line) => line.trim())
+              .filter((line) => line !== '');
 
-            if (zeile !== '') {
-              const regex = /^(.*?) (\d{2}\.\d{2}\.\d{4}) (\w+)$/gm;
+            // zeile = kommentarOLD[i].trim();
+            console.log('zeilen-i_: ' + zeilen);
+            console.log('zeilen.length: ' + zeilen.length);
+            for (let i = 0; i < zeilen.length; i++) {
+              let zeile = zeilen[i];
+              console.log('zeile_____: ' + zeile);
+              if (zeile !== '') {
+                const regex = /^(.*?) (\d{2}\.\d{2}\.\d{4}) (\w+)$/gm;
 
-              let match1 = regex.exec(zeile);
-              console.log('match1-i: ' + match1);
-              if (match1) {
-                console.log('bin im if..');
-                let worteOderSaetze = match1[1];
-                let erstelltAmDatum = match1[2];
-                let kurzerName = match1[3];
+                let match1 = regex.exec(zeile);
+                console.log('match1-i__: ' + match1);
+                console.log('zeile-i__: ' + zeile);
 
-                console.log('Worte oder Sätze:', worteOderSaetze);
-                console.log('Datum:', erstelltAmDatum);
-                console.log('Kurzname:', kurzerName);
+                const regex2 = /^(.*?) (\d{2}\.\d{2}\.\d{4}) (\w+) (\w+)$/m;
+                const match2 = regex2.exec(zeile);
+                console.log('match2__', match2);
 
-                const isUserJOSInDB =
-                  await getFindUserByIDWithoutPasswordCreatedAt(
-                    '643c1f042df0321cb8a06a47',
-                  );
+                if (match1) {
+                  console.log('bin im if..');
+                  let worteOderSaetze = match1[1];
+                  let erstelltAmDatum = match1[2];
+                  let kurzerName = match1[3];
 
-                const isUserKAEInDB =
-                  await getFindUserByIDWithoutPasswordCreatedAt(
-                    '643c1f042df0321cb8a06a70',
-                  );
+                  console.log('Worte oder Sätze:', worteOderSaetze);
+                  console.log('Datum:', erstelltAmDatum);
+                  console.log('Kurzname:', kurzerName);
 
-                const isUserMATInDB =
-                  await getFindUserByIDWithoutPasswordCreatedAt(
-                    '643c1f042df0321cb8a06a51',
-                  );
+                  const isUserJOSInDB =
+                    await getFindUserByIDWithoutPasswordCreatedAt(
+                      '643c1f042df0321cb8a06a47',
+                    );
 
-                const isUserSADInDB =
-                  await getFindUserByIDWithoutPasswordCreatedAt(
-                    '643c1f042df0321cb8a06a52',
-                  );
+                  const isUserKAEInDB =
+                    await getFindUserByIDWithoutPasswordCreatedAt(
+                      '643c1f042df0321cb8a06a70',
+                    );
 
-                const isUserJAGInDB =
-                  await getFindUserByIDWithoutPasswordCreatedAt(
-                    '643c1f042df0321cb8a06a53',
-                  );
+                  const isUserMATInDB =
+                    await getFindUserByIDWithoutPasswordCreatedAt(
+                      '643c1f042df0321cb8a06a51',
+                    );
 
-                console.log(
-                  '*****************************JOS********************: ' +
-                    isUserJOSInDB,
-                );
-                console.log('isUserJOSInDB.length: ' + isUserJOSInDB.length);
+                  const isUserSADInDB =
+                    await getFindUserByIDWithoutPasswordCreatedAt(
+                      '643c1f042df0321cb8a06a52',
+                    );
 
-                console.log('isUserKAEInDB: ' + isUserKAEInDB);
-                console.log('isUserJOSInDB.length: ' + isUserJOSInDB.length);
+                  const isUserJAGInDB =
+                    await getFindUserByIDWithoutPasswordCreatedAt(
+                      '643c1f042df0321cb8a06a53',
+                    );
 
-                if (kurzerName === 'JOS') {
-                  //if (isUserJOSInDB)
-                  kurzerName = '643c1f042df0321cb8a06a47';
-                } else if (kurzerName === 'MAT') {
-                  if (isUserMATInDB === null) {
-                    console.log('is null: ' + isUserMATInDB);
-                    kurzerName = '000000000000000000000000';
-                    worteOderSaetze = worteOderSaetze + '; Matthias Trudewind';
-                  } else {
-                    console.log('is not null: ' + isUserMATInDB);
-                    kurzerName = '643c1f042df0321cb8a06a51';
-                  }
-                } else if (kurzerName === 'SAD') {
-                  if (isUserSADInDB === null) {
-                    console.log('is null: ' + isUserSADInDB);
-                    kurzerName = '000000000000000000000000';
-                    worteOderSaetze = worteOderSaetze + '; Samuel Danehl';
-                  } else {
-                    console.log('is not null: ' + isUserSADInDB);
-                    kurzerName = '643c1f042df0321cb8a06a52';
-                  }
-                } else if (kurzerName === 'JAG') {
-                  if (isUserJAGInDB === null) {
-                    console.log('is null: ' + isUserJAGInDB);
-                    kurzerName = '000000000000000000000000';
-                    worteOderSaetze = worteOderSaetze + '; Janik Grote';
-                  } else {
-                    console.log('is not null: ' + isUserKAEInDB);
-                    kurzerName = '643c1f042df0321cb8a06a53';
-                  }
-                } else if (kurzerName === 'KAE') {
-                  if (isUserKAEInDB === null) {
-                    console.log('is null: ' + isUserKAEInDB);
-                    kurzerName = '000000000000000000000000';
-                    worteOderSaetze = worteOderSaetze + '; Enes Karaalp';
-                  } else {
-                    console.log('is not null: ' + isUserKAEInDB);
-                    kurzerName = '643c1f042df0321cb8a06a70';
-                  }
-                } else {
-                  kurzerName = '643c1f042df0321cb8a06a50';
-                }
-                console.log('Kurzname_ID:', kurzerName);
-
-                const [day, month, year] = erstelltAmDatum.split('.');
-                const dateObject = new Date(
-                  `${year}-${month}-${day}T00:00:00.000Z`,
-                );
-                console.log(dateObject.toISOString());
-
-                console.log('---');
-                if (
-                  worteOderSaetze === '' ||
-                  erstelltAmDatum === '' ||
-                  kurzerName === ''
-                ) {
                   console.log(
-                    'warum gehe ich hier hinein???????????????????????????????',
+                    '*****************************JOS********************: ' +
+                      isUserJOSInDB,
                   );
-                  kommentarBeschreibung: zeile.trim();
+                  console.log('isUserJOSInDB.length: ' + isUserJOSInDB.length);
+
+                  console.log('isUserKAEInDB: ' + isUserKAEInDB);
+                  console.log('isUserJOSInDB.length: ' + isUserJOSInDB.length);
+
+                  if (kurzerName === 'JOS') {
+                    //if (isUserJOSInDB)
+                    kurzerName = '643c1f042df0321cb8a06a47';
+                  } else if (kurzerName === 'MAT') {
+                    if (isUserMATInDB === null) {
+                      console.log('is null: ' + isUserMATInDB);
+                      kurzerName = '000000000000000000000000';
+                      worteOderSaetze =
+                        worteOderSaetze + '; Matthias Trudewind';
+                    } else {
+                      console.log('is not null: ' + isUserMATInDB);
+                      kurzerName = '643c1f042df0321cb8a06a51';
+                    }
+                  } else if (kurzerName === 'SAD') {
+                    if (isUserSADInDB === null) {
+                      console.log('is null: ' + isUserSADInDB);
+                      kurzerName = '000000000000000000000000';
+                      worteOderSaetze = worteOderSaetze + '; Samuel Danehl';
+                    } else {
+                      console.log('is not null: ' + isUserSADInDB);
+                      kurzerName = '643c1f042df0321cb8a06a52';
+                    }
+                  } else if (kurzerName === 'JAG') {
+                    if (isUserJAGInDB === null) {
+                      console.log('is null: ' + isUserJAGInDB);
+                      kurzerName = '000000000000000000000000';
+                      worteOderSaetze = worteOderSaetze + '; Janik Grote';
+                    } else {
+                      console.log('is not null: ' + isUserKAEInDB);
+                      kurzerName = '643c1f042df0321cb8a06a53';
+                    }
+                  } else if (kurzerName === 'KAE') {
+                    if (isUserKAEInDB === null) {
+                      console.log('is null: ' + isUserKAEInDB);
+                      kurzerName = '000000000000000000000000';
+                      worteOderSaetze = worteOderSaetze + '; Enes Karaalp';
+                    } else {
+                      console.log('is not null: ' + isUserKAEInDB);
+                      kurzerName = '643c1f042df0321cb8a06a70';
+                    }
+                  } else {
+                    kurzerName = '643c1f042df0321cb8a06a50';
+                  }
+                  console.log('Kurzname_ID:', kurzerName);
+
+                  const [day, month, year] = erstelltAmDatum.split('.');
+                  const dateObject = new Date(
+                    `${year}-${month}-${day}T00:00:00.000Z`,
+                  );
+                  console.log(dateObject.toISOString());
+
+                  console.log('---');
+                  if (
+                    worteOderSaetze === '' ||
+                    erstelltAmDatum === '' ||
+                    kurzerName === ''
+                  ) {
+                    console.log(
+                      'warum gehe ich hier hinein???????????????????????????????',
+                    );
+                    kommentarBeschreibung: zeile.trim();
+                  } else {
+                    kommentarArr.push({
+                      erstelltAm: dateObject.toISOString(),
+                      createdBy: kurzerName,
+                      kommentarBeschreibung: worteOderSaetze.trim(),
+                    });
+                  }
+                } else if (match2) {
+                  console.log('Es ist match2__: ', match2);
+                  let worteOderSaetze = match2[1];
+                  let erstelltAmDatum = match2[2];
+                  let vorName = match2[3];
+                  let nachName = match2[4];
+
+                  console.log('Worte oder Sätze:', worteOderSaetze);
+                  console.log('Datum:', erstelltAmDatum);
+                  console.log('VorName:', vorName);
+                  console.log('NachName:', nachName);
+
+                  const isUserInDBWithFirstLastName =
+                    await getFindUserByFirstLastName(vorName, nachName);
+                  console.log(
+                    'isUserInDBWithFirstLastName:',
+                    isUserInDBWithFirstLastName,
+                  );
+                  if (isUserInDBWithFirstLastName) {
+                    const [day, month, year] = erstelltAmDatum.split('.');
+                    const dateObject = new Date(
+                      `${year}-${month}-${day}T00:00:00.000Z`,
+                    );
+                    console.log(dateObject.toISOString());
+                    console.log(
+                      'isUserInDBWithFirstLastName._id:',
+                      isUserInDBWithFirstLastName._id,
+                    );
+                    kommentarArr.push({
+                      erstelltAm: dateObject.toISOString(),
+                      createdBy: isUserInDBWithFirstLastName._id,
+                      kommentarBeschreibung: worteOderSaetze.trim(),
+                    });
+                  }
                 } else {
+                  console.log('Kein Kommentar oder keine Regel gefunden.');
+                  const erstelltAmDatum3 = '01.01.1970';
+                  const [day, month, year] = erstelltAmDatum3.split('.');
+                  const dateObject3 = new Date(
+                    `${year}-${month}-${day}T00:00:00.000Z`,
+                  );
+                  console.log(dateObject3.toISOString());
+
                   kommentarArr.push({
-                    erstelltAm: dateObject.toISOString(),
-                    createdBy: kurzerName,
-                    kommentarBeschreibung: worteOderSaetze.trim(),
+                    erstelltAm: dateObject3.toISOString(),
+                    createdBy: '643c1f042df0321cb8a06a50',
+                    kommentarBeschreibung: zeile.trim(),
                   });
                 }
-              } else {
-                console.log('Kein Kommentar oder keine Regel gefunden.');
-                const erstelltAmDatum3 = '01.01.1970';
-                const [day, month, year] = erstelltAmDatum3.split('.');
-                const dateObject3 = new Date(
-                  `${year}-${month}-${day}T00:00:00.000Z`,
-                );
-                console.log(dateObject3.toISOString());
-
-                kommentarArr.push({
-                  erstelltAm: dateObject3.toISOString(),
-                  createdBy: '643c1f042df0321cb8a06a50',
-                  kommentarBeschreibung: zeile.trim(),
-                });
               }
             }
           }
@@ -2958,7 +3043,7 @@ export const getConvertOldRecipesToMongoDB = catchAsync(
 
         console.log('*****************************');
 
-        console.log('kommentarOLD: ' + kommentarOLD);
+        console.log('kommentarOLD: ' + JSON.stringify(kommentarOLD));
         kommentarArr.forEach((kommentar) => {
           console.log(`kommentar: ${JSON.stringify(kommentar)}`); // [object object]
 
@@ -2966,7 +3051,7 @@ export const getConvertOldRecipesToMongoDB = catchAsync(
           console.log('createdBy:', kommentar.createdBy);
           console.log('Worte:', kommentar.kommentarBeschreibung);
         });
-        console.log('kommentarArr: ' + kommentarArr);
+        console.log('kommentarArr: ' + JSON.stringify(kommentarArr));
         console.log('*****************************');
 
         artikelnameOLD =
