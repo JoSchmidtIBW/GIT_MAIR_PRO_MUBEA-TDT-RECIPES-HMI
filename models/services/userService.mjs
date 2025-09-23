@@ -22,6 +22,15 @@ export async function getFindUserByIDWithoutPasswordCreatedAt(_id) {
   }
 }
 
+export async function getFindUserByFirstLastName(firstName, lastName) {
+  try {
+    const user = await User.findOne({ firstName, lastName });
+    return user;
+  } catch (err) {
+    console.log(`Could not fetch users by firstName, lastName: ${err}`);
+  }
+}
+
 export async function getFindUserByID(_id) {
   try {
     const user = await User.findOne({ _id }).select('+createdAt +password');

@@ -10,76 +10,12 @@ import { Server as WebSocketServer } from 'socket.io';
 import http from 'http';
 import { readLastCSV_File } from './utils/writeCSV_File.mjs';
 
-import util from 'util';
-
-import { OPCUAClient, AttributeIds, doTraceChunk } from 'node-opcua';
-
-// import {
-//   connectOPCUA,
-//   connectClientOBCUA,
-//   createSessionOPCUA,
-//   monitorVariable,
-// } from './models/sps_OPCUA_Connector.mjs';
-import { SessionDiagnosticsDataType } from 'node-opcua';
+import { OPCUAClient, AttributeIds } from 'node-opcua';
 
 import { readHeaderSpezialOPCUAData } from './models/sps_OPCUA_Connector.mjs';
-//import { readSimaticStatus } from './models/services/sps_OPCUA_Service.mjs';
 
 const __filename = fileURLToPath(import.meta.url); //__dirname is not defined // funktioniert, auch wenn rot ist
 const __dirname = path.dirname(__filename); //__dirname is not defined
-
-// const plc_OPCUA_WITHSIMATIC = process.env.PLC_OPCUA_WITHSIMATIC;
-// console.log('plc_OPCUA_WITHSIMATIC: ', plc_OPCUA_WITHSIMATIC);
-
-// let x = 2;
-// console.log('x: ', x);
-// console.log('typeof x: ', typeof x);
-// console.log('parseFloat(x): ', parseFloat(x));
-// //console.log('x.parseFloat(): ', x.parseFloat());
-// console.log('typeof x: ', typeof x);
-
-// const hasKey = (obj, keys) => {
-//   return (
-//     keys.length > 0 &&
-//     keys.every((key) => {
-//       if (typeof obj !== 'object' || !obj.hasOwnProperty(key)) return false;
-//       obj = obj[key];
-//       return true;
-//     })
-//   );
-// };
-
-// let obj = {
-//   a: 1,
-//   b: { c: 4 },
-//   'b.d': 5,
-// };
-
-// hasKey(obj, ['a']); // true
-// hasKey(obj, ['b']); // true
-// hasKey(obj, ['b', 'c']); // true
-// hasKey(obj, ['b.d']); // true
-// hasKey(obj, ['d']); // false
-// hasKey(obj, ['c']); // false
-// hasKey(obj, ['b', 'f']); // false
-
-// console.log(hasKey(obj, ['a']));
-
-// var buttons = {
-//   foo: 'bar',
-//   fiz: 'buz',
-// };
-
-// for (var property in buttons) {
-//   console.log(property + ' , ' + buttons[property]); // Outputs: foo, fiz or fiz, foo
-// }
-
-// console.log(1 <= '200');
-
-// console.log(9999999999999999);
-
-// console.log(0.5 + 0.1 == 0.6);
-// console.log(0.1 + 0.2 == 0.3);
 
 console.log('hello Mubea_PRO_MAIR_TDT :)'); // I am a test-commit 2
 
@@ -1017,14 +953,12 @@ if (process.env.NODE_ENV === 'development') {
   PORT = 8554;
 }
 
-//console.log(process.env);
-
+// console.log(process.env);
 // if ('development' == app.get('env')) {
+//   $env:NODE_TLS_REJECT_UNAUTHORIZED="0"
 //   console.log("Rejecting node tls");
 //   process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 // }
-
-//$env:NODE_TLS_REJECT_UNAUTHORIZED="0"
 
 const httpExpressServer = httpServer.listen(PORT, () => {
   console.log(
