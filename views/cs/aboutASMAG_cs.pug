@@ -5,6 +5,11 @@ block content
         h1 O MAIR...
         br
         br
+        svg(width="24" height="24" id="ant1" class="ants" style="fill: maroon; display:none;")
+            use(xlink:href='/img/icons.svg#icon-ant1')   
+
+        div#ant_Zieh.ants(style="position:absolute;  fill: red; display:none;")
+            img(src="/img/RezepteBilderASMAG/Ziehwagen004.png" width="60" height="40")    
         br
         .error_center
             h2.heading-secondary.heading-secondary--error  Uh oh! Něco je špatně!
@@ -19,3 +24,31 @@ block content
             a.btn.btn--small.btn--green(href="/api/v1/overviewInlogt") Zpět na přehled  
         br
         br            
+
+        script.     
+
+            document.addEventListener("DOMContentLoaded", () => {
+                const ants = document.querySelectorAll(".ants");
+                let timers = [];
+
+                function resetAnts() {
+
+                    ants.forEach(el => el.style.display = "none");
+
+                    timers.forEach(t => clearTimeout(t));
+                    timers = [];
+
+                    timers.push(setTimeout(() => {
+                        document.getElementById("ant1").style.display = "inline";
+                    }, 10000));
+
+                    timers.push(setTimeout(() => {
+                        document.getElementById("ant_Zieh").style.display = "inline";
+                    }, 10100));                    
+
+                }
+
+                resetAnts();
+
+                document.addEventListener("mousemove", resetAnts);
+            });              
