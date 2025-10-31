@@ -38,6 +38,7 @@ timeout /t 20
 
 REM -----------------------------
 REM Browser-Fenster 3: msedge http://127.0.0.1:8555/api/v1/overview
+REM Geändert zu .../login
 REM -----------------------------
 
 start msedge http://127.0.0.1:8555/api/v1/overview

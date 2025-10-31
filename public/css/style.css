@@ -761,6 +761,110 @@ body {
   filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
 }
 
+/*
+.heading-box__icon_blocked {
+  height: 2rem;
+  width: 2rem;
+  fill: currentColor;
+  -webkit-filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+}
+*/
+
+.heading-box__icon_blocked_Old {
+  height: 2rem;
+  width: 2rem;
+  fill: currentColor;
+  /* background-color: lightgrey; */
+  -webkit-filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+  /* border-top: 1px solid red; */
+  /* transform: rotate(45deg); */
+  opacity: 0.4;
+  background-image: repeating-linear-gradient(
+    45deg,
+    #c99595,
+    rgba(0, 0, 0, 0.1) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+}
+
+.heading-box__icon_blocked_old2 {
+  position: relative;
+  height: 2rem;
+  width: 2rem;
+  fill: currentColor;
+  color: grey;
+  opacity: 0.4;
+  -webkit-filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+
+  /*background-color: lightgrey;*/
+
+  background-blend-mode: overlay;
+  border-radius: 0.25rem;
+  background-size: 3px 3px;
+  background-image: radial-gradient(
+      circle,
+      rgb(80 70 70 / 41%) 1px,
+      transparent 1px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgb(233 31 31 / 30%),
+      rgba(0, 0, 0, 0.1) 2px,
+      transparent 2px,
+      transparent 3.8px
+    );
+}
+
+.heading-box__icon_blocked {
+  position: relative;
+  height: 2.5rem;
+  width: 2.5rem;
+  fill: currentColor;
+  color: grey;
+  opacity: 0.4;
+  -webkit-filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 0.75rem 0.5rem rgba(0, 0, 0, 0.25));
+  border-radius: 0.25rem;
+
+  background-image: radial-gradient(
+      circle,
+      rgb(80 70 70 / 100%) 0.9px,
+      transparent 1px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgb(237 3 3 / 74%),
+      rgba(0, 0, 0, 0.1) 0.6px,
+      transparent 2px,
+      transparent 3px
+    );
+  background-size:
+    5px 5px,
+    8px 8px;
+  background-blend-mode: overlay;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+/*
+  background-image: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1) 2px,
+      transparent 2px,
+      transparent 4px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.05) 2px,
+      transparent 2px,
+      transparent 4px
+    );*/
+
 .section-description {
   background-color: #fcfcfc;
   /*margin-top: calc(0px - var(--section-rotate));*/
@@ -2059,6 +2163,15 @@ button-upDown {
   color: #333333;
   cursor: pointer;
 }
+
+.edit-button_blocked {
+  color: green;
+}
+
+/*.edit-button_blocked:hover {
+  color: #333333;
+  cursor: pointer;
+}*/
 
 .footer {
   border-top: 1px solid #ccc;

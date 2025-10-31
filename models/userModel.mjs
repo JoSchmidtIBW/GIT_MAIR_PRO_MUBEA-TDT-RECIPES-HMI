@@ -145,6 +145,7 @@ userSchema.pre('findOneAndDelete', async function (next) {
   const DELETED_USER_ID = '000000000000000000000000'; // Dummy, für Rezept-verläufe, und Statistik, wenn ein user gelöscht wurde
   const NONAME_USER_ID = '643c1f042df0321cb8a06a50'; // Für alte Rezepte, wo kein Name drin steht
   const NOACCOUNT_USER_ID = '000000000000000000000001'; // für Bediener ohne Login, zum Rezept senden und das es Statistik gibt
+  const SAMDAN_ID = '643c1f042df0321cb8a06a52';
 
   if (user.role === 'admin' || user._id.toString() === ADMIN_ID) {
     console.log(
@@ -177,6 +178,13 @@ userSchema.pre('findOneAndDelete', async function (next) {
     return next(
       new AppError('The user NoAccount_User cannot be deleted!', 400),
     );
+  }
+
+  if (user._id.toString() === SAMDAN_ID) {
+    console.log(
+      'Der zu löschende User ist der SAM_DAN_User! Dieser darf nicht gelöscht werden!',
+    );
+    return next(new AppError('The user SAM_DAN_User cannot be deleted!', 400));
   }
 
   next();
@@ -493,6 +501,8 @@ userSchema.pre('findOneAndUpdate', async function (next) {
     'bin findOneAndUpdate in userModel, schaue das Admin nicht seine rolle ändern kann',
   );
 
+  //const updatedFields = this.getUpdate().$set || this.getUpdate();
+
   const updatedFields = this.getUpdate();
   console.log('updatedFields: ' + updatedFields);
   console.log('updatedFields.role: ' + updatedFields.role);
@@ -505,12 +515,59 @@ userSchema.pre('findOneAndUpdate', async function (next) {
   console.log('user: ' + user);
 
   const ADMIN_ID = '643c1f042df0321cb8a06a47'; //ID (Admin) by MongoDB
+  const DELETED_USER_ID = '000000000000000000000000'; // Dummy, für Rezept-verläufe, und Statistik, wenn ein user gelöscht wurde
+  const NONAME_USER_ID = '643c1f042df0321cb8a06a50'; // Für alte Rezepte, wo kein Name drin steht
+  const NOACCOUNT_USER_ID = '000000000000000000000001'; // für Bediener ohne Login, zum Rezept senden und das es Statistik gibt
+  const SAMDAN_ID = '643c1f042df0321cb8a06a52';
 
   if (user._id.toString() === ADMIN_ID) {
     console.log('ID ist diese vom ADMIN! Admin darf seine rolle nicht ändern!');
     if (updatedFields.role && updatedFields.role !== user.role) {
       return next(new AppError('Admin cannot update role field', 400));
     }
+  }
+
+  if (user._id.toString() === DELETED_USER_ID) {
+    console.log(
+      'ID ist diese vom DELETED_USER! DELETED_USER darf seine rolle nicht ändern!',
+    );
+    if (updatedFields.role && updatedFields.role !== user.role) {
+      return next(
+        new AppError('DELETED_USER_ID cannot update role field', 400),
+      );
+    }
+  }
+
+  if (user._id.toString() === NONAME_USER_ID) {
+    console.log(
+      'ID ist diese vom NONAME_USER! NONAME_USER darf seine rolle nicht ändern!',
+    );
+    if (updatedFields.role && updatedFields.role !== user.role) {
+      return next(new AppError('NONAME_USER cannot update role field', 400));
+    }
+  }
+
+  if (user._id.toString() === NOACCOUNT_USER_ID) {
+    console.log(
+      'ID ist diese vom NOACCOUNT_USER! NOACCOUNT_USER darf seine rolle nicht ändern!',
+    );
+    if (updatedFields.role && updatedFields.role !== user.role) {
+      return next(new AppError('NOACCOUNT_USER cannot update role field', 400));
+    }
+  }
+
+  if (user._id.toString() === SAMDAN_ID) {
+    console.log(
+      'ID ist diese vom SAM_DAN_USER! SAM_DAN_USER darf seine rolle nicht ändern!',
+    );
+    if (updatedFields.role && updatedFields.role !== user.role) {
+      return next(new AppError('SAM_DAN_USER cannot update role field', 400));
+    }
+    // if (updatedFields.password && updatedFields.password !== user.password) {
+    //   return next(
+    //     new AppError('SAM_DAN_USER cannot update password field', 400),
+    //   );
+    // }
   }
 
   console.log(
@@ -572,10 +629,36 @@ userSchema.pre('save', async function (next) {
   // if not changed the password, make next, go to next middleware, otherwise, stay in it
   if (!this.isModified('password')) return next(); // this, is the actually document, isModified is function when something in the document is being modified, needs name of the field that is being modified
 
+  const DELETED_USER_ID = '000000000000000000000000';
+  const NONAME_USER_ID = '643c1f042df0321cb8a06a50';
+  const NOACCOUNT_USER_ID = '000000000000000000000001';
+  const SAMDAN_USER_ID = '643c1f042df0321cb8a06a52';
+
   // console.log('key: ' + key);
   // this.password = encryptPassword(this.password, key);
   this.password = encryptPassword(this.password);
   console.log('encryptPassword  in pre-save: ' + this.password);
+
+  const id = this._id?.toString();
+  if ([DELETED_USER_ID, NONAME_USER_ID, NOACCOUNT_USER_ID].includes(id)) {
+    console.log(`User ${id} darf sein Passwort nicht ändern!`);
+    return next(
+      new AppError(
+        `This user ${id} is not allowed to change the password`,
+        400,
+      ),
+    );
+  }
+
+  if (SAMDAN_USER_ID === id) {
+    console.log(`User SAMDAN_USER darf sein Passwort nicht ändern!`);
+    return next(
+      new AppError(
+        `This user SAMDAN_USER is not allowed to change the password`,
+        400,
+      ),
+    );
+  }
 
   // after that, confirmPassword must be deleted, because only hashPassword exists, with set to undefined
   // Delete the passwordConfirm field
