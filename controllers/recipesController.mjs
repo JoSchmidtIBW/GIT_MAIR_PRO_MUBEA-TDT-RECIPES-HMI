@@ -85,6 +85,9 @@ export const getDeleteRecipe = catchAsync(async (req, res, next) => {
 
 export const getRecipesTDTtoLoad = catchAsync(async (req, res, next) => {
   console.log('bin getRecipesTDTtoLoad im recipesController');
+  const user = req.query.user;
+  console.log('req.query:', req.query);
+  console.log('req.query.user:', req.query.user);
 
   // const recipesTDTtoLoad = await RecipesTDT_de.find().sort({
   //   'kopfDaten.artikelNummer': 1,
@@ -99,6 +102,7 @@ export const getRecipesTDTtoLoad = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       recipesTDTtoLoad: recipesTDTtoLoad,
+      userInlogt: user,
     },
   });
 });
