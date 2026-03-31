@@ -640,7 +640,10 @@ userSchema.pre('save', async function (next) {
   console.log('encryptPassword  in pre-save: ' + this.password);
 
   const id = this._id?.toString();
-  if ([DELETED_USER_ID, NONAME_USER_ID, NOACCOUNT_USER_ID].includes(id)) {
+  if (
+    !this.isNew &&
+    [DELETED_USER_ID, NONAME_USER_ID, NOACCOUNT_USER_ID].includes(id)
+  ) {
     console.log(`User ${id} darf sein Passwort nicht ändern!`);
     return next(
       new AppError(
@@ -650,7 +653,7 @@ userSchema.pre('save', async function (next) {
     );
   }
 
-  if (SAMDAN_USER_ID === id) {
+  if (!this.isNew && SAMDAN_USER_ID === id) {
     console.log(`User SAMDAN_USER darf sein Passwort nicht ändern!`);
     return next(
       new AppError(
