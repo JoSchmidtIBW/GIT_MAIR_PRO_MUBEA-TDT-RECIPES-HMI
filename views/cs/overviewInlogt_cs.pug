@@ -154,10 +154,18 @@ block content
                 div.aussenDiv
                     div#rightDiv
 
-        div(style="margin-left: -30px; margin-right: -30px;")
+        //-div(style="margin-left: -30px; margin-right: -30px;")
             a.btn.btn--small.btn--green(style="float: left;" href="/api/v1/createRecipeOverview") Vytvořit
             a.btn.btn--small.btn--green.btn--saveAllRecipteToTXT_Files#saveAllRecipteToTXT_FilesBtn(style="float: right; margin-right: 25px;" href="#") Uložit všechny recepty
 
+        if(user.role === 'admin' || user.role === 'Chef')
+            div(style="margin-left: -30px; margin-right: -30px;")
+                a.btn.btn--small.btn--green(style="float: left;" href="/api/v1/createRecipeOverview") Vytvořit
+                a.btn.btn--small.btn--green.btn--saveAllRecipteToTXT_Files#saveAllRecipteToTXT_FilesBtn(style="float: right; margin-right: 25px;" href="#") Uložit všechny recepty
+        else
+            div(style="margin-left: -30px; margin-right: -30px; display: none;")
+                a.btn.btn--small.btn--green(style="float: left; color: red;" href="/api/v1/createRecipeOverview") Vytvořit
+                a.btn.btn--small.btn--green.btn--saveAllRecipteToTXT_Files#saveAllRecipteToTXT_FilesBtn(style="float: right; margin-right: 25px;" href="#") Uložit všechny recepty  
 
         script.
             console.log("bin script")
@@ -331,47 +339,53 @@ block content
             const recipeDataContainer = document.getElementById('recipeDataContainer');
             const textRecipefindLoadedinSPS = document.getElementById('recipefindLoadedinSPSinDBrightDiv');
 
-            toggleButtonHackerMatrixRecipe.addEventListener('click', function() {
-                    if (isToggledHackerMatrixRecipe) {
-                        recipeDataContainer.style.backgroundColor = 'rgb(243, 239, 239)';
-                        toggleButtonHackerMatrixRecipe.style.file = 'opacity(0.5);';
-                        textRecipefindLoadedinSPS.style.backgroundColor = 'rgb(243, 239, 239)';
-                        textRecipefindLoadedinSPS.style.color = '#777';
-                    } else {
-                        recipeDataContainer.style.backgroundColor = 'black';
-                        recipeDataContainer.style.color = 'rgb(0, 255, 65)';
-                        toggleButtonHackerMatrixRecipe.style.filter = 'contrast(0.5)';
-                        textRecipefindLoadedinSPS.style.backgroundColor = 'black';
-                        textRecipefindLoadedinSPS.style.color ='rgb(0, 255, 65)';
-                        textRecipefindLoadedinSPS.style.marginLeft = '500px';
-                    }
-                    isToggledHackerMatrixRecipe = !isToggledHackerMatrixRecipe;
-            });  
+            if(toggleButtonHackerMatrixRecipe){
+                toggleButtonHackerMatrixRecipe.addEventListener('click', function() {
+                        if (isToggledHackerMatrixRecipe) {
+                            recipeDataContainer.style.backgroundColor = 'rgb(243, 239, 239)';
+                            toggleButtonHackerMatrixRecipe.style.file = 'opacity(0.5);';
+                            textRecipefindLoadedinSPS.style.backgroundColor = 'rgb(243, 239, 239)';
+                            textRecipefindLoadedinSPS.style.color = '#777';
+                        } else {
+                            recipeDataContainer.style.backgroundColor = 'black';
+                            recipeDataContainer.style.color = 'rgb(0, 255, 65)';
+                            toggleButtonHackerMatrixRecipe.style.filter = 'contrast(0.5)';
+                            textRecipefindLoadedinSPS.style.backgroundColor = 'black';
+                            textRecipefindLoadedinSPS.style.color ='rgb(0, 255, 65)';
+                            textRecipefindLoadedinSPS.style.marginLeft = '500px';
+                        }
+                        isToggledHackerMatrixRecipe = !isToggledHackerMatrixRecipe;
+                });  
+            }
+
 
             let isToggledHackerMatrix = false;
             const toggleButtonHackerMatrix = document.getElementById('toggleButtonHackerMatrix');
             const csvDataContainer = document.getElementById('csvDataContainer');
             const textCSVData = document.getElementById('CSVDataLocalStorage');
 
-            toggleButtonHackerMatrix.addEventListener('click', function() {
-                    if (isToggledHackerMatrix) {
-                        csvDataContainer.style.backgroundColor = 'lightgrey';
-                        csvDataContainer.style.color = 'pink';
-                        toggleButtonHackerMatrix.style.file = 'opacity(0.5);';
-                        textCSVData.style.backgroundColor = 'lightgrey';
-                        textCSVData.style.color = 'green';
-                    } else {
-                        csvDataContainer.style.backgroundColor = 'black';
-                        //csvDataContainer.style.color = '#00ff41';
-                        csvDataContainer.style.color = 'rgb(0, 255, 65)';
-                        toggleButtonHackerMatrix.style.filter = 'contrast(0.5)';
-                        textCSVData.style.backgroundColor = 'black';
-                        textCSVData.style.color ='rgb(0, 255, 65)';
-                        textCSVData.style.marginLeft = '500px';
-                        //isToggledHackerMatrix = true;
-                    }
-                    isToggledHackerMatrix = !isToggledHackerMatrix;
-            });                   
+            if(toggleButtonHackerMatrix){
+                toggleButtonHackerMatrix.addEventListener('click', function() {
+                        if (isToggledHackerMatrix) {
+                            csvDataContainer.style.backgroundColor = 'lightgrey';
+                            csvDataContainer.style.color = 'pink';
+                            toggleButtonHackerMatrix.style.file = 'opacity(0.5);';
+                            textCSVData.style.backgroundColor = 'lightgrey';
+                            textCSVData.style.color = 'green';
+                        } else {
+                            csvDataContainer.style.backgroundColor = 'black';
+                            //csvDataContainer.style.color = '#00ff41';
+                            csvDataContainer.style.color = 'rgb(0, 255, 65)';
+                            toggleButtonHackerMatrix.style.filter = 'contrast(0.5)';
+                            textCSVData.style.backgroundColor = 'black';
+                            textCSVData.style.color ='rgb(0, 255, 65)';
+                            textCSVData.style.marginLeft = '500px';
+                            //isToggledHackerMatrix = true;
+                        }
+                        isToggledHackerMatrix = !isToggledHackerMatrix;
+                });       
+            }
+            
             
             document.addEventListener('DOMContentLoaded', function() {
                 console.log("Bin DOMcontentLoader...");
