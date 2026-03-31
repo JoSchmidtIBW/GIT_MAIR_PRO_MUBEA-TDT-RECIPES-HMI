@@ -1,0 +1,76 @@
+extends base
+
+block content
+    main.main
+        table#manageUsersTable_de.manageUsersTable_de.table
+            thead
+                tr
+                    th ID
+                    th Mitarbeiter-<br>Nummer
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down
+                    th Nachname
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Vorname
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Sprache
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Beruf
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Foto
+                    th E-Mail-Adresse
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Rolle
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Abteilung(en)
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Passwort
+                    th Erstellt am
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down                    
+                    th Bearbeiten
+                tbody
+                    each user in data
+                        tr
+                            td= user._id
+                            td= user.employeeNumber
+                            td= user.lastName
+                            td= user.firstName
+                            td= user.language
+                            td= user.professional
+                            td= user.photo
+                            td= user.email
+                            td= user.role
+                            td= user.department
+                            td= user.password
+                            td= user.createdAt
+                            td
+        br
+        br
+
+        a.btn.btn--small.btn--green(href="/api/v1/createUser") Neuen Benutzer erstellen

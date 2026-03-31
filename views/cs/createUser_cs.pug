@@ -1,0 +1,103 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            | #{text}
+
+block content
+    main.main
+        .user-view
+            nav.user-view__menu
+                ul.side-nav
+                    +navItem('/api/v1/me', 'Mé nastavení', 'settings', false)
+                    +navItem('/api/v1/myRecipeSend', 'Moje objednávky', 'folder-plus', false)
+                    +navItem('/api/v1/recipesSendSPSLog', 'Historie odesílání receptů SPS', 'search', false)
+                    +navItem('/api/v1/recipesStatistic', 'Statistika receptů', 'trending-up', false)                      
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading ŠÉF
+                        ul.side-nav
+                            +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)            
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading= `${user.role}`
+                        ul.side-nav
+                            +navItem('/api/v1/manage_users', 'Správa uživatelů', 'users', true)
+
+
+            .user-view__content
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Nový uživatel vytvořit
+                        svg(class="heading-box__icon" style="margin-left: 8px; margin-bottom: -3px; height: 24px; length: 24px;")
+                            use(xlink:href="/img/icons.svg#icon-user-plus" style="color: green; ")                     
+                    form.form.form-new-user-data
+                        div(class="form__group")
+                            label(class="form__label", for="employeeNumber") Číslo zaměstnance
+                            input#employeeNumber(class="form__input" type="number" placeholder="20004010" required="required" min="10000" max="99999999")
+                        div(class="form__group")
+                            label(class="form__label", for="firstname") Jméno
+                            input#firstname(class="form__input", type="text", placeholder="Max", required="required")
+                        div(class="form__group")
+                            label(class="form__label", for="lastname") Příjmení
+                            input#lastname(class="form__input", type="text", placeholder="Mustermann", required="required")
+                        div(class="form__group")
+                            label(class="form__label", for="language") Jazyk
+                            select#language(class="form__input")
+                                option(value="en") Angličtina
+                                option(value="de") Němčina
+                                option(value="cs") Čeština
+                        div(class="form__group")
+                            label(class="form__label", for="professional") Profese (fiktivní)
+                            input#professional(class="form__input", type="text", placeholder="professional")
+                        div(class="form__group")
+                            label(class="form__label", for="email") E-mailová adresa
+                            input#email(class="form__input", type="email", placeholder="you@mubea.com")
+                        div(class="form__group ma-bt-md")
+                            label(class="form__label", for="password") Heslo
+                            input#password(class="form__input", type="password", placeholder="••••••••", required="required", minlength="8")
+                        div(class="form__group ma-bt-md")
+                            label(class="form__label", for="passwordConfirm") Potvrzení hesla
+                            input#passwordConfirm(class="form__input", type="password", placeholder="••••••••", required="required", minlength="8")
+                        div(class="form__group")
+                            label(class="form__label", for="role") Role
+                            select#role(class="form__input")
+                                option(value="user") Uživatel
+                                //-option(value="Unterhalt") Údržba
+                                //-option(value="Schichtleiter") Mistr směny
+                                option(value="Chef") Šéf
+                        div(class="form__group")
+                            label(class="form__label", for="department") Oddělení (fiktivní)
+                            each department in [ 'Schweisserei', 'Zieherei', 'Anarbeit', 'Engineering', 'Konstruktion', 'Unterhalt', 'IT', 'Operations', 'Geschäfts-Führung' ]
+                                label(class="form__checkbox-label" style="display: block; margin-bottom: 10px; border: none")
+                                input(class="form__checkbox-box", type="checkbox", name="departments", value=department, checked=checked,  style="width: 20px; height: 20px;")
+                                span(class="form__checkbox-name", style="font-size: 1.5rem;") #{department}
+        
+                        div(class="form__group")
+                            button.btn.btn--green Uložit
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/manage_users`) Zrušit
+
+
+                        script.
+
+                            function getSelectedDepartments() {
+                                const departmentCheckboxes = document.querySelectorAll('input[name="departments"]');
+                                let selectedDepartments = [];
+                                departmentCheckboxes.forEach((checkbox) => {
+                                    if (checkbox.checked) {
+                                        selectedDepartments.push(checkbox.value);
+                                    }
+                                });
+                                if (selectedDepartments.length > 0) {
+                                    console.log(selectedDepartments + " sind angewählt");
+                                    alert("Angewählte Abteilungen: "+selectedDepartments)
+                                    document.querySelector('#department').value = selectedDepartments;
+                                } else {
+                                    alert('Prosím, vyberte alespoň jedno oddělení.');
+                                }
+                            }
