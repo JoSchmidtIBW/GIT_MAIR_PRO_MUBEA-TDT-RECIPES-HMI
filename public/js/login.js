@@ -70,7 +70,7 @@ export const logout = async () => {
       url: `${apiUrl}/users/logout`,
     });
 
-    if (res.data.status === 'success') location.assign('/api/v1/overview');
+    if (res.data.status === 'success') location.assign('/api/v1/login');
   } catch (err) {
     console.log(err.response);
     showAlert('error', 'Error logging out! Try agein.');

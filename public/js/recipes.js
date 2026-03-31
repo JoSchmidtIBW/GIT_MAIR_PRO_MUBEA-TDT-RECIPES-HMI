@@ -976,18 +976,25 @@ export const showRecipesTDToverviewTable_cs_NotInlogt = async () => {
   }
 };
 
-export const showRecipesTDToverviewTable_de = async () => {
-  console.log('bin showRecipesTDToverviewTable_de');
+export const showRecipesTDToverviewTable_de = async (user) => {
+  console.log('bin showRecipesTDToverviewTable_de, user', user);
   try {
     const res = await axios({
       method: 'GET',
       url: `${apiUrl}/recipes/recipesTDTtoLoad`,
+      params: { user: user },
     });
 
     console.log('Response:', res); // Log the gesamte Antwort
+    console.log('Response res.data:', res.data);
+    console.log('Response res.data.data:', res.data.data);
 
     if (res.data && res.data.status === 'success') {
       console.log('Success in showRecipesTDToverviewTable_de');
+
+      const userInlogt = JSON.parse(res.data.data.userInlogt);
+      const userRole = userInlogt.role;
+      console.log('userRole:', userRole);
 
       const recipesArrayNormal = res.data.data.recipesTDTtoLoad.map(
         (recipe) => ({
@@ -1123,6 +1130,14 @@ export const showRecipesTDToverviewTable_de = async () => {
               data: 'id',
               render: function (data) {
                 console.log('Value of data:', data);
+                //if (userRole === 'user') return '<a>user!!!</>';   href="#"    style="background-color: red;"
+                if (userRole === 'user')
+                  return `
+                <a class="edit-button_blocked">
+                  <svg class="heading-box__icon_blocked" >
+                  <use xlink:href="/img/icons.svg#icon-edit-3"></use>
+                  </svg>
+                </a>`;
                 return `
                 <a href="${apiUrl}/recipes/updateRecipe/${data}" class="edit-button">
                   <svg class="heading-box__icon">
@@ -1281,18 +1296,23 @@ export const showRecipesTDToverviewTable_de = async () => {
   }
 };
 
-export const showRecipesTDToverviewTable_cs = async () => {
+export const showRecipesTDToverviewTable_cs = async (user) => {
   console.log('bin showRecipesTDToverviewTable_cs');
   try {
     const res = await axios({
       method: 'GET',
       url: `${apiUrl}/recipes/recipesTDTtoLoad`,
+      params: { user: user },
     });
 
     console.log('Response:', res); // Log the gesamte Antwort
 
     if (res.data && res.data.status === 'success') {
       console.log('Success in showRecipesTDToverviewTable_cs');
+
+      const userInlogt = JSON.parse(res.data.data.userInlogt);
+      const userRole = userInlogt.role;
+      console.log('userRole:', userRole);
 
       const recipesArrayNormal = res.data.data.recipesTDTtoLoad.map(
         (recipe) => ({
@@ -1428,6 +1448,13 @@ export const showRecipesTDToverviewTable_cs = async () => {
               data: 'id',
               render: function (data) {
                 console.log('Value of data:', data);
+                if (userRole === 'user')
+                  return `
+                <a class="edit-button_blocked">
+                  <svg class="heading-box__icon_blocked" >
+                  <use xlink:href="/img/icons.svg#icon-edit-3"></use>
+                  </svg>
+                </a>`;
                 return `
                 <a href="${apiUrl}/recipes/updateRecipe/${data}" class="edit-button">
                   <svg class="heading-box__icon">
@@ -1586,19 +1613,24 @@ export const showRecipesTDToverviewTable_cs = async () => {
   }
 };
 
-export const showRecipesTDToverviewTable = async () => {
+export const showRecipesTDToverviewTable = async (user) => {
   console.log('bin showRecipesTDToverviewTable');
 
   try {
     const res = await axios({
       method: 'GET',
       url: `${apiUrl}/recipes/recipesTDTtoLoad`,
+      params: { user: user },
     });
 
     console.log('Response:', res);
 
     if (res.data && res.data.status === 'success') {
       console.log('Success in showRecipesTDToverviewTable');
+
+      const userInlogt = JSON.parse(res.data.data.userInlogt);
+      const userRole = userInlogt.role;
+      console.log('userRole:', userRole);
 
       const recipesArray = res.data.data.recipesTDTtoLoad.map((recipe) => ({
         id: recipe._id,
@@ -1725,6 +1757,13 @@ export const showRecipesTDToverviewTable = async () => {
               data: 'id',
               render: function (data) {
                 console.log('Value of data:', data);
+                if (userRole === 'user')
+                  return `
+                <a class="edit-button_blocked">
+                  <svg class="heading-box__icon_blocked" >
+                  <use xlink:href="/img/icons.svg#icon-edit-3"></use>
+                  </svg>
+                </a>`;
                 return `
                 <a href="${apiUrl}/recipes/updateRecipe/${data}" class="edit-button">
                   <svg class="heading-box__icon">
