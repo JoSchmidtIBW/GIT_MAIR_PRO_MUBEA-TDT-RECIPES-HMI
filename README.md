@@ -108,8 +108,8 @@ NODE_ENV=Development
 
 
 #Port Configuration
-DEV_PORT=8555
-PROD_PORT=8557
+DEV_PORT=8225
+PROD_PORT=8227
 
 
 #DB Configuration (const DB = 'mongodb://127.0.0.1:27017/TDT_MubeaDB';)
